@@ -15,5 +15,10 @@ Require-Bundle: com.tibco.bw.palette.zendesk.model;bundle-version="[0.0.0,2.0.0)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.tibco.bw.palette.zendesk.design;version="1.0.0",
- com.tibco.bw.palette.zendesk.design.createticket;version="1.0.0"
+ com.tibco.bw.palette.zendesk.design.createticket;version="1.0.0",
+ com.tibco.bw.palette.zendesk.design.createuser;version="1.0.0",
+ com.tibco.bw.palette.zendesk.design.delete;version="1.0.0",
+ com.tibco.bw.palette.zendesk.design.getticketmetrics;version="1.0.0",
+ com.tibco.bw.palette.zendesk.design.search;version="1.0.0",
+ com.tibco.bw.palette.zendesk.design.updateticket;version="1.0.0"
 Import-Package: com.tibco.amf.model.sharedresource.jndi;version="[1.4.0,2.0.0)"
