@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Overridable true -->
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="com.tibco.bw.palette.zendesk.CreateUser" name="bw.zendesk.CreateUser">
+   <implementation class="com.tibco.bw.palette.zendesk.runtime.CreateUserSynchronousActivity"/>
+   <property name="activityTypeID" type="String" value="bw.zendesk.CreateUser"/>
+   <property name="modelPackageClass" type="String" value="com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage"/>
+   <property name="runtimeClass" type="String" value="com.tibco.bw.palette.zendesk.runtime.CreateUserSynchronousActivity"/>
+</scr:component>

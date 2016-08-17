@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/DeleteObject" xmlns:tns="http://www.example.org/DeleteObject" elementFormDefault="qualified">
+	<complexType name="ActivityInputType">
+		<sequence>
+			<element form="unqualified" minOccurs="1" name="Id" type="long"/>
+		</sequence>
+	</complexType>
+	<element name="ActvityInput" type="tns:ActivityInputType"/>
+	<complexType name="ActivityOutputType">
+    	<sequence>
+    		<element maxOccurs="1" minOccurs="1" name="Success" type="boolean"/>
+    	</sequence>
+    </complexType>
+    <element name="ActivityOutput" type="tns:ActivityOutputType"/>
+</schema>

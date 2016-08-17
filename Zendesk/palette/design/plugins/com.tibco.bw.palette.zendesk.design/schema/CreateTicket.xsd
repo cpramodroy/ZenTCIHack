@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/createTicket" xmlns:tns="http://www.example.org/createTicket" elementFormDefault="unqualified">
+	<complexType name="RequesterType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" name="Name" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Email" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="CollaboratorsType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="unbounded" name="CC" type="tns:CCType"/>
+		</sequence>
+	</complexType>
+	<complexType name="CCType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" name="Name" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Email" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="TagsType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="unbounded" name="TagName" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="CustomFieldType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="1" name="Field1" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="ActivityInputType">
+		<sequence>
+			<element form="unqualified" minOccurs="1" name="Requester" type="tns:RequesterType"/>
+			<element form="unqualified" minOccurs="1" name="Subject" type="string"/>
+			<element form="unqualified" minOccurs="1" name="Description" type="string"/>
+			<element form="unqualified" minOccurs="0" maxOccurs="1" name="Collaborators" type="tns:CollaboratorsType"/>
+			<element form="unqualified" minOccurs="0" name="Type">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="Task"></enumeration>
+						<enumeration value="Problem"></enumeration>
+						<enumeration value="Incident"></enumeration>
+						<enumeration value="Question"></enumeration>
+					</restriction>
+				</simpleType>
+			</element>
+			<element form="unqualified" minOccurs="0" name="Priority">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="Low"></enumeration>
+						<enumeration value="Normal"></enumeration>
+						<enumeration value="High"></enumeration>
+						<enumeration value="Urgent"></enumeration>
+					</restriction>
+				</simpleType>
+			</element>
+			<element form="unqualified" minOccurs="0" name="Tags" type="tns:TagsType"/>
+			<element form="unqualified" maxOccurs="1" minOccurs="0" name="CustomFields" type="tns:CustomFieldType"/>
+		</sequence>
+	</complexType>
+	<element name="ActvityInput" type="tns:ActivityInputType"/>
+	<complexType name="ActivityOutput">
+    	<sequence>
+    		<element maxOccurs="1" minOccurs="1" name="ticketId" type="long"/>
+    	</sequence>
+    </complexType>
+    <element name="ActivityOutput" type="tns:ActivityOutput"/>
+</schema>

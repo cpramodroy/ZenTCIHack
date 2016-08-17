@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+ Overridable true
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://ns.tibco.com/bw/palette/zendesk"
+            class="com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage"/>
+   </extension>
+   <extension
+         point="com.tibco.bw.model.ActivityIcon">
+    <activityIcon
+            activityTypeID="bw.zendesk.CreateTicket"
+            diagramIcon="icons/obj48/zendesk_createticket_48x48.png"
+            largeIcon="icons/obj32/zendesk_createticket_32x32.png"
+            smallIcon="icons/obj16/zendesk_createticket_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.CreateUser"
+            diagramIcon="icons/obj48/zendesk_createuser_48x48.png"
+            largeIcon="icons/obj32/zendesk_createuser_32x32.png"
+            smallIcon="icons/obj16/zendesk_createuser_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.UpdateTicket"
+            diagramIcon="icons/obj48/zendesk_updateticket_48x48.png"
+            largeIcon="icons/obj32/zendesk_updateticket_32x32.png"
+            smallIcon="icons/obj16/zendesk_updateticket_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.Delete"
+            diagramIcon="icons/obj48/zendesk_delete_48x48.png"
+            largeIcon="icons/obj32/zendesk_delete_32x32.png"
+            smallIcon="icons/obj16/zendesk_delete_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.GetTicketMetrics"
+            diagramIcon="icons/obj48/zendesk_getticketmetrics_48x48.png"
+            largeIcon="icons/obj32/zendesk_getticketmetrics_32x32.png"
+            smallIcon="icons/obj16/zendesk_getticketmetrics_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.Search"
+            diagramIcon="icons/obj48/zendesk_search_48x48.png"
+            largeIcon="icons/obj32/zendesk_search_32x32.png"
+            smallIcon="icons/obj16/zendesk_search_16x16.png">
+      </activityIcon>
+    </extension>
+</plugin>

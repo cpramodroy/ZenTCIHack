@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.tibco.bw.palette.zendesk.runtime
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: %providerName
+Import-Package: com.tibco.bw.palette.zendesk.model.zendesk,com.tibco.b
+ w.runtime.util;version="[6.0.0,7.0.0)",com.tibco.bw.runtime;version="
+ [6.0.0,7.0.0)",com.tibco.bw.runtime.annotation;version="[6.0.0,7.0.0)
+ ",com.tibco.neo.localized;version="[2.5.0,3.0.0)",org.eclipse.emf.eco
+ re;version="[2.4.2,3.0.0)",org.genxdm;version="[1.0.0,2.0.0)",org.gen
+ xdm.axes;version="[1.0.0,2.0.0)",org.genxdm.io;version="[1.0.0,2.0.0)
+ ",org.genxdm.mutable;version="[1.0.0,2.0.0)",org.genxdm.nodes;version
+ ="[1.0.0,2.0.0)",org.genxdm.typed;version="[1.0.0,2.0.0)",org.genxdm.
+ typed.types;version="[1.0.0,2.0.0)",org.genxdm.xs;version="[1.0.0,2.0
+ .0)",org.genxdm.xs.components;version="[1.0.0,2.0.0)",org.genxdm.xs.c
+ onstraints;version="[1.0.0,2.0.0)",org.genxdm.xs.exceptions;version="
+ [1.0.0,2.0.0)",org.genxdm.xs.resolve;version="[1.0.0,2.0.0)",org.genx
+ dm.xs.types;version="[1.0.0,2.0.0)"
+Service-Component:  OSGI-INF/createticket.xml, OSGI-INF/createuser.xml
+ , OSGI-INF/updateticket.xml, OSGI-INF/delete.xml, OSGI-INF/getticketm
+ etrics.xml, OSGI-INF/search.xml
+Provide-Capability: com.tibco.bw.palette; name=bw.zendesk
+Export-Package: com.tibco.bw.palette.zendesk.runtime;version="1.0.0"; 
+ uses:="com.tibco.neo.localized,com.tibco.bw.runtime,javax.activation,
+   com.tibco.neo.localized"
+Bundle-Version: 1.0.0.qualifier
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-ClassPath: lib/async-http-client-1.9.31.jar,lib/handy-uri-templ
+ ates-1.1.7.jar,lib/jackson-annotations-2.1.4.jar,lib/jackson-core-2.1
+ .4.jar,lib/jackson-databind-2.1.4.jar,lib/netty-3.10.4.Final.jar,lib/
+ slf4j-api-1.7.2.jar,lib/zendesk-java-client-0.5.0.jar,.
+
