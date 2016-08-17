@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Overridable true -->
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="com.tibco.bw.palette.zendesk.CreateTicket" name="bw.zendesk.CreateTicket">
-   <implementation class="com.tibco.bw.palette.zendesk.runtime.CreateTicketSynchronousActivity"/>
-   <property name="activityTypeID" type="String" value="bw.zendesk.CreateTicket"/>
-   <property name="modelPackageClass" type="String" value="com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage"/>
-   <property name="runtimeClass" type="String" value="com.tibco.bw.palette.zendesk.runtime.CreateTicketSynchronousActivity"/>
-</scr:component>
