@@ -3,19 +3,38 @@ package com.tibco.bw.palette.zendesk.runtime;
 import java.util.List;
 import java.util.Map;
 
+import org.zendesk.client.v2.model.Collaborator;
+import org.zendesk.client.v2.model.CustomFieldValue;
+import org.zendesk.client.v2.model.Priority;
+import org.zendesk.client.v2.model.Type;
+
 public class TicketData {
 	String companyURL;
 	String username ;
 	String password ;
 	Map<String, String> requesterDetails;
+	String requesterName;
+	String requesterEmail;
 	String subject;
 	String Description;
-	Map<String, String> collaborators;
-	String ticketType;
-	String ticketPriority;
+	List<Collaborator> collaborators;
+	Type ticketType;
+	Priority ticketPriority;
 	List<String> ticketTags;
+	Map<String, String> ticketCustomFields;
 	
-	
+	public String getRequesterName() {
+		return requesterName;
+	}
+	public void setRequesterName(String requesterName) {
+		this.requesterName = requesterName;
+	}
+	public String getRequesterEmail() {
+		return requesterEmail;
+	}
+	public void setRequesterEmail(String requesterEmail) {
+		this.requesterEmail = requesterEmail;
+	}
 	public String getCompanyURL() {
 		return companyURL;
 	}
@@ -52,29 +71,35 @@ public class TicketData {
 	public void setDescription(String description) {
 		Description = description;
 	}
-	public Map<String, String> getCollaborators() {
+	public List<Collaborator> getCollaborators() {
 		return collaborators;
 	}
-	public void setCollaborators(Map<String, String> collaborators) {
+	public void setCollaborators(List<Collaborator> collaborators) {
 		this.collaborators = collaborators;
 	}
-	public String getTicketType() {
+	public Type getTicketType() {
 		return ticketType;
 	}
-	public void setTicketType(String ticketType) {
+	public void setTicketType(Type ticketType) {
 		this.ticketType = ticketType;
 	}
-	public String getTicketPriority() {
+	public Priority getTicketPriority() {
 		return ticketPriority;
 	}
-	public void setTicketPriority(String ticketPriority) {
-		this.ticketPriority = ticketPriority;
+	public void setTicketPriority(Priority low) {
+		this.ticketPriority = low;
 	}
 	public List<String> getTicketTags() {
 		return ticketTags;
 	}
 	public void setTicketTags(List<String> ticketTags) {
 		this.ticketTags = ticketTags;
+	}
+	public Map<String, String> getTicketCustomFields() {
+		return ticketCustomFields;
+	}
+	public void setTicketCustomFields(Map<String, String> customFieldValues) {
+		this.ticketCustomFields = customFieldValues;
 	}
 	
 }

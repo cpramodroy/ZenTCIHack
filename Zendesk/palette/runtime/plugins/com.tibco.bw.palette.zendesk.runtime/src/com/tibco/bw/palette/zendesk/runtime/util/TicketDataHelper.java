@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
+import org.zendesk.client.v2.model.Collaborator;
 
 public class TicketDataHelper {
 	public static final String PARAM_REQUESTER = "Requester";
@@ -16,6 +17,7 @@ public class TicketDataHelper {
 	public static final String PARAM_TYPE = "Type";
 	public static final String PARAM_PRIORITY = "Priority";
 	public static final String PARAM_TAGS = "Tags";
+	public static final String PARAM_CUSTOM_FIELDS = "CustomFields";
 
 
 	public static <N> Map<String, String> getRequesterDetails(final N input, final ProcessingContext<N> pcx) {
@@ -73,8 +75,7 @@ public static <N> String getTicketPriority(final N input, final ProcessingContex
 			requesterNodes = model.getChildElements(requesterElement);
 		List<String> tagList = new ArrayList<String>();
 		if(requesterNodes != null){
-			Iterator<N> requesterNodesIterator = requesterNodes.iterator();
-			
+			Iterator<N> requesterNodesIterator = requesterNodes.iterator();			
 			while(requesterNodesIterator.hasNext()){
 				N node = requesterNodesIterator.next();
 				if (node != null) {
@@ -86,7 +87,7 @@ public static <N> String getTicketPriority(final N input, final ProcessingContex
 		return tagList;
 	}
 	
-public static <N> Map<String, String> getCollaborators(final N input, final ProcessingContext<N> pcx){
+public static <N> List<Collaborator> getCollaborators(final N input, final ProcessingContext<N> pcx){
 		
 	
 	Model<N> model = pcx.getModel();
@@ -94,7 +95,7 @@ public static <N> Map<String, String> getCollaborators(final N input, final Proc
 	Iterable<N> requesterNodes = null; 	
 	if(requesterElement != null)
 		requesterNodes = model.getChildElements(requesterElement);
-	Map<String,String> ccMap = new HashMap<String, String>();
+	ArrayList<Collaborator> collaborators = new ArrayList<Collaborator>();
 	if(requesterNodes != null){
 		Iterator<N> requesterNodesIterator = requesterNodes.iterator();
 		while(requesterNodesIterator.hasNext()){
@@ -106,27 +107,55 @@ public static <N> Map<String, String> getCollaborators(final N input, final Proc
 					Iterator<N> ccNodesIterator = ccNodes.iterator();
 					String nameValue = null;
 					String emailValue = null;
+					Collaborator collaborator = new Collaborator();
 					while(ccNodesIterator.hasNext()){
 						N ccNode = ccNodesIterator.next();
 						if (ccNode != null) {
 							String nodeName = model.getLocalName(ccNode);
 							if(nodeName.equalsIgnoreCase("name")){
 								nameValue = model.getStringValue(ccNode);
+								collaborator.setName(nameValue);
 							}
-							else if(nodeName.equalsIgnoreCase("email")){
+							else{
 								emailValue = model.getStringValue(ccNode);
+								collaborator.setEmail(emailValue);
 							}
 						}
 					}
-					ccMap.put(emailValue, nameValue);
+					if(emailValue != null){
+						collaborators.add(collaborator);
+					}
 				}	
 				
 			}
 		}
 	}
-	return ccMap;
+	return collaborators;
 	}
 	
+
+public static <N> Map<String, String> getTicketCustomFields(final N input, final ProcessingContext<N> pcx) {
+	Model<N> model = pcx.getModel();
+	N requesterElement = model.getFirstChildElementByName(input, null, PARAM_CUSTOM_FIELDS);
+	Iterable<N> requesterNodes = null; 	
+	if(requesterElement != null)
+		requesterNodes = model.getChildElements(requesterElement);
+	Map<String,String> requesterMap = null;
+	if(requesterNodes != null){
+		Iterator<N> requesterNodesIterator = requesterNodes.iterator();
+		requesterMap = new HashMap<String, String>();
+		while(requesterNodesIterator.hasNext()){
+			N node = requesterNodesIterator.next();
+			if (node != null) {
+				String nodeName = model.getLocalName(node);
+				String nodeValue = model.getStringValue(node);
+				requesterMap.put(nodeName, nodeValue);
+			}
+		}
+	}
+	return requesterMap;
+}
+
 	public static <N> String getChildElementStringValue(final String elementName, final N input, final ProcessingContext<N> pcx) {
 		Model<N> model = pcx.getModel();
 		N node = model.getFirstChildElementByName(input, null, elementName);

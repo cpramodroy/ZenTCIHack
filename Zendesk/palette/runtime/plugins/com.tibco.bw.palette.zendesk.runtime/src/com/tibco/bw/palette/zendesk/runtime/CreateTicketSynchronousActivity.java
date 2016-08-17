@@ -1,14 +1,34 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
-import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.Attachment;
+import org.zendesk.client.v2.model.Collaborator;
+import org.zendesk.client.v2.model.Comment;
+import org.zendesk.client.v2.model.CustomFieldValue;
+import org.zendesk.client.v2.model.Field;
+import org.zendesk.client.v2.model.Field.Option;
+import org.zendesk.client.v2.model.Priority;
+import org.zendesk.client.v2.model.Ticket;
+import org.zendesk.client.v2.model.Type;
 
 import com.tibco.bw.palette.zendesk.model.zendesk.CreateTicket;
-import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.pojo.createticket.ActivityOutput;
+import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
 import com.tibco.bw.runtime.ActivityFault;
 import com.tibco.bw.runtime.ActivityLifecycleFault;
 import com.tibco.bw.runtime.ProcessContext;
@@ -18,13 +38,13 @@ import com.tibco.bw.runtime.util.XMLUtils;
 import com.tibco.neo.localized.LocalizedMessage;
 
 
-public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
-
-
-{
+public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
 
 	@Property
 	public CreateTicket activityConfig;
+	
+	static ConcurrentHashMap<String, Long> customFieldIDStore = new ConcurrentHashMap<String, Long>();
+	static HashMap<String, HashMap<String, String>> customOptionsMap = new HashMap<String, HashMap<String, String>>();
 	
 	
 	
@@ -116,12 +136,15 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		    activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_INPUT, new Object[] {activityContext.getActivityName(), serializedInputNode});
 		}
         N result = null;
+        
         try {
             // begin-custom-code
         		String namespace = activityContext.getActivityInputType().getTargetNamespace();
-            getTicketInput(input,processContext,namespace);			// end-custom-code
+            TicketData ticketData = getTicketInput(input,processContext,namespace);
+            Long ticketId = createZendeskTicket(ticketData);
+            // end-custom-code
 	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+            result = evalOutput(input, processContext.getXMLProcessingContext(), ticketId);
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -134,12 +157,78 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
         return result;
 	}
 	
-	private void getTicketInput(N input, ProcessContext<N> processContext,
+	private Long createZendeskTicket(TicketData ticketData) {
+		String companyURL = ticketData.getCompanyURL();
+		String username = ticketData.getUsername();
+		String password = ticketData.getPassword();
+		
+		Zendesk zendeskInstance = new Zendesk.Builder(companyURL)
+			.setUsername(username)
+	        .setPassword(password)
+	        .build();		
+
+		String requesterName = ticketData.getRequesterName();
+		String requesterEmail = ticketData.getRequesterEmail();
+		String description = ticketData.getDescription();
+		
+		Ticket.Requester requester = new Ticket.Requester(requesterName, requesterEmail);
+		Ticket ticket = new Ticket( requester, null, new Comment(description));
+		ticket.setSubject(ticketData.getSubject());
+		if(ticketData.getCollaborators().size() > 0){
+			ticket.setCollaborators(ticketData.getCollaborators());
+		}
+		if(ticketData.getTicketType() != null){
+			ticket.setType(ticketData.getTicketType());
+		}
+		if(ticketData.getTicketPriority() != null){
+			ticket.setPriority(ticketData.getTicketPriority());
+		}
+		
+		if(ticketData.getTicketTags().size() > 0){
+			ticket.setTags(ticketData.getTicketTags());
+		}
+		
+		// Custom fields		
+		if(activityConfig.isHasCustomFields() && ticketData.getTicketCustomFields().size() > 0){
+			getAllTicketFields(zendeskInstance);
+			List<CustomFieldValue> customFields = verifyAndGetCustomFields(ticketData.getTicketCustomFields());
+			ticket.setCustomFields(customFields);
+		}
+
+		// Attachments
+		if(activityConfig.isHasAttachments()){
+			File file = new File(activityConfig.getAttachmentName());
+			byte[] contents = new byte[(int) file.length()];
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				fis.read(contents);
+			} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+			} catch (IOException e) {
+					e.printStackTrace();
+			}	
+			try {
+					fis.close();
+			} catch (IOException e) {
+					e.printStackTrace();
+			}
+			Attachment.Upload upload = zendeskInstance.createUpload(file.getName(), "application/binary", contents);
+			String[] uploadTokens = new String[1];
+			uploadTokens[0] = upload.getToken();
+			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
+		}		
+		
+		Ticket createdTicket = zendeskInstance.createTicket(ticket);
+		zendeskInstance.close();
+		return createdTicket.getId();
+	}
+
+	private TicketData getTicketInput(N input, ProcessContext<N> processContext,
 			String namespace) {
 		TicketData ticketData = new TicketData();
 		
 		String companyURL = activityConfig.getCompanyUrl();
-		
 		if(companyURL != null){
 			ticketData.setCompanyURL(companyURL);
 		}
@@ -151,37 +240,117 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		if(password != null){
 			ticketData.setPassword(password);
 		}
+		
 		Map<String, String> requesterDetails = TicketDataHelper.getRequesterDetails(input, processContext.getXMLProcessingContext());
-		if(requesterDetails.size() > 0){
-			ticketData.setRequesterDetails(requesterDetails);
+		
+		for(Entry<String, String> entry : requesterDetails.entrySet()){
+				String key = entry.getKey();
+				if(key.equalsIgnoreCase("name")){
+					ticketData.setRequesterName(entry.getValue());
+				}
+				else{
+					ticketData.setRequesterEmail(entry.getValue());
+				}
 		}
+
 		String subject = TicketDataHelper.getSubject(input, processContext.getXMLProcessingContext());
-		if(subject != null){
-			ticketData.setSubject(subject);
-		}
+		ticketData.setSubject(subject);
+
 		String description = TicketDataHelper.getDescription(input, processContext.getXMLProcessingContext());
-		if(description != null){
-			ticketData.setDescription(description);
-		}
-		Map<String, String> collaborators =TicketDataHelper.getCollaborators(input, processContext.getXMLProcessingContext());
-		if(collaborators.size() > 0){
-			ticketData.setCollaborators(collaborators);
-		}
+		ticketData.setDescription(description);
+
+		List<Collaborator> collaborators =TicketDataHelper.getCollaborators(input, processContext.getXMLProcessingContext());
+		ticketData.setCollaborators(collaborators);
+
 		String ticketType = TicketDataHelper.getTicketType(input, processContext.getXMLProcessingContext());
-		if(ticketType !=  null){
-			ticketData.setTicketType(ticketType);
+		if(ticketType != null){
+			if(ticketType.equalsIgnoreCase("task")){
+				ticketData.setTicketType(Type.TASK);
+			}
+			else if(ticketType.equalsIgnoreCase("problem")){
+				ticketData.setTicketType(Type.PROBLEM);
+			}
+			else if(ticketType.equalsIgnoreCase("incident")){
+				ticketData.setTicketType(Type.INCIDENT);
+			}
+			else if(ticketType.equalsIgnoreCase("question")){
+				ticketData.setTicketType(Type.QUESTION);
+			}
 		}
+		
 		String ticketPriority = TicketDataHelper.getTicketPriority(input, processContext.getXMLProcessingContext());
 		if(ticketPriority !=  null){
-			ticketData.setTicketPriority(ticketPriority);
+			if(ticketPriority.equalsIgnoreCase("low")){
+				ticketData.setTicketPriority(Priority.LOW);
+			}
+			else if(ticketPriority.equalsIgnoreCase("high")){
+				ticketData.setTicketPriority(Priority.HIGH);
+			}
+			else if(ticketPriority.equalsIgnoreCase("normal")){
+				ticketData.setTicketPriority(Priority.NORMAL);
+			}
+			else if(ticketPriority.equalsIgnoreCase("urgent")){
+				ticketData.setTicketPriority(Priority.URGENT);
+			}
 		}
+		
 		List<String> ticketTags = TicketDataHelper.getTags(input, processContext.getXMLProcessingContext());
-		if(ticketTags.size() > 0){
-			ticketData.setTicketTags(ticketTags);
-		}
+		ticketData.setTicketTags(ticketTags);
+		
+		// Custom fields
+		if(activityConfig.isHasCustomFields()){
+			Map<String, String> customFieldValues = TicketDataHelper.getTicketCustomFields(input, processContext.getXMLProcessingContext());
+			ticketData.setTicketCustomFields(customFieldValues);
+		}			
+		return ticketData;
 
 	}
 
+
+
+	private List<CustomFieldValue> verifyAndGetCustomFields(Map<String, String> customFieldValues) {
+		Long custom_id = null;
+		String custom_value = null;
+        List<CustomFieldValue> customFields = new ArrayList<CustomFieldValue>();
+		for(Entry<String, String> custom: customFieldValues.entrySet()){
+			String customKey = custom.getKey().toLowerCase();
+			String customValue = custom.getValue().toLowerCase();
+			if(customOptionsMap.containsKey(customKey)){
+				if(customOptionsMap.get(customKey).size() > 0){					
+					if(customOptionsMap.get(customKey).containsKey(customValue)){
+						if(customFieldIDStore.containsKey(customKey)){
+							custom_id = customFieldIDStore.get(customKey);
+							custom_value = customOptionsMap.get(customKey).get(customValue);
+						}
+					}
+				}
+				else{
+					custom_id = customFieldIDStore.get(customKey);
+					custom_value = customValue;
+				}
+		        CustomFieldValue customField = new CustomFieldValue(custom_id, custom_value);
+		        customFields.add(customField);
+			}
+		}
+		return customFields;		
+	}
+
+	private  void getAllTicketFields(Zendesk zendesk) {
+		List<Field> fields = zendesk.getTicketFields();
+		for(Field field: fields){
+			Long fieldID = field.getId();
+			String fieldType = field.getType();
+			HashMap<String, String> optionValues = new HashMap<String, String>();
+			if(fieldType.equals("tagger")){				
+					for(Option option: field.getCustomFieldOptions()){
+						optionValues.put(option.getName().toLowerCase(), option.getValue().toLowerCase());
+					}		
+			}
+			String fieldTitle = field.getTitle().replaceAll("\\s+", "");
+			customOptionsMap.put(fieldTitle.toLowerCase(), optionValues);
+			customFieldIDStore.put(fieldTitle.toLowerCase(), fieldID);
+		}		
+	}
 	/**
 	 * <!-- begin-custom-doc -->
 	 *
@@ -198,10 +367,10 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Long ticketId) throws Exception {
 		
 		ActivityOutput activityOutput = new ActivityOutput();
-		activityOutput.setTicketId(new Long("-9223372036854775808"));
+		activityOutput.setTicketId(ticketId);
 		N output = PaletteUtil.parseObjtoN(ActivityOutput.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
         // add your own business code here
