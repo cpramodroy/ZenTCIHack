@@ -11,7 +11,7 @@ Export-Package:
  com.tibco.bw.palette.zendesk.model.zendesk;version="1.0.0",
  com.tibco.bw.palette.zendesk.model.zendesk.impl;version="1.0.0",
  com.tibco.bw.palette.zendesk.model.zendesk.util;version="1.0.0",
- com.tibco.bw.palette.zendesk.model.utils
+ com.tibco.bw.palette.zendesk.model.utils;version="1.0.0"
 Import-Package: 
  com.tibco.bw.validation;version="[6.0.0,7.0.0)",
  com.tibco.bw.validation.exception;version="[6.0.0,7.0.0)",
