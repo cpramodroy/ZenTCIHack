@@ -103,9 +103,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityOutput }{@code >}}
      * 
      */
+
     @XmlElementDecl(namespace = "http://www.example.org/UpdateTicket", name = "ActivityOutput")
     public JAXBElement<ActivityOutput> createActivityOutput(ActivityOutput value) {
         return new JAXBElement<ActivityOutput>(_ActivityOutput_QNAME, ActivityOutput.class, null, value);
-    }
-
+	}
 }
