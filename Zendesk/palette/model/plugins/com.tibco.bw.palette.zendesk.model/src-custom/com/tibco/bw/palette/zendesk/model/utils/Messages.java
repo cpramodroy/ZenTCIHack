@@ -48,5 +48,6 @@ public class Messages extends NLS {
 	public static String SEARCH_USERID;
 	public static String SEARCH_PASSWORD;
 	public static String SEARCH_SEARCHTYPE;
+	public static String SEARCH_MAXROWS;
 	public static String PALETTE_PARAMETER_VALUE_INVALID;	
 }

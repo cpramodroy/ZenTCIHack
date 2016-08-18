@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getUserId <em>User Id</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getPassword <em>Password</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getSearchType <em>Search Type</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getMaxRows <em>Max Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -113,7 +114,7 @@ public interface Search extends EObject {
 	 * @return the value of the '<em>Search Type</em>' attribute.
 	 * @see #setSearchType(String)
 	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getSearch_SearchType()
-	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='true' label='Search Type' isModelProperty='false' control='ComboViewer' value='Ticket'"
+	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='true' label='Search Type' isModelProperty='false' control='ComboViewer' value=''"
 	 * @generated
 	 */
 	String getSearchType();
@@ -127,5 +128,31 @@ public interface Search extends EObject {
 	 * @generated
 	 */
 	void setSearchType(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Max Rows</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Max Rows</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Max Rows</em>' attribute.
+	 * @see #setMaxRows(int)
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getSearch_MaxRows()
+	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='false' label='Max Rows' isModelProperty='true' control='Spinner' value=''"
+	 * @generated
+	 */
+	int getMaxRows();
+
+	/**
+	 * Sets the value of the '{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getMaxRows <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Max Rows</em>' attribute.
+	 * @see #getMaxRows()
+	 * @generated
+	 */
+	void setMaxRows(int value);
 
 } // Search

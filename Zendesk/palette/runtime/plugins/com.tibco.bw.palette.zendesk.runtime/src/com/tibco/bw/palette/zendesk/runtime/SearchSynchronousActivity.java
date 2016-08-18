@@ -13,6 +13,7 @@ import com.tibco.neo.localized.LocalizedMessage;
 import org.genxdm.io.FragmentBuilder;
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.pojo.search.ActivityOutputType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.search.IdsType;
 import com.tibco.bw.runtime.annotation.Property;
 
 
@@ -150,7 +151,9 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
 		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		activityOutput.setIds("StringValue");
+		IdsType id = new IdsType();
+		id.getId().add(new Long("1"));
+		activityOutput.setId(id);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
         // add your own business code here

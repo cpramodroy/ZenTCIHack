@@ -343,5 +343,15 @@
         <details key="value" value=""/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="false"/>
+        <details key="label" value="Max Rows"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="Spinner"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

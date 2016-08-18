@@ -136,7 +136,6 @@ public interface ZendeskPackage extends EPackage {
 	 */
 	int CREATE_TICKET_FEATURE_COUNT = 7;
 
-
 	/**
 	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.CreateUserImpl <em>Create User</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -191,7 +190,6 @@ public interface ZendeskPackage extends EPackage {
 	 * @ordered
 	 */
 	int CREATE_USER_FEATURE_COUNT = 4;
-
 
 	/**
 	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.UpdateTicketImpl <em>Update Ticket</em>}' class.
@@ -265,7 +263,6 @@ public interface ZendeskPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_TICKET_FEATURE_COUNT = 6;
-
 
 	/**
 	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.DeleteImpl <em>Delete</em>}' class.
@@ -424,13 +421,22 @@ public interface ZendeskPackage extends EPackage {
 	int SEARCH__SEARCH_TYPE = 3;
 
 	/**
+	 * The feature id for the '<em><b>Max Rows</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SEARCH__MAX_ROWS = 4;
+
+	/**
 	 * The number of structural features of the '<em>Search</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SEARCH_FEATURE_COUNT = 4;
+	int SEARCH_FEATURE_COUNT = 5;
 
 
 	/**
@@ -813,6 +819,17 @@ public interface ZendeskPackage extends EPackage {
 	EAttribute getSearch_SearchType();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.Search#getMaxRows <em>Max Rows</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Max Rows</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.Search#getMaxRows()
+	 * @see #getSearch()
+	 * @generated
+	 */
+	EAttribute getSearch_MaxRows();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1125,6 +1142,14 @@ public interface ZendeskPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SEARCH__SEARCH_TYPE = eINSTANCE.getSearch_SearchType();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Rows</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SEARCH__MAX_ROWS = eINSTANCE.getSearch_MaxRows();
 
 	}
 

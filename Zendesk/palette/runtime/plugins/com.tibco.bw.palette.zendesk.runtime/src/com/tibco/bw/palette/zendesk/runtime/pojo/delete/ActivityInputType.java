@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Id" type="{http://www.w3.org/2001/XMLSchema}long" form="unqualified"/>
+ *         &lt;element name="Ids" type="{http://www.example.org/DeleteObject}IdsType" form="unqualified"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,27 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ActivityInputType", namespace = "http://www.example.org/DeleteObject", propOrder = {
-    "id"
+    "ids"
 })
 public class ActivityInputType {
 
-    @XmlElement(name = "Id")
-    protected long id;
+    @XmlElement(name = "Ids", required = true)
+    protected IdsType ids;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the ids property.
      * 
+     * @return
+     *     possible object is
+     *     {@link IdsType }
+     *     
      */
-    public long getId() {
-        return id;
+    public IdsType getIds() {
+        return ids;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the ids property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link IdsType }
+     *     
      */
-    public void setId(long value) {
-        this.id = value;
+    public void setIds(IdsType value) {
+        this.ids = value;
     }
 
 }

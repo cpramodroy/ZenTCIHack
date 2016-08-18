@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl#getUserId <em>User Id</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl#getPassword <em>Password</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl#getSearchType <em>Search Type</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl#getMaxRows <em>Max Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -108,6 +109,26 @@ public class SearchImpl extends EObjectImpl implements Search {
 	 * @ordered
 	 */
 	protected String searchType = SEARCH_TYPE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getMaxRows() <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxRows()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MAX_ROWS_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMaxRows() <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxRows()
+	 * @generated
+	 * @ordered
+	 */
+	protected int maxRows = MAX_ROWS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -217,6 +238,27 @@ public class SearchImpl extends EObjectImpl implements Search {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getMaxRows() {
+		return maxRows;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMaxRows(int newMaxRows) {
+		int oldMaxRows = maxRows;
+		maxRows = newMaxRows;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ZendeskPackage.SEARCH__MAX_ROWS, oldMaxRows, maxRows));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -228,6 +270,8 @@ public class SearchImpl extends EObjectImpl implements Search {
 				return getPassword();
 			case ZendeskPackage.SEARCH__SEARCH_TYPE:
 				return getSearchType();
+			case ZendeskPackage.SEARCH__MAX_ROWS:
+				return getMaxRows();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -251,6 +295,9 @@ public class SearchImpl extends EObjectImpl implements Search {
 				return;
 			case ZendeskPackage.SEARCH__SEARCH_TYPE:
 				setSearchType((String)newValue);
+				return;
+			case ZendeskPackage.SEARCH__MAX_ROWS:
+				setMaxRows((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -276,6 +323,9 @@ public class SearchImpl extends EObjectImpl implements Search {
 			case ZendeskPackage.SEARCH__SEARCH_TYPE:
 				setSearchType(SEARCH_TYPE_EDEFAULT);
 				return;
+			case ZendeskPackage.SEARCH__MAX_ROWS:
+				setMaxRows(MAX_ROWS_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -296,6 +346,8 @@ public class SearchImpl extends EObjectImpl implements Search {
 				return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
 			case ZendeskPackage.SEARCH__SEARCH_TYPE:
 				return SEARCH_TYPE_EDEFAULT == null ? searchType != null : !SEARCH_TYPE_EDEFAULT.equals(searchType);
+			case ZendeskPackage.SEARCH__MAX_ROWS:
+				return maxRows != MAX_ROWS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -318,6 +370,8 @@ public class SearchImpl extends EObjectImpl implements Search {
 		result.append(password);
 		result.append(", searchType: ");
 		result.append(searchType);
+		result.append(", maxRows: ");
+		result.append(maxRows);
 		result.append(')');
 		return result.toString();
 	}

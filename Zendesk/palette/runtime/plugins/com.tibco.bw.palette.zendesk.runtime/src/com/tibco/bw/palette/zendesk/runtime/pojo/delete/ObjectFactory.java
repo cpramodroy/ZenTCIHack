@@ -51,6 +51,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link IdsType }
+     * 
+     */
+    public IdsType createIdsType() {
+        return new IdsType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityInputType }{@code >}}
      * 
      */

@@ -451,6 +451,15 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSearch_MaxRows() {
+		return (EAttribute)searchEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ZendeskFactory getZendeskFactory() {
 		return (ZendeskFactory)getEFactoryInstance();
 	}
@@ -514,6 +523,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		createEAttribute(searchEClass, SEARCH__USER_ID);
 		createEAttribute(searchEClass, SEARCH__PASSWORD);
 		createEAttribute(searchEClass, SEARCH__SEARCH_TYPE);
+		createEAttribute(searchEClass, SEARCH__MAX_ROWS);
 	}
 
 	/**
@@ -589,6 +599,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		initEAttribute(getSearch_UserId(), ecorePackage.getEString(), "userId", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSearch_Password(), ecorePackage.getEString(), "password", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSearch_SearchType(), ecorePackage.getEString(), "searchType", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSearch_MaxRows(), ecorePackage.getEInt(), "maxRows", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -899,7 +910,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "label", "Delete Type",
 			 "isModelProperty", "false",
 			 "control", "ComboViewer",
-			 "value", "Ticket"
+			 "value", ""
 		   });	
 		addAnnotation
 		  (getGetTicketMetrics_CompanyUrl(), 
@@ -940,7 +951,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		   new String[] {
 			 "sectionName", "General",
 			 "isRequired", "false",
-			 "label", "Label",
+			 "label", "Is Ticket",
 			 "isModelProperty", "false",
 			 "control", "CheckBox",
 			 "value", ""
@@ -987,7 +998,18 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "label", "Search Type",
 			 "isModelProperty", "false",
 			 "control", "ComboViewer",
-			 "value", "Ticket"
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getSearch_MaxRows(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "false",
+			 "label", "Max Rows",
+			 "isModelProperty", "true",
+			 "control", "Spinner",
+			 "value", ""
 		   });
 	}
 

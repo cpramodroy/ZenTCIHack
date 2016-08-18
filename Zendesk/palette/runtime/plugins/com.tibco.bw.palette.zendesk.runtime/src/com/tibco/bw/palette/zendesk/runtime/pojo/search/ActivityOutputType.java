@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Ids" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="Id" type="{http://www.example.org/Search}IdsType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,35 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ActivityOutputType", namespace = "http://www.example.org/Search", propOrder = {
-    "ids"
+    "id"
 })
 public class ActivityOutputType {
 
-    @XmlElement(name = "Ids", namespace = "http://www.example.org/Search", required = true)
-    protected String ids;
+    @XmlElement(name = "Id", namespace = "http://www.example.org/Search", required = true)
+    protected IdsType id;
 
     /**
-     * Gets the value of the ids property.
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link IdsType }
      *     
      */
-    public String getIds() {
-        return ids;
+    public IdsType getId() {
+        return id;
     }
 
     /**
-     * Sets the value of the ids property.
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link IdsType }
      *     
      */
-    public void setIds(String value) {
-        this.ids = value;
+    public void setId(IdsType value) {
+        this.id = value;
     }
 
 }

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ActivityOutputType {
 
     @XmlElement(name = "UserId", required = true)
-    protected String userId;
+    protected long userId;
 
     /**
      * Gets the value of the userId property.
@@ -43,7 +43,7 @@ public class ActivityOutputType {
      *     {@link String }
      *     
      */
-    public String getUserId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -55,7 +55,7 @@ public class ActivityOutputType {
      *     {@link String }
      *     
      */
-    public void setUserId(String value) {
+    public void setUserId(Long value) {
         this.userId = value;
     }
 

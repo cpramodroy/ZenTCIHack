@@ -113,7 +113,7 @@ public interface Delete extends EObject {
 	 * @return the value of the '<em>Delete Type</em>' attribute.
 	 * @see #setDeleteType(String)
 	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getDelete_DeleteType()
-	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='true' label='Delete Type' isModelProperty='false' control='ComboViewer' value='Ticket'"
+	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='true' label='Delete Type' isModelProperty='false' control='ComboViewer' value=''"
 	 * @generated
 	 */
 	String getDeleteType();

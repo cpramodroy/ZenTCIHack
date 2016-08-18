@@ -6,9 +6,14 @@
     	</sequence>
     </complexType>
     <element name="ActivityInput" type="tns:ActivityInputType"/>
+	<complexType name="IdsType">
+    	<sequence>
+    		<element maxOccurs="unbounded" minOccurs="1" name="Id" type="long"/>
+    	</sequence>
+    </complexType>
 	<complexType name="ActivityOutputType">
     	<sequence>
-    		<element maxOccurs="1" minOccurs="1" name="Ids" type="string"/>
+    		<element maxOccurs="1" minOccurs="1" name="Id" type="tns:IdsType"/>
     	</sequence>
     </complexType>
     <element name="ActivityOutput" type="tns:ActivityOutputType"/>

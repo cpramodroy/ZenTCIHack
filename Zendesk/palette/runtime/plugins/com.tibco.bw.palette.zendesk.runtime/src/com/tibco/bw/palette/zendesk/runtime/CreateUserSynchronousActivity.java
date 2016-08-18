@@ -1,5 +1,14 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
 import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
 import com.tibco.bw.palette.zendesk.model.zendesk.CreateUser;
 import com.tibco.bw.runtime.ActivityFault;
@@ -7,11 +16,21 @@ import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.ProcessContext;
 import com.tibco.bw.runtime.ActivityLifecycleFault;
 import com.tibco.bw.runtime.util.XMLUtils;
+
 import org.genxdm.ProcessingContext;
 import org.genxdm.Model;
+
 import com.tibco.neo.localized.LocalizedMessage;
+
 import org.genxdm.io.FragmentBuilder;
+import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.Attachment;
+import org.zendesk.client.v2.model.Attachment.Upload;
+import org.zendesk.client.v2.model.Role;
+import org.zendesk.client.v2.model.User;
+
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.palette.zendesk.runtime.util.UserDataHelper;
 import com.tibco.bw.palette.zendesk.runtime.pojo.createuser.ActivityOutputType;
 import com.tibco.bw.runtime.annotation.Property;
 
@@ -116,10 +135,12 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
         N result = null;
         try {
             // begin-custom-code
-			// add your own business code here
+        	String namespace = activityContext.getActivityInputType().getTargetNamespace();
+            UserData userData = UserDataHelper.getUserInput(input,processContext.getXMLProcessingContext(),namespace);
+            long userId = createZendeskUser(userData);
 			// end-custom-code
 	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+            result = evalOutput(input, processContext.getXMLProcessingContext(), userId);
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -131,6 +152,76 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		}
         return result;
 	}
+	
+	private Long createZendeskUser(UserData userData) {
+		String companyUrl = activityConfig.getCompanyUrl();
+		String userId = activityConfig.getUserId();
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
+
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+
+		// Build user for zendesk
+		User user = new User();
+		user.setName(userData.getName());
+		user.setEmail(userData.getEmail());
+
+		String role = userData.getRole();
+		if (role != null) {
+			if (role.equalsIgnoreCase("admin"))
+				user.setRole(Role.ADMIN);
+			else if (role.equalsIgnoreCase("end-user"))
+				user.setRole(Role.END_USER);
+			else if (role.equalsIgnoreCase("agent"))
+				user.setRole(Role.AGENT);
+		}
+		if (userData.getPhoneNumber() != null) {
+			user.setPhone(userData.getPhoneNumber());
+		}
+
+		if (userData.getAlias() != null) {
+			user.setAlias(userData.getAlias());
+		}
+
+		if (userData.getExternalId() != null) {
+			user.setExternalId(userData.getExternalId());
+		}
+
+		// Profile photo
+		if (activityConfig.getProfilePhoto() != null) {
+			File file = new File(activityConfig.getProfilePhoto());
+			try {
+				@SuppressWarnings("unused")
+				Image image = ImageIO.read(file); // It's an image (only BMP,
+													// GIF, JPG and PNG are
+													// recognized)
+			} catch (IOException e) {
+				e.printStackTrace(); // It's not an image.
+			}
+
+			byte[] contents = new byte[(int) file.length()];
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				fis.read(contents);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
+			List<Attachment> photos = upload.getAttachments();
+			user.setPhoto(photos.get(0));
+		}
+
+		User createdUser = zendeskInstance.createUser(user);
+		return createdUser.getId();
+	}
+	
 	/**
 	 * <!-- begin-custom-doc -->
 	 *
@@ -147,10 +238,10 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long data) throws Exception {
 		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		activityOutput.setUserId("StringValue");
+		activityOutput.setUserId(data);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
         // add your own business code here

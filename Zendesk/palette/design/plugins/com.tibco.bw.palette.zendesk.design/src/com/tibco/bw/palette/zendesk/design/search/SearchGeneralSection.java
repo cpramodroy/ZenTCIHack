@@ -1,6 +1,7 @@
 package com.tibco.bw.palette.zendesk.design.search;
 
 import com.tibco.bw.design.util.PropertyTypeQnameConstants;
+import org.eclipse.swt.SWT;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -9,6 +10,7 @@ import com.tibco.bw.design.field.AttributeBindingField;
 
 import org.eclipse.swt.widgets.Text;
 
+import org.eclipse.swt.widgets.Spinner;
 import com.tibco.bw.design.field.viewer.CustomComboViewer;
 
 import org.eclipse.swt.widgets.Composite;
@@ -73,7 +75,23 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
     private CustomComboViewer searchType;
 
 
-    @Override
+    /**
+	* <!-- begin-custom-doc -->
+	* 
+	* <!-- end-custom-doc -->
+	* @generated
+	*/
+    private AttributeBindingField maxRowsABF;
+/**
+	* <!-- begin-custom-doc -->
+	* 
+	* <!-- end-custom-doc -->
+	* @generated
+	*/
+    private Spinner maxRows;
+
+
+	@Override
     protected Class<?> getModelClass() {
        return Search.class;
     }
@@ -92,6 +110,7 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
         getBindingManager().bind(userIdABF, getInput(), ZendeskPackage.Literals.SEARCH__USER_ID); 
         getBindingManager().bind(passwordABF, getInput(), ZendeskPackage.Literals.SEARCH__PASSWORD); 
         getBindingManager().bindCustomViewer(searchType, getInput(), ZendeskPackage.Literals.SEARCH__SEARCH_TYPE, BWFieldFactory.getInstance().getPropertyTargetToModelUpdateValueStrategy(), null); 
+        getBindingManager().bind(maxRowsABF, getInput(), ZendeskPackage.Literals.SEARCH__MAX_ROWS); 
    	    // begin-custom-code
         // end-custom-code
     }
@@ -128,6 +147,11 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
    	    searchType = BWFieldFactory.getInstance().createComboViewer(parent);
    	    searchType.setContentProvider(new ArrayContentProvider());
    	    searchType.setInput(new String[]{"defaultValue1", "defaultValue2"});
+
+   	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_MAXROWS, false);
+   	    maxRows = BWFieldFactory.getInstance().createSpinner(parent, 2, SWT.BORDER);
+
+   	    maxRowsABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, maxRows, PropertyTypeQnameConstants.INTEGER_PRIMITIVE, true);
      
         // begin-custom-code
         // end-custom-code
