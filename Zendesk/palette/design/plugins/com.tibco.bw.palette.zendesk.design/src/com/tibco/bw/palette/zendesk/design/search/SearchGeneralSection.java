@@ -146,7 +146,7 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_SEARCHTYPE, true);
    	    searchType = BWFieldFactory.getInstance().createComboViewer(parent);
    	    searchType.setContentProvider(new ArrayContentProvider());
-   	    searchType.setInput(new String[]{"defaultValue1", "defaultValue2"});
+   	    searchType.setInput(new String[]{"ticket", "user", "group", "organization"});
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_MAXROWS, false);
    	    maxRows = BWFieldFactory.getInstance().createSpinner(parent, 2, SWT.BORDER);
