@@ -38,8 +38,8 @@ public class ObjectFactory {
      * Create an instance of {@link ActivityOutput }
      * 
      */
-    public ActivityOutput createActivityOutput() {
-        return new ActivityOutput();
+    public ActivityOutputType createActivityOutputType() {
+        return new ActivityOutputType();
     }
 
     /**
@@ -95,8 +95,8 @@ public class ObjectFactory {
      * 
      */
     @XmlElementDecl(namespace = "http://www.example.org/createTicket", name = "ActivityOutput")
-    public JAXBElement<ActivityOutput> createActivityOutput(ActivityOutput value) {
-        return new JAXBElement<ActivityOutput>(_ActivityOutput_QNAME, ActivityOutput.class, null, value);
+    public JAXBElement<ActivityOutputType> createActivityOutputType(ActivityOutputType value) {
+        return new JAXBElement<ActivityOutputType>(_ActivityOutput_QNAME, ActivityOutputType.class, null, value);
     }
 
     /**

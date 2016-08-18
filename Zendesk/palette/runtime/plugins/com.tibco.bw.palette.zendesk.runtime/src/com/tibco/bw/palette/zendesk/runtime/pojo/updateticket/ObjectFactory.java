@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _ActvityInput_QNAME = new QName("http://www.example.org/UpdateTicket", "ActvityInput");
-    private final static QName _ActivityOutputType_QNAME = new QName("http://www.example.org/UpdateTicket", "ActivityOutputType");
+    private final static QName _ActivityOutput_QNAME = new QName("http://www.example.org/UpdateTicket", "ActivityOutput");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.tibco.bw.palette.zendesk.runtime.pojo.updateticket
@@ -103,9 +103,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityOutput }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.example.org/UpdateTicket", name = "ActivityOutputType")
+    @XmlElementDecl(namespace = "http://www.example.org/UpdateTicket", name = "ActivityOutput")
     public JAXBElement<ActivityOutputType> createActivityOutput(ActivityOutputType value) {
-        return new JAXBElement<ActivityOutputType>(_ActivityOutputType_QNAME, ActivityOutputType.class, null, value);
+        return new JAXBElement<ActivityOutputType>(_ActivityOutput_QNAME, ActivityOutputType.class, null, value);
     }
 
 }
