@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.zendesk.client.v2.model.Collaborator;
-import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Priority;
 import org.zendesk.client.v2.model.Type;
 
 public class TicketData {
+	Long ticketId;
 	String companyURL;
 	String username ;
 	String password ;
@@ -17,12 +17,25 @@ public class TicketData {
 	String requesterEmail;
 	String subject;
 	String Description;
+	String comment;
 	List<Collaborator> collaborators;
 	Type ticketType;
 	Priority ticketPriority;
 	List<String> ticketTags;
 	Map<String, String> ticketCustomFields;
 	
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	public Long getTicketId() {
+		return ticketId;
+	}
+	public void setTicketId(Long ticketId) {
+		this.ticketId = ticketId;
+	}
 	public String getRequesterName() {
 		return requesterName;
 	}
