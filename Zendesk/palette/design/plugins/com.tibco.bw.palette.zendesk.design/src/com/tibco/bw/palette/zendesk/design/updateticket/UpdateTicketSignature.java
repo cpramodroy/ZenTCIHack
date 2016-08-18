@@ -3,8 +3,13 @@ package com.tibco.bw.palette.zendesk.design.updateticket;
 import java.util.List;
 
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDTypeDefinition;
+
 import com.tibco.bw.design.api.BWActivitySignature;
+import com.tibco.bw.design.util.ModelHelper;
 import com.tibco.bw.palette.zendesk.design.ZendeskExceptionsSchema;
+import com.tibco.bw.palette.zendesk.model.zendesk.UpdateTicket;
 import com.tibco.bw.model.activityconfig.Configuration;
 /**
  * <!-- begin-custom-doc -->
@@ -70,9 +75,34 @@ public class UpdateTicketSignature extends BWActivitySignature
         XSDElementDeclaration inputType = null;
         inputType =  UpdateTicketSchema.getInputType();
         // begin-custom-code
+        UpdateTicket updateTicket = (UpdateTicket) getDefaultEMFConfigObject(config);
+		
+		// get dynamic schema
+		XSDTypeDefinition inputCustomFieldType = ModelHelper.INSTANCE.getXSDTypeByQName(updateTicket, updateTicket.getInputHeadersQName());
+
+		// create namespace and use it to update new input schema's namespace.
+		String namespace = createNamespace(new Object[] { inputType.getSchema(), config, "input" }); //$NON-NLS-1$
+		updateNamespace(inputType, namespace);
+
+		if (inputType != null && inputCustomFieldType != null) {
+			isInputHeaderContentChanged(config, inputType, inputCustomFieldType);
+			combineSimpleTypes(inputType, inputCustomFieldType, "CustomFields");
+		}
         // end-custom-code
         return inputType;
     } 
+    
+    private void isInputHeaderContentChanged(Configuration config, XSDElementDeclaration newInputTypeElement, XSDTypeDefinition inputCustomFieldType) {
+		XSDSchema inputCustomFieldSchema = newInputTypeElement.getSchema();
+		XSDSchema customFieldSchema = inputCustomFieldType.getSchema();
+
+		if (inputCustomFieldSchema != null && customFieldSchema != null) {
+			if (isContentChanged(inputCustomFieldSchema.resolveElementDeclaration("CustomFields"), customFieldSchema.resolveElementDeclaration("CustomFields"))) {
+				createImport(config, inputCustomFieldSchema, customFieldSchema);
+			}
+		}
+	}
+    
    /**
 	* <!-- begin-custom-doc -->
 	* 

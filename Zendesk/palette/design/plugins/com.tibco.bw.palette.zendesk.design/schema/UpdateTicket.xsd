@@ -32,7 +32,7 @@
 			<element form="unqualified" minOccurs="1" name="TicketId" type="long"/>
 			<element form="unqualified" minOccurs="0" name="Requester" type="tns:RequesterType"/>
 			<element form="unqualified" minOccurs="0" name="Subject" type="string"/>
-			<element form="unqualified" minOccurs="0" name="Description" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Comment" type="string"/>
 			<element form="unqualified" minOccurs="0" maxOccurs="1" name="Collaborators" type="tns:CollaboratorsType"/>
 			<element form="unqualified" minOccurs="0" name="Type">
 				<simpleType>
