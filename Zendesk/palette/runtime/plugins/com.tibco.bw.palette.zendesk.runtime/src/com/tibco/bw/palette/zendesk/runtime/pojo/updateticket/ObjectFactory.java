@@ -35,11 +35,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ActivityOutputType }
+     * Create an instance of {@link ActivityOutput }
      * 
      */
-    public ActivityOutputType createActivityOutputType() {
-        return new ActivityOutputType();
+    public ActivityOutput createActivityOutput() {
+        return new ActivityOutput();
     }
 
     /**
@@ -104,8 +104,8 @@ public class ObjectFactory {
      * 
      */
     @XmlElementDecl(namespace = "http://www.example.org/UpdateTicket", name = "ActivityOutput")
-    public JAXBElement<ActivityOutputType> createActivityOutput(ActivityOutputType value) {
-        return new JAXBElement<ActivityOutputType>(_ActivityOutput_QNAME, ActivityOutputType.class, null, value);
+    public JAXBElement<ActivityOutput> createActivityOutput(ActivityOutput value) {
+        return new JAXBElement<ActivityOutput>(_ActivityOutput_QNAME, ActivityOutput.class, null, value);
     }
 
 }
