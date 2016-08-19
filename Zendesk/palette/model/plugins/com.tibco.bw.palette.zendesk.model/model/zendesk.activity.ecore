@@ -282,13 +282,23 @@
       </eAnnotations>
       <eAnnotations source="http://tns.tibco.com/bw/annotations/semantictype/password"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTicket" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleTicket" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="dkcontrolconfig">
         <details key="sectionName" value="General"/>
         <details key="isRequired" value="false"/>
-        <details key="label" value="Is Ticket"/>
+        <details key="label" value="Single Ticket"/>
         <details key="isModelProperty" value="false"/>
         <details key="control" value="CheckBox"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="false"/>
+        <details key="label" value="Max Rows"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="Spinner"/>
         <details key="value" value=""/>
       </eAnnotations>
     </eStructuralFeatures>

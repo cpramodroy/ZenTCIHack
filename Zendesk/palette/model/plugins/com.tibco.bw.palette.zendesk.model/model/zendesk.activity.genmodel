@@ -39,7 +39,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/companyUrl"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/userId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/password"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/isTicket"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/singleTicket"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//GetTicketMetrics/maxRows"/>
     </genClasses>
     <genClasses ecoreClass="zendesk.activity.ecore#//Search">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute zendesk.activity.ecore#//Search/companyUrl"/>
