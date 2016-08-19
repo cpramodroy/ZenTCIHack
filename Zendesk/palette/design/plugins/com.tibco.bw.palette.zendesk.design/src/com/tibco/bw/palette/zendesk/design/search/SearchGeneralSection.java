@@ -11,6 +11,7 @@ import com.tibco.bw.design.field.AttributeBindingField;
 import org.eclipse.swt.widgets.Text;
 
 import org.eclipse.swt.widgets.Spinner;
+import com.tibco.bw.design.field.PasswordField;
 import com.tibco.bw.design.field.viewer.CustomComboViewer;
 
 import org.eclipse.swt.widgets.Composite;
@@ -65,7 +66,7 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
 	* <!-- end-custom-doc -->
 	* @generated
 	*/
-    private Text password;
+    private PasswordField password;
    /**
 	* <!-- begin-custom-doc -->
 	* 
@@ -139,14 +140,14 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
    	    userIdABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, userId, PropertyTypeQnameConstants.STRING_PRIMITIVE, true);
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_PASSWORD, true);
-   	    password = BWFieldFactory.getInstance().createTextBox(parent);
+   	    password = BWFieldFactory.getInstance().createPasswordField(parent);
 
-   	    passwordABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, password, PropertyTypeQnameConstants.STRING_PRIMITIVE, true);
+   	    passwordABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, password, PropertyTypeQnameConstants.PASSWORD_PRIMITIVE, true);
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_SEARCHTYPE, true);
    	    searchType = BWFieldFactory.getInstance().createComboViewer(parent);
    	    searchType.setContentProvider(new ArrayContentProvider());
-   	    searchType.setInput(new String[]{"ticket", "user", "group", "organization"});
+   	    searchType.setInput(new String[]{"defaultValue1", "defaultValue2"});
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_MAXROWS, false);
    	    maxRows = BWFieldFactory.getInstance().createSpinner(parent, 2, SWT.BORDER);

@@ -21,8 +21,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *       &lt;sequence>
  *         &lt;element name="Id" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="TicketId" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="CreateAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="UpdateAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
+ *         &lt;element name="CreatedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
+ *         &lt;element name="UpdatedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="GroupStations" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="AssigneeStations" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="Reopens" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -34,12 +34,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="AssignedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="SolvedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="LatestCommentAddedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="ReplyTimeInMinutes" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="FirstResolutionTimeInMinutes" type="{http://www.example.org/GetTicketMetrics}ComboMinutesType"/>
  *         &lt;element name="FullResolutionTimeInMinutes" type="{http://www.example.org/GetTicketMetrics}ComboMinutesType"/>
  *         &lt;element name="AgentWaitTimeInMinutes" type="{http://www.example.org/GetTicketMetrics}ComboMinutesType"/>
  *         &lt;element name="RequesterWaitTimeInMinutes" type="{http://www.example.org/GetTicketMetrics}ComboMinutesType"/>
- *         &lt;element name="OnHoldTimeInMinutes" type="{http://www.example.org/GetTicketMetrics}ComboMinutesType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -52,8 +50,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlType(name = "TicketMetricsType", namespace = "http://www.example.org/GetTicketMetrics", propOrder = {
     "id",
     "ticketId",
-    "createAt",
-    "updateAt",
+    "createdAt",
+    "updatedAt",
     "groupStations",
     "assigneeStations",
     "reopens",
@@ -65,12 +63,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "assignedAt",
     "solvedAt",
     "latestCommentAddedAt",
-    "replyTimeInMinutes",
     "firstResolutionTimeInMinutes",
     "fullResolutionTimeInMinutes",
     "agentWaitTimeInMinutes",
-    "requesterWaitTimeInMinutes",
-    "onHoldTimeInMinutes"
+    "requesterWaitTimeInMinutes"
 })
 public class TicketMetricsType {
 
@@ -78,12 +74,12 @@ public class TicketMetricsType {
     protected long id;
     @XmlElement(name = "TicketId", namespace = "http://www.example.org/GetTicketMetrics")
     protected long ticketId;
-    @XmlElement(name = "CreateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "CreatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar createAt;
-    @XmlElement(name = "UpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    protected XMLGregorianCalendar createdAt;
+    @XmlElement(name = "UpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar updateAt;
+    protected XMLGregorianCalendar updatedAt;
     @XmlElement(name = "GroupStations", namespace = "http://www.example.org/GetTicketMetrics")
     protected long groupStations;
     @XmlElement(name = "AssigneeStations", namespace = "http://www.example.org/GetTicketMetrics")
@@ -92,40 +88,35 @@ public class TicketMetricsType {
     protected long reopens;
     @XmlElement(name = "Replies", namespace = "http://www.example.org/GetTicketMetrics")
     protected long replies;
-    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assigneeUpdateAt;
-    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar requesterUpdatedAt;
-    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar statusUpdatedAt;
-    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar initiallyAssignedAt;
-    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assignedAt;
-    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar solvedAt;
-    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar latestCommentAddedAt;
-    @XmlElement(name = "ReplyTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
-    @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar replyTimeInMinutes;
-    @XmlElement(name = "FirstResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "FirstResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType firstResolutionTimeInMinutes;
-    @XmlElement(name = "FullResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "FullResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType fullResolutionTimeInMinutes;
-    @XmlElement(name = "AgentWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AgentWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType agentWaitTimeInMinutes;
-    @XmlElement(name = "RequesterWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "RequesterWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType requesterWaitTimeInMinutes;
-    @XmlElement(name = "OnHoldTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
-    protected ComboMinutesType onHoldTimeInMinutes;
 
     /**
      * Gets the value of the id property.
@@ -160,51 +151,51 @@ public class TicketMetricsType {
     }
 
     /**
-     * Gets the value of the createAt property.
+     * Gets the value of the createdAt property.
      * 
      * @return
      *     possible object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getCreateAt() {
-        return createAt;
+    public XMLGregorianCalendar getCreatedAt() {
+        return createdAt;
     }
 
     /**
-     * Sets the value of the createAt property.
+     * Sets the value of the createdAt property.
      * 
      * @param value
      *     allowed object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setCreateAt(XMLGregorianCalendar value) {
-        this.createAt = value;
+    public void setCreatedAt(XMLGregorianCalendar value) {
+        this.createdAt = value;
     }
 
     /**
-     * Gets the value of the updateAt property.
+     * Gets the value of the updatedAt property.
      * 
      * @return
      *     possible object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getUpdateAt() {
-        return updateAt;
+    public XMLGregorianCalendar getUpdatedAt() {
+        return updatedAt;
     }
 
     /**
-     * Sets the value of the updateAt property.
+     * Sets the value of the updatedAt property.
      * 
      * @param value
      *     allowed object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setUpdateAt(XMLGregorianCalendar value) {
-        this.updateAt = value;
+    public void setUpdatedAt(XMLGregorianCalendar value) {
+        this.updatedAt = value;
     }
 
     /**
@@ -440,30 +431,6 @@ public class TicketMetricsType {
     }
 
     /**
-     * Gets the value of the replyTimeInMinutes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getReplyTimeInMinutes() {
-        return replyTimeInMinutes;
-    }
-
-    /**
-     * Sets the value of the replyTimeInMinutes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setReplyTimeInMinutes(XMLGregorianCalendar value) {
-        this.replyTimeInMinutes = value;
-    }
-
-    /**
      * Gets the value of the firstResolutionTimeInMinutes property.
      * 
      * @return
@@ -557,30 +524,6 @@ public class TicketMetricsType {
      */
     public void setRequesterWaitTimeInMinutes(ComboMinutesType value) {
         this.requesterWaitTimeInMinutes = value;
-    }
-
-    /**
-     * Gets the value of the onHoldTimeInMinutes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ComboMinutesType }
-     *     
-     */
-    public ComboMinutesType getOnHoldTimeInMinutes() {
-        return onHoldTimeInMinutes;
-    }
-
-    /**
-     * Sets the value of the onHoldTimeInMinutes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ComboMinutesType }
-     *     
-     */
-    public void setOnHoldTimeInMinutes(ComboMinutesType value) {
-        this.onHoldTimeInMinutes = value;
     }
 
 }
