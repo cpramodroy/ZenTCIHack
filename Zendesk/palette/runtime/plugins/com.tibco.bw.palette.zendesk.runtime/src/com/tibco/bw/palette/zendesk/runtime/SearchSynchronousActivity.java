@@ -24,18 +24,19 @@ import com.tibco.bw.runtime.annotation.Property;
 import com.tibco.bw.runtime.util.XMLUtils;
 import com.tibco.neo.localized.LocalizedMessage;
 
+/**
+ * @author tvuppala, pramod
+ *
+ * @param <N>
+ */
 public class SearchSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants
 
 {
 
 	@Property
-	public Search	activityConfig;
+	public Search activityConfig;
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 * 
 	 *            This method is called to initialize the activity. It is called
@@ -54,17 +55,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					new Object[] { "init()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-		// add your own business code here
-		// end-custom-code
 		super.init();
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 * 
 	 *            This method is called when an activity is destroyed. It is
@@ -80,17 +74,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					new Object[] { "destroy()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-		// add your own business code here
-		// end-custom-code
 		super.destroy();
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 *
 	 *            The implementation of this method defines the execution
@@ -136,12 +123,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
 		N result = null;
 		try {
-			// begin-custom-code
-			// add your own business code here
+			// Reading search parameters from input activity
 			SearchData searchData = getSearchInput(input, processContext);
 			List<Long> searchResult = executeSearch(searchData);
-			// end-custom-code
-			// create output data according the output structure
+			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), searchResult);
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT,
@@ -155,17 +140,29 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
 		return result;
 	}
-	
+
+	/**
+	 * This method is used to get search results based on input activity from
+	 * zendesk
+	 * 
+	 * @param searchData
+	 * @return
+	 */
 	private List<Long> executeSearch(SearchData searchData) {
 		ArrayList<Long> result = null;
+		Zendesk zendeskInstance = null;
 		String companyUrl = activityConfig.getCompanyUrl();
 		String userId = activityConfig.getUserId();
 		String password = activityConfig.getPassword(); // TODO: Encode password
 														// using HTTP connector
-		// Create zendesk instance to communicate
-		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-
+		// Create zendesk instance to communicate with zendesk portal
+		try {
+			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		} catch (RuntimeException e) {
+			throw new RuntimeException("Unable to make connection with given url and credentials " + e);
+		}
 		int maxRows = searchData.getMaxRows();
+		// If input is empty then limiting the results to default value i.e., 10
 		if (maxRows == 0) {
 			maxRows = 10;
 		}
@@ -191,6 +188,14 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return result;
 	}
 
+	/**
+	 * Used to get the search results by organization
+	 * 
+	 * @param query
+	 * @param maxRows
+	 * @param zendeskInstance
+	 * @return list of organization ids for the given query
+	 */
 	private ArrayList<Long> getSearchResultsByOrganization(String query, int maxRows, Zendesk zendeskInstance) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Organization> orgs = zendeskInstance.getSearchResults(Organization.class, query);
@@ -202,6 +207,14 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return result;
 	}
 
+	/**
+	 * Used to get the search results by group
+	 * 
+	 * @param query
+	 * @param maxRows
+	 * @param zendeskInstance
+	 * @return list of group ids for the given query
+	 */
 	private ArrayList<Long> getSearchResultsByGroup(String query, int maxRows, Zendesk zendeskInstance) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Group> groups = zendeskInstance.getSearchResults(Group.class, query);
@@ -213,6 +226,14 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return result;
 	}
 
+	/**
+	 * Used to get the search results by user
+	 * 
+	 * @param query
+	 * @param maxRows
+	 * @param zendeskInstance
+	 * @return list of user ids for the given query
+	 */
 	private ArrayList<Long> getSearchResultsByUser(String query, int maxRows, Zendesk zendeskInstance) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<User> users = zendeskInstance.getSearchResults(User.class, query);
@@ -224,6 +245,14 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return result;
 	}
 
+	/**
+	 * Used to get the search results by ticket
+	 * 
+	 * @param query
+	 * @param maxRows
+	 * @param zendeskInstance
+	 * @return list of ticket ids for the given query
+	 */
 	private ArrayList<Long> getSearchResultsByTicket(String query, int maxRows, Zendesk zendeskInstance) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Ticket> tickets = zendeskInstance.getSearchResults(Ticket.class, query);
@@ -235,6 +264,13 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return result;
 	}
 
+	/**
+	 * Used to extract information from search activity
+	 * 
+	 * @param input
+	 * @param processContext
+	 * @return
+	 */
 	private SearchData getSearchInput(N input, ProcessContext<N> processContext) {
 		SearchData searchData = new SearchData();
 		// Search type
@@ -248,7 +284,6 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		if (searchQuery != null) {
 			searchData.setSearchQuery(searchQuery);
 		}
-
 		return searchData;
 	}
 
@@ -266,11 +301,6 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 *
-	 *
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 * 
 	 *            This method to build the output after finishing the business.
@@ -279,7 +309,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @param processingContext
 	 *            XML processing context.
 	 * @param data
-	 *            Business object.
+	 *            List of ids based on search type.
 	 * @return An XML Element which adheres to the output schema of the activity
 	 *         or may return <code>null</code> if the activity does not require
 	 *         an output.
@@ -292,17 +322,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		activityOutput.setId(idsType);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType()
 				.getTargetNamespace(), "ActivityOutput");
-		// begin-custom-code
-		// add your own business code here
-		// end-custom-code
 		return output;
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 *
 	 *            This method to get the root element of output.
@@ -326,17 +349,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
 		N output = builder.getNode();
 		N resultList = model.getFirstChild(output);
-		// begin-custom-code
-		// add your own business code here
-		// end-custom-code
 		return resultList;
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated Gets the String type parameter from the input by name.
 	 * @param inputData
 	 *            This is the activity input data.
@@ -356,10 +372,6 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated Gets the String type attribute from the input by name.
 	 * @param inputData
 	 *            This is the activity input data.
@@ -379,10 +391,6 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated Gets the Boolean type parameter from the input by name.
 	 * @param inputData
 	 *            This is the activity input data.

@@ -1,10 +1,19 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
+/**
+ * @author tvuppala, pramod
+ *
+ */
+
+/*
+ * This class is used to store the search data parameters specified in the
+ * search zendesk activity
+ */
 public class SearchData {
 	String searchQuery;
 	String searchType;
 	int maxRows;
-	
+
 	public String getSearchType() {
 		return searchType;
 	}
@@ -28,5 +37,5 @@ public class SearchData {
 	public void setSearchQuery(String searchQuery) {
 		this.searchQuery = searchQuery;
 	}
-	
+
 }

@@ -7,6 +7,13 @@ import org.zendesk.client.v2.model.Collaborator;
 import org.zendesk.client.v2.model.Priority;
 import org.zendesk.client.v2.model.Type;
 
+/**
+ * @author tvuppala, pramod
+ *
+ */
+/*
+ * 
+ */
 public class TicketData {
 	Long ticketId;
 	String companyURL;
