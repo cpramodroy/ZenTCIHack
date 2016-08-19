@@ -74,6 +74,13 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
 	* <!-- end-custom-doc -->
 	* @generated
 	*/
+    private AttributeBindingField maxRowsABF;
+/**
+	* <!-- begin-custom-doc -->
+	* 
+	* <!-- end-custom-doc -->
+	* @generated
+	*/
     private Spinner maxRows;
 @Override
     protected Class<?> getModelClass() {
@@ -94,7 +101,7 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
         getBindingManager().bind(userIdABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__USER_ID); 
         getBindingManager().bind(passwordABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__PASSWORD); 
         getBindingManager().bind(singleTicket, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__SINGLE_TICKET); 
-        getBindingManager().bind(maxRows, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__MAX_ROWS); 
+        getBindingManager().bind(maxRowsABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__MAX_ROWS); 
    	    // begin-custom-code
         // end-custom-code
     }
@@ -132,6 +139,8 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.GETTICKETMETRICS_MAXROWS, false);
    	    maxRows = BWFieldFactory.getInstance().createSpinner(parent, 2, SWT.BORDER);
+
+   	    maxRowsABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, maxRows, PropertyTypeQnameConstants.INTEGER_PRIMITIVE, true);
 
         // begin-custom-code
         // end-custom-code
