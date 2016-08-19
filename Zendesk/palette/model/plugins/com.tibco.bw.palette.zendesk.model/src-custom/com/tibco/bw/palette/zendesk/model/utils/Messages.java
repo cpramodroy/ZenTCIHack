@@ -43,7 +43,8 @@ public class Messages extends NLS {
 	public static String GETTICKETMETRICS_COMPANYURL;
 	public static String GETTICKETMETRICS_USERID;
 	public static String GETTICKETMETRICS_PASSWORD;
-	public static String GETTICKETMETRICS_ISTICKET;
+	public static String GETTICKETMETRICS_SINGLETICKET;
+	public static String GETTICKETMETRICS_MAXROWS;
 	public static String SEARCH_COMPANYURL;
 	public static String SEARCH_USERID;
 	public static String SEARCH_PASSWORD;

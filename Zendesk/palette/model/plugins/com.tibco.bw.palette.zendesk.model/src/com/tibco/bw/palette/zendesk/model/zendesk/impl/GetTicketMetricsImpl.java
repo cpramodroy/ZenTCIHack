@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#getCompanyUrl <em>Company Url</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#getUserId <em>User Id</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#getPassword <em>Password</em>}</li>
- *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#isIsTicket <em>Is Ticket</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#isSingleTicket <em>Single Ticket</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketMetricsImpl#getMaxRows <em>Max Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -90,24 +91,44 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 	protected String password = PASSWORD_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isIsTicket() <em>Is Ticket</em>}' attribute.
+	 * The default value of the '{@link #isSingleTicket() <em>Single Ticket</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIsTicket()
+	 * @see #isSingleTicket()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean IS_TICKET_EDEFAULT = false;
+	protected static final boolean SINGLE_TICKET_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsTicket() <em>Is Ticket</em>}' attribute.
+	 * The cached value of the '{@link #isSingleTicket() <em>Single Ticket</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIsTicket()
+	 * @see #isSingleTicket()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean isTicket = IS_TICKET_EDEFAULT;
+	protected boolean singleTicket = SINGLE_TICKET_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getMaxRows() <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxRows()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MAX_ROWS_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMaxRows() <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxRows()
+	 * @generated
+	 * @ordered
+	 */
+	protected int maxRows = MAX_ROWS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -196,8 +217,8 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isIsTicket() {
-		return isTicket;
+	public boolean isSingleTicket() {
+		return singleTicket;
 	}
 
 	/**
@@ -205,11 +226,32 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setIsTicket(boolean newIsTicket) {
-		boolean oldIsTicket = isTicket;
-		isTicket = newIsTicket;
+	public void setSingleTicket(boolean newSingleTicket) {
+		boolean oldSingleTicket = singleTicket;
+		singleTicket = newSingleTicket;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZendeskPackage.GET_TICKET_METRICS__IS_TICKET, oldIsTicket, isTicket));
+			eNotify(new ENotificationImpl(this, Notification.SET, ZendeskPackage.GET_TICKET_METRICS__SINGLE_TICKET, oldSingleTicket, singleTicket));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getMaxRows() {
+		return maxRows;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMaxRows(int newMaxRows) {
+		int oldMaxRows = maxRows;
+		maxRows = newMaxRows;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ZendeskPackage.GET_TICKET_METRICS__MAX_ROWS, oldMaxRows, maxRows));
 	}
 
 	/**
@@ -226,8 +268,10 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 				return getUserId();
 			case ZendeskPackage.GET_TICKET_METRICS__PASSWORD:
 				return getPassword();
-			case ZendeskPackage.GET_TICKET_METRICS__IS_TICKET:
-				return isIsTicket();
+			case ZendeskPackage.GET_TICKET_METRICS__SINGLE_TICKET:
+				return isSingleTicket();
+			case ZendeskPackage.GET_TICKET_METRICS__MAX_ROWS:
+				return getMaxRows();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -249,8 +293,11 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 			case ZendeskPackage.GET_TICKET_METRICS__PASSWORD:
 				setPassword((String)newValue);
 				return;
-			case ZendeskPackage.GET_TICKET_METRICS__IS_TICKET:
-				setIsTicket((Boolean)newValue);
+			case ZendeskPackage.GET_TICKET_METRICS__SINGLE_TICKET:
+				setSingleTicket((Boolean)newValue);
+				return;
+			case ZendeskPackage.GET_TICKET_METRICS__MAX_ROWS:
+				setMaxRows((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -273,8 +320,11 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 			case ZendeskPackage.GET_TICKET_METRICS__PASSWORD:
 				setPassword(PASSWORD_EDEFAULT);
 				return;
-			case ZendeskPackage.GET_TICKET_METRICS__IS_TICKET:
-				setIsTicket(IS_TICKET_EDEFAULT);
+			case ZendeskPackage.GET_TICKET_METRICS__SINGLE_TICKET:
+				setSingleTicket(SINGLE_TICKET_EDEFAULT);
+				return;
+			case ZendeskPackage.GET_TICKET_METRICS__MAX_ROWS:
+				setMaxRows(MAX_ROWS_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -294,8 +344,10 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 				return USER_ID_EDEFAULT == null ? userId != null : !USER_ID_EDEFAULT.equals(userId);
 			case ZendeskPackage.GET_TICKET_METRICS__PASSWORD:
 				return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
-			case ZendeskPackage.GET_TICKET_METRICS__IS_TICKET:
-				return isTicket != IS_TICKET_EDEFAULT;
+			case ZendeskPackage.GET_TICKET_METRICS__SINGLE_TICKET:
+				return singleTicket != SINGLE_TICKET_EDEFAULT;
+			case ZendeskPackage.GET_TICKET_METRICS__MAX_ROWS:
+				return maxRows != MAX_ROWS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -316,8 +368,10 @@ public class GetTicketMetricsImpl extends EObjectImpl implements GetTicketMetric
 		result.append(userId);
 		result.append(", password: ");
 		result.append(password);
-		result.append(", isTicket: ");
-		result.append(isTicket);
+		result.append(", singleTicket: ");
+		result.append(singleTicket);
+		result.append(", maxRows: ");
+		result.append(maxRows);
 		result.append(')');
 		return result.toString();
 	}

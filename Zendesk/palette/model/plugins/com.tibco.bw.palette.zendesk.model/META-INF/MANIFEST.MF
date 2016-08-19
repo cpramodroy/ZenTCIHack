@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: 
  com.tibco.bw.palette.zendesk.model.zendesk;version="1.0.0",
  com.tibco.bw.palette.zendesk.model.zendesk.impl;version="1.0.0",
