@@ -21,8 +21,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *       &lt;sequence>
  *         &lt;element name="Id" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="TicketId" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="CreateAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="UpdateAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
+ *         &lt;element name="CreatedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
+ *         &lt;element name="UpdatedAt" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="GroupStations" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="AssigneeStations" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="Reopens" type="{http://www.w3.org/2001/XMLSchema}long"/>
@@ -50,8 +50,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlType(name = "TicketMetricsType", namespace = "http://www.example.org/GetTicketMetrics", propOrder = {
     "id",
     "ticketId",
-    "createAt",
-    "updateAt",
+    "createdAt",
+    "updatedAt",
     "groupStations",
     "assigneeStations",
     "reopens",
@@ -74,12 +74,12 @@ public class TicketMetricsType {
     protected long id;
     @XmlElement(name = "TicketId", namespace = "http://www.example.org/GetTicketMetrics")
     protected long ticketId;
-    @XmlElement(name = "CreateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "CreatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar createAt;
-    @XmlElement(name = "UpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    protected XMLGregorianCalendar createdAt;
+    @XmlElement(name = "UpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar updateAt;
+    protected XMLGregorianCalendar updatedAt;
     @XmlElement(name = "GroupStations", namespace = "http://www.example.org/GetTicketMetrics")
     protected long groupStations;
     @XmlElement(name = "AssigneeStations", namespace = "http://www.example.org/GetTicketMetrics")
@@ -88,25 +88,25 @@ public class TicketMetricsType {
     protected long reopens;
     @XmlElement(name = "Replies", namespace = "http://www.example.org/GetTicketMetrics")
     protected long replies;
-    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assigneeUpdateAt;
-    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar requesterUpdatedAt;
-    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar statusUpdatedAt;
-    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar initiallyAssignedAt;
-    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assignedAt;
-    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar solvedAt;
-    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar latestCommentAddedAt;
     @XmlElement(name = "FirstResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
@@ -151,51 +151,51 @@ public class TicketMetricsType {
     }
 
     /**
-     * Gets the value of the createAt property.
+     * Gets the value of the createdAt property.
      * 
      * @return
      *     possible object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getCreateAt() {
-        return createAt;
+    public XMLGregorianCalendar getCreatedAt() {
+        return createdAt;
     }
 
     /**
-     * Sets the value of the createAt property.
+     * Sets the value of the createdAt property.
      * 
      * @param value
      *     allowed object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setCreateAt(XMLGregorianCalendar value) {
-        this.createAt = value;
+    public void setCreatedAt(XMLGregorianCalendar value) {
+        this.createdAt = value;
     }
 
     /**
-     * Gets the value of the updateAt property.
+     * Gets the value of the updatedAt property.
      * 
      * @return
      *     possible object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getUpdateAt() {
-        return updateAt;
+    public XMLGregorianCalendar getUpdatedAt() {
+        return updatedAt;
     }
 
     /**
-     * Sets the value of the updateAt property.
+     * Sets the value of the updatedAt property.
      * 
      * @param value
      *     allowed object is
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setUpdateAt(XMLGregorianCalendar value) {
-        this.updateAt = value;
+    public void setUpdatedAt(XMLGregorianCalendar value) {
+        this.updatedAt = value;
     }
 
     /**

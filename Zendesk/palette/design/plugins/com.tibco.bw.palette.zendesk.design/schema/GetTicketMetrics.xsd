@@ -16,19 +16,19 @@
     	<sequence>
     		<element maxOccurs="1" minOccurs="1" name="Id" type="long"/>
     		<element maxOccurs="1" minOccurs="1" name="TicketId" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" name="CreateAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="UpdateAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="CreatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="UpdatedAt" type="dateTime"/>
     		<element maxOccurs="1" minOccurs="1" name="GroupStations" type="long"/>
     		<element maxOccurs="1" minOccurs="1" name="AssigneeStations" type="long"/>
     		<element maxOccurs="1" minOccurs="1" name="Reopens" type="long"/>
     		<element maxOccurs="1" minOccurs="1" name="Replies" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" name="AssigneeUpdateAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="RequesterUpdatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="StatusUpdatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="InitiallyAssignedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="AssignedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="SolvedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="LatestCommentAddedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="AssigneeUpdateAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="RequesterUpdatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="StatusUpdatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="InitiallyAssignedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="AssignedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="SolvedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="1" nillable="true" name="LatestCommentAddedAt" type="dateTime"/>
     		<element maxOccurs="1" minOccurs="1" name="FirstResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
     		<element maxOccurs="1" minOccurs="1" name="FullResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
     		<element maxOccurs="1" minOccurs="1" name="AgentWaitTimeInMinutes" type="tns:ComboMinutesType"/>
