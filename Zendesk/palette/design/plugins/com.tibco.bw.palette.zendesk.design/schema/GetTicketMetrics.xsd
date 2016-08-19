@@ -16,23 +16,23 @@
     	<sequence>
     		<element maxOccurs="1" minOccurs="1" name="Id" type="long"/>
     		<element maxOccurs="1" minOccurs="1" name="TicketId" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="CreatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="UpdatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="GroupStations" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" name="AssigneeStations" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" name="Reopens" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" name="Replies" type="long"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="AssigneeUpdateAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="RequesterUpdatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="StatusUpdatedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="InitiallyAssignedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="AssignedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="SolvedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" nillable="true" name="LatestCommentAddedAt" type="dateTime"/>
-    		<element maxOccurs="1" minOccurs="1" name="FirstResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
-    		<element maxOccurs="1" minOccurs="1" name="FullResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
-    		<element maxOccurs="1" minOccurs="1" name="AgentWaitTimeInMinutes" type="tns:ComboMinutesType"/>
-    		<element maxOccurs="1" minOccurs="1" name="RequesterWaitTimeInMinutes" type="tns:ComboMinutesType"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="CreatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="UpdatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" name="GroupStations" type="long"/>
+    		<element maxOccurs="1" minOccurs="0" name="AssigneeStations" type="long"/>
+    		<element maxOccurs="1" minOccurs="0" name="Reopens" type="long"/>
+    		<element maxOccurs="1" minOccurs="0" name="Replies" type="long"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="AssigneeUpdateAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="RequesterUpdatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="StatusUpdatedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="InitiallyAssignedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="AssignedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="SolvedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" nillable="true" name="LatestCommentAddedAt" type="dateTime"/>
+    		<element maxOccurs="1" minOccurs="0" name="FirstResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
+    		<element maxOccurs="1" minOccurs="0" name="FullResolutionTimeInMinutes" type="tns:ComboMinutesType"/>
+    		<element maxOccurs="1" minOccurs="0" name="AgentWaitTimeInMinutes" type="tns:ComboMinutesType"/>
+    		<element maxOccurs="1" minOccurs="0" name="RequesterWaitTimeInMinutes" type="tns:ComboMinutesType"/>
     	</sequence>
     </complexType>
     <complexType name="ActivityOutputType">

@@ -7,16 +7,29 @@ import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.ProcessContext;
 import com.tibco.bw.runtime.ActivityLifecycleFault;
 import com.tibco.bw.runtime.util.XMLUtils;
+
 import org.genxdm.ProcessingContext;
 import org.genxdm.Model;
+
 import com.tibco.neo.localized.LocalizedMessage;
+
 import org.genxdm.io.FragmentBuilder;
+import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.Metric;
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
+
+import java.util.Date;
 import java.util.GregorianCalendar;
+
 import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.TicketMetricsType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ComboMinutesType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ActivityOutputType;
+
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import com.tibco.bw.runtime.annotation.Property;
 
 
@@ -27,8 +40,8 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 
 	@Property
 	public GetTicketMetrics activityConfig;
-	
-	
+	private static Metric zMetric;
+	private static final String	PARAM_TICKET_ID = "TicketId";
 	
 	
     /**
@@ -120,10 +133,24 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
         N result = null;
         try {
             // begin-custom-code
-			// add your own business code here
-			// end-custom-code
+        	long ticketId = 0;
+    		
+        	if(activityConfig.isSingleTicket()) {
+    			String tId = TicketDataHelper.getChildElementStringValue(PARAM_TICKET_ID, input, processContext.getXMLProcessingContext());
+    			if (tId != null)
+    				ticketId = Long.parseLong(tId);
+    		}
+    		
+        	Iterable<Metric> ticketMetrics = getZendeskTicketMetrics(ticketId);
+			
 	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+        	if(ticketId > 0)
+        		result = evalOutput(input, processContext.getXMLProcessingContext(), zMetric);
+        	else
+        		result = evalOutput(input, processContext.getXMLProcessingContext(), ticketMetrics);
+        	
+        	// end-custom-code
+        		
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -134,6 +161,36 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 			activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_OUTPUT, new Object[] {activityContext.getActivityName(), serializedOutputNode, activityContext.getActivityName()});
 		}
         return result;
+	}
+	
+	private Iterable<Metric> getZendeskTicketMetrics(long ticketId) {
+		String companyUrl = activityConfig.getCompanyUrl();
+		String userId = activityConfig.getUserId();
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
+		
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		Iterable<Metric> ticketMetrics = null;
+		
+		if(ticketId > 0)
+			zMetric = zendeskInstance.getTicketMetricByTicket(ticketId);
+		else 
+			ticketMetrics = zendeskInstance.getTicketMetrics();
+
+		return ticketMetrics;
+	}
+
+	protected XMLGregorianCalendar getXMLDateTime(Date date) {
+		XMLGregorianCalendar date2 = null;
+		if(date == null)
+			return date2;
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTime(date);
+		try {
+			date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+		} catch (DatatypeConfigurationException e) {
+			e.printStackTrace();
+		}
+		return date2;
 	}
 	/**
 	 * <!-- begin-custom-doc -->
@@ -151,53 +208,131 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
-		
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Metric metrics) throws Exception {
 		ActivityOutputType activityOutput = new ActivityOutputType();
 		TicketMetricsType ticketMetrics = new TicketMetricsType();
-		ticketMetrics.setId(new Long("1"));
-		ticketMetrics.setTicketId(new Long("1"));
-		ticketMetrics.setCreateAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setUpdateAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setGroupStations(new Long("1"));
-		ticketMetrics.setAssigneeStations(new Long("1"));
-		ticketMetrics.setReopens(new Long("1"));
-		ticketMetrics.setReplies(new Long("1"));
-		ticketMetrics.setAssigneeUpdateAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setRequesterUpdatedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setStatusUpdatedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setInitiallyAssignedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setAssignedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setSolvedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setLatestCommentAddedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
-		ticketMetrics.setReplyTimeInMinutes(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+		ticketMetrics.setId(metrics.getId());
+		ticketMetrics.setTicketId(metrics.getTicketId());
+		ticketMetrics.setCreatedAt(getXMLDateTime(metrics.getCreatedAt()));
+		ticketMetrics.setUpdatedAt(getXMLDateTime(metrics.getLastUpdatedAt()));
+		ticketMetrics.setGroupStations(metrics.getGroupStations());
+		ticketMetrics.setAssigneeStations(metrics.getAssigneeStations());
+		ticketMetrics.setReopens(metrics.getReopens());
+		ticketMetrics.setReplies(metrics.getReplies());
+		ticketMetrics.setAssigneeUpdateAt(getXMLDateTime(metrics.getAssigneeUpdatedAt()));
+		ticketMetrics.setRequesterUpdatedAt(getXMLDateTime(metrics.getRequesterUpdatedAt()));
+		ticketMetrics.setStatusUpdatedAt(getXMLDateTime(metrics.getLastUpdatedAt()));
+		ticketMetrics.setInitiallyAssignedAt(getXMLDateTime(metrics.getInitiallyUpdatedAt()));
+		ticketMetrics.setAssignedAt(getXMLDateTime(metrics.getAssignedAt()));
+		ticketMetrics.setSolvedAt(getXMLDateTime(metrics.getSolvedAt()));
+		ticketMetrics.setLatestCommentAddedAt(getXMLDateTime(metrics.getLastCommentAddedAt()));
 		ComboMinutesType firstResolutionTimeInMinutes = new ComboMinutesType();
-		firstResolutionTimeInMinutes.setCalendarMinutes(new Long("1"));
-		firstResolutionTimeInMinutes.setBusinessMinutes(new Long("1"));
+		if (metrics.getReplyTimeMinutes().getCalendarMinutes() != null) {
+			firstResolutionTimeInMinutes.setCalendarMinutes(metrics.getReplyTimeMinutes().getCalendarMinutes());
+			firstResolutionTimeInMinutes.setBusinessMinutes(metrics.getReplyTimeMinutes().getBusinessMinutes());
+		}
 		ticketMetrics.setFirstResolutionTimeInMinutes(firstResolutionTimeInMinutes);
 		ComboMinutesType fullResolutionTimeInMinutes = new ComboMinutesType();
-		fullResolutionTimeInMinutes.setCalendarMinutes(new Long("1"));
-		fullResolutionTimeInMinutes.setBusinessMinutes(new Long("1"));
+		if (metrics.getFullResolutionTimeMinutes().getCalendarMinutes() != null) {
+			fullResolutionTimeInMinutes.setCalendarMinutes(metrics.getFullResolutionTimeMinutes().getCalendarMinutes());
+			fullResolutionTimeInMinutes.setBusinessMinutes(metrics.getFullResolutionTimeMinutes().getBusinessMinutes());
+		}
 		ticketMetrics.setFullResolutionTimeInMinutes(fullResolutionTimeInMinutes);
 		ComboMinutesType agentWaitTimeInMinutes = new ComboMinutesType();
-		agentWaitTimeInMinutes.setCalendarMinutes(new Long("1"));
-		agentWaitTimeInMinutes.setBusinessMinutes(new Long("1"));
+		if (metrics.getAgentWaitTimeMinutes().getCalendarMinutes() != null) {
+			agentWaitTimeInMinutes.setCalendarMinutes(metrics.getAgentWaitTimeMinutes().getCalendarMinutes());
+			agentWaitTimeInMinutes.setBusinessMinutes(metrics.getAgentWaitTimeMinutes().getBusinessMinutes());
+		}
 		ticketMetrics.setAgentWaitTimeInMinutes(agentWaitTimeInMinutes);
 		ComboMinutesType requesterWaitTimeInMinutes = new ComboMinutesType();
-		requesterWaitTimeInMinutes.setCalendarMinutes(new Long("1"));
-		requesterWaitTimeInMinutes.setBusinessMinutes(new Long("1"));
+		if (metrics.getRequesterWaitTimeMinutes().getCalendarMinutes() != null) {
+			requesterWaitTimeInMinutes.setCalendarMinutes(metrics.getRequesterWaitTimeMinutes().getCalendarMinutes());
+			requesterWaitTimeInMinutes.setBusinessMinutes(metrics.getRequesterWaitTimeMinutes().getBusinessMinutes());
+		}
 		ticketMetrics.setRequesterWaitTimeInMinutes(requesterWaitTimeInMinutes);
-		ComboMinutesType onHoldTimeInMinutes = new ComboMinutesType();
-		onHoldTimeInMinutes.setCalendarMinutes(new Long("1"));
-		onHoldTimeInMinutes.setBusinessMinutes(new Long("1"));
-		ticketMetrics.setOnHoldTimeInMinutes(onHoldTimeInMinutes);
 		activityOutput.getTicketMetrics().add(ticketMetrics);
-		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
+		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType()
+				.getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
-	    return output;
+		// add your own business code here
+		// end-custom-code
+		return output;
 	}
+	
+	/**
+	 * <!-- begin-custom-doc -->
+	 *
+	 *
+	 * <!-- end-custom-doc -->
+	 * @generated
+	 *  
+	 * This method to build the output after finishing the business.
+	 * @param inputData
+	 *			This is the activity input data. 
+	 * @param processingContext
+	 *			XML processing context.
+	 * @param data
+	 *			Business object.
+	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
+	 */
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Iterable<Metric> metricIterator) throws Exception {
+		ActivityOutputType activityOutput = new ActivityOutputType();
+		while (metricIterator.iterator().hasNext()) {
+			Metric metrics = metricIterator.iterator().next();
+			TicketMetricsType ticketMetrics = new TicketMetricsType();
+
+			ticketMetrics.setId(metrics.getId());
+			ticketMetrics.setTicketId(metrics.getTicketId());
+			ticketMetrics.setCreatedAt(getXMLDateTime(metrics.getCreatedAt()));
+			ticketMetrics.setUpdatedAt(getXMLDateTime(metrics.getLastUpdatedAt()));
+			ticketMetrics.setGroupStations(metrics.getGroupStations());
+			ticketMetrics.setAssigneeStations(metrics.getAssigneeStations());
+			ticketMetrics.setReopens(metrics.getReopens());
+			ticketMetrics.setReplies(metrics.getReplies());
+			ticketMetrics.setAssigneeUpdateAt(getXMLDateTime(metrics.getAssigneeUpdatedAt()));
+			ticketMetrics.setRequesterUpdatedAt(getXMLDateTime(metrics.getRequesterUpdatedAt()));
+			ticketMetrics.setStatusUpdatedAt(getXMLDateTime(metrics.getLastUpdatedAt()));
+			ticketMetrics.setInitiallyAssignedAt(getXMLDateTime(metrics.getInitiallyUpdatedAt()));
+			ticketMetrics.setAssignedAt(getXMLDateTime(metrics.getAssignedAt()));
+			ticketMetrics.setSolvedAt(getXMLDateTime(metrics.getSolvedAt()));
+			ticketMetrics.setLatestCommentAddedAt(getXMLDateTime(metrics.getLastCommentAddedAt()));
+			ComboMinutesType firstResolutionTimeInMinutes = new ComboMinutesType();
+			if (metrics.getReplyTimeMinutes().getCalendarMinutes() != null) {
+				firstResolutionTimeInMinutes.setCalendarMinutes(metrics.getReplyTimeMinutes().getCalendarMinutes());
+				firstResolutionTimeInMinutes.setBusinessMinutes(metrics.getReplyTimeMinutes().getBusinessMinutes());
+			}
+			ticketMetrics.setFirstResolutionTimeInMinutes(firstResolutionTimeInMinutes);
+			ComboMinutesType fullResolutionTimeInMinutes = new ComboMinutesType();
+			if (metrics.getFullResolutionTimeMinutes().getCalendarMinutes() != null) {
+				fullResolutionTimeInMinutes.setCalendarMinutes(metrics.getFullResolutionTimeMinutes().getCalendarMinutes());
+				fullResolutionTimeInMinutes.setBusinessMinutes(metrics.getFullResolutionTimeMinutes().getBusinessMinutes());
+			}
+			ticketMetrics.setFullResolutionTimeInMinutes(fullResolutionTimeInMinutes);
+			ComboMinutesType agentWaitTimeInMinutes = new ComboMinutesType();
+			if (metrics.getAgentWaitTimeMinutes().getCalendarMinutes() != null) {
+				agentWaitTimeInMinutes.setCalendarMinutes(metrics.getAgentWaitTimeMinutes().getCalendarMinutes());
+				agentWaitTimeInMinutes.setBusinessMinutes(metrics.getAgentWaitTimeMinutes().getBusinessMinutes());
+			}
+			ticketMetrics.setAgentWaitTimeInMinutes(agentWaitTimeInMinutes);
+			ComboMinutesType requesterWaitTimeInMinutes = new ComboMinutesType();
+			if (metrics.getRequesterWaitTimeMinutes().getCalendarMinutes() != null) {
+				requesterWaitTimeInMinutes.setCalendarMinutes(metrics.getRequesterWaitTimeMinutes().getCalendarMinutes());
+				requesterWaitTimeInMinutes.setBusinessMinutes(metrics.getRequesterWaitTimeMinutes().getBusinessMinutes());
+			}
+			ticketMetrics.setRequesterWaitTimeInMinutes(requesterWaitTimeInMinutes);
+			activityOutput.getTicketMetrics().add(ticketMetrics);
+			if(activityOutput.getTicketMetrics().size() == activityConfig.getMaxRows())
+				break;
+		}
+		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType()
+				.getTargetNamespace(), "ActivityOutput");
+		// begin-custom-code
+		// add your own business code here
+		// end-custom-code
+		return output;
+	}
+	
+	
     /**
 	 * <!-- begin-custom-doc -->
 	 * 

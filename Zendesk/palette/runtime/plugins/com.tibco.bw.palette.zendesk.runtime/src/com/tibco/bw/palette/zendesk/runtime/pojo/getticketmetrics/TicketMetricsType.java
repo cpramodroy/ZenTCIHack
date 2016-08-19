@@ -74,10 +74,10 @@ public class TicketMetricsType {
     protected long id;
     @XmlElement(name = "TicketId", namespace = "http://www.example.org/GetTicketMetrics")
     protected long ticketId;
-    @XmlElement(name = "CreatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "CreatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar createdAt;
-    @XmlElement(name = "UpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "UpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar updatedAt;
     @XmlElement(name = "GroupStations", namespace = "http://www.example.org/GetTicketMetrics")
@@ -88,34 +88,34 @@ public class TicketMetricsType {
     protected long reopens;
     @XmlElement(name = "Replies", namespace = "http://www.example.org/GetTicketMetrics")
     protected long replies;
-    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "AssigneeUpdateAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assigneeUpdateAt;
-    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "RequesterUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar requesterUpdatedAt;
-    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "StatusUpdatedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar statusUpdatedAt;
-    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "InitiallyAssignedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar initiallyAssignedAt;
-    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "AssignedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar assignedAt;
-    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "SolvedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar solvedAt;
-    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", required = true, nillable = true)
+    @XmlElement(name = "LatestCommentAddedAt", namespace = "http://www.example.org/GetTicketMetrics", nillable = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar latestCommentAddedAt;
-    @XmlElement(name = "FirstResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "FirstResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType firstResolutionTimeInMinutes;
-    @XmlElement(name = "FullResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "FullResolutionTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType fullResolutionTimeInMinutes;
-    @XmlElement(name = "AgentWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "AgentWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType agentWaitTimeInMinutes;
-    @XmlElement(name = "RequesterWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics", required = true)
+    @XmlElement(name = "RequesterWaitTimeInMinutes", namespace = "http://www.example.org/GetTicketMetrics")
     protected ComboMinutesType requesterWaitTimeInMinutes;
 
     /**
