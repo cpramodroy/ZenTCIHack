@@ -12,7 +12,7 @@ import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
-import org.zendesk.client.v2.model.Attachment;
+import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
 import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
@@ -205,7 +205,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			} catch (IOException e) {
 					e.printStackTrace();
 			}
-			Attachment.Upload upload = zendeskInstance.createUpload(file.getName(), "application/binary", contents);
+			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
