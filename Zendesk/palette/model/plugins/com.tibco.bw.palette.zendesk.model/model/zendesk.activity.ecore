@@ -339,9 +339,10 @@
         <details key="isRequired" value="true"/>
         <details key="label" value="Password"/>
         <details key="isModelProperty" value="true"/>
-        <details key="control" value="TextBox"/>
+        <details key="control" value="PasswordField"/>
         <details key="value" value=""/>
       </eAnnotations>
+      <eAnnotations source="http://tns.tibco.com/bw/annotations/semantictype/password"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="dkcontrolconfig">
