@@ -135,8 +135,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
         N result = null;
         try {
             // begin-custom-code
-        	String namespace = activityContext.getActivityInputType().getTargetNamespace();
-            UserData userData = UserDataHelper.getUserInput(input,processContext.getXMLProcessingContext(),namespace);
+            UserData userData = UserDataHelper.getUserInput(input,processContext.getXMLProcessingContext());
             long userId = createZendeskUser(userData);
 			// end-custom-code
 	        // create output data according the output structure
@@ -213,7 +212,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
+			Attachment.Upload upload = zendeskInstance.createUpload(file.getName(), contents);
 			List<Attachment> photos = upload.getAttachments();
 			user.setPhoto(photos.get(0));
 		}

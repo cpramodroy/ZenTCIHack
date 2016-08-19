@@ -132,8 +132,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
         
         try {
             // begin-custom-code
-        		String namespace = activityContext.getActivityInputType().getTargetNamespace();
-            TicketData ticketData = TicketDataHelper.getTicketInput(input,processContext,namespace);
+            TicketData ticketData = TicketDataHelper.getTicketInput(input,processContext);
             Long ticketId = createZendeskTicket(ticketData);
             // end-custom-code
 	        // create output data according the output structure

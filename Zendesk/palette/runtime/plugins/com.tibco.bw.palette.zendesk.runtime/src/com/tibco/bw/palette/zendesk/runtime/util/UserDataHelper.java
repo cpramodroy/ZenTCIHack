@@ -13,7 +13,7 @@ public class UserDataHelper {
 	private static final String	PARAM_ALIAS			= "Alias";
 	private static final String	PARAM_EXTERNAL_ID	= "ExternalId";
 
-	public static <N> UserData getUserInput(N input, ProcessingContext<N> pcx, String namespace) {
+	public static <N> UserData getUserInput(N input, ProcessingContext<N> pcx) {
 		UserData userData = new UserData();
 
 		String name = getName(input, pcx);

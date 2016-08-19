@@ -15,7 +15,7 @@ import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
 
 import com.tibco.bw.palette.zendesk.model.zendesk.UpdateTicket;
-import com.tibco.bw.palette.zendesk.runtime.pojo.updateticket.ActivityOutput;
+import com.tibco.bw.palette.zendesk.runtime.pojo.updateticket.ActivityOutputType;
 import com.tibco.bw.palette.zendesk.runtime.util.CustomFieldsUtil;
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
@@ -128,10 +128,9 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
         N result = null;
         try {
         // begin-custom-code
-    		String namespace = activityContext.getActivityInputType().getTargetNamespace();
-        TicketData ticketData = TicketDataHelper.getTicketInput(input,processContext,namespace);
+        TicketData ticketData = TicketDataHelper.getTicketInput(input,processContext);
         boolean success = updateZendeskTicket(ticketData);
-        Long ticketId = ticketData.getTicketId();
+        long ticketId = ticketData.getTicketId();
 		// add your own business code here
 		// end-custom-code
 	        // create output data according the output structure
@@ -164,12 +163,12 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Long ticketId, boolean success) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long ticketId, boolean success) throws Exception {
 		
-		ActivityOutput activityOutput = new ActivityOutput();
-		activityOutput.setTicketId(ticketId+"");
-		activityOutput.setSuccess(new Boolean(success));
-		N output = PaletteUtil.parseObjtoN(ActivityOutput.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
+		ActivityOutputType activityOutputType = new ActivityOutputType();
+		activityOutputType.setTicketId(ticketId);
+		activityOutputType.setSuccess(new Boolean(success));
+		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutputType, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutputType");
 		// begin-custom-code
         // add your own business code here
         // end-custom-code
@@ -193,7 +192,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
         Model<N> model = processingContext.getModel();
         builder.startDocument(null, "xml");
         try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput", "ns0");
+			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutputType", "ns0");
         try {
 			} finally {
 				builder.endElement();
