@@ -135,8 +135,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
         N result = null;
         try {
             // begin-custom-code
-        	String namespace = activityContext.getActivityInputType().getTargetNamespace();
-            UserData userData = UserDataHelper.getUserInput(input,processContext.getXMLProcessingContext(),namespace);
+        	UserData userData = UserDataHelper.getUserInput(input,processContext.getXMLProcessingContext());
             long userId = createZendeskUser(userData);
 			// end-custom-code
 	        // create output data according the output structure
@@ -166,14 +165,15 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		user.setEmail(userData.getEmail());
 
 		String role = userData.getRole();
-		if (role != null) {
-			if (role.equalsIgnoreCase("admin"))
-				user.setRole(Role.ADMIN);
-			else if (role.equalsIgnoreCase("end-user"))
-				user.setRole(Role.END_USER);
-			else if (role.equalsIgnoreCase("agent"))
-				user.setRole(Role.AGENT);
-		}
+		if (role == null)
+			user.setRole(Role.END_USER);
+		else if (role.equals("admin"))
+			user.setRole(Role.ADMIN);
+		else if (role.equals("end-user"))
+			user.setRole(Role.END_USER);
+		else if (role.equals("agent"))
+			user.setRole(Role.AGENT);
+
 		if (userData.getPhoneNumber() != null) {
 			user.setPhone(userData.getPhoneNumber());
 		}
@@ -238,10 +238,10 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long userId) throws Exception {
 		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		activityOutput.setUserId(data);
+		activityOutput.setUserId(userId);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
         // add your own business code here

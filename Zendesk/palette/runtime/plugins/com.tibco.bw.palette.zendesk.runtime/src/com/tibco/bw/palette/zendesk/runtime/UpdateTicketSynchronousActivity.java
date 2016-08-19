@@ -9,7 +9,7 @@ import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
-import org.zendesk.client.v2.model.Attachment;
+import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
 import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
@@ -128,8 +128,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
         N result = null;
         try {
         // begin-custom-code
-    		String namespace = activityContext.getActivityInputType().getTargetNamespace();
-        TicketData ticketData = TicketDataHelper.getTicketInput(input,processContext,namespace);
+    	TicketData ticketData = TicketDataHelper.getTicketInput(input, processContext);
         boolean success = updateZendeskTicket(ticketData);
         Long ticketId = ticketData.getTicketId();
 		// add your own business code here
@@ -342,7 +341,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			} catch (IOException e) {
 					e.printStackTrace();
 			}
-			Attachment.Upload upload = zendeskInstance.createUpload(file.getName(), "application/binary", contents);
+			Upload upload = zendeskInstance.createUpload(file.getName(), "application/binary", contents);
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));

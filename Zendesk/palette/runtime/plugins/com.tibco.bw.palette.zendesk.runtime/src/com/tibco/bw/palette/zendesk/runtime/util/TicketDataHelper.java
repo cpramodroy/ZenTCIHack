@@ -29,7 +29,7 @@ public class TicketDataHelper {
 	public static final String PARAM_COMMENT = "Comment";
 
 	public static <N> TicketData getTicketInput(N input,
-			ProcessContext<N> processContext, String namespace) {
+			ProcessContext<N> processContext) {
 		
 		TicketData ticketData = new TicketData();		
 		

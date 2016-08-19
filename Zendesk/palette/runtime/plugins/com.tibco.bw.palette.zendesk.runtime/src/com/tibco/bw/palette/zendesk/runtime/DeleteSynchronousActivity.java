@@ -1,5 +1,9 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
 import com.tibco.bw.palette.zendesk.model.zendesk.Delete;
 import com.tibco.bw.runtime.ActivityFault;
@@ -7,20 +11,23 @@ import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.ProcessContext;
 import com.tibco.bw.runtime.ActivityLifecycleFault;
 import com.tibco.bw.runtime.util.XMLUtils;
+
 import org.genxdm.ProcessingContext;
 import org.genxdm.Model;
+
 import com.tibco.neo.localized.LocalizedMessage;
+
 import org.genxdm.io.FragmentBuilder;
+import org.zendesk.client.v2.Zendesk;
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.pojo.delete.ActivityOutputType;
 import com.tibco.bw.runtime.annotation.Property;
 
 
 public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
-
-
 {
-
+	public static final String PARAM_IDS = "Ids";
+	
 	@Property
 	public Delete activityConfig;
 	
@@ -116,10 +123,14 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
         N result = null;
         try {
             // begin-custom-code
-			// add your own business code here
+        	long[] listOfIds = getListOfIds(input, processContext.getXMLProcessingContext());
+    		DeleteData deleteData = new DeleteData();
+    		deleteData.setDeleteType(activityConfig.getDeleteType());
+    		deleteData.setListOfIds(listOfIds);
+    		boolean success = deleteZendeskObject(deleteData);
 			// end-custom-code
 	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+            result = evalOutput(input, processContext.getXMLProcessingContext(), success);
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -131,6 +142,64 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
         return result;
 	}
+	
+	private static <N> long[] getListOfIds(final N input, final ProcessingContext<N> pcx) {
+		Model<N> model = pcx.getModel();
+		N requesterElement = model.getFirstChildElementByName(input, null, PARAM_IDS);
+		Iterable<N> requesterNodes = null; 	
+		if(requesterElement != null)
+			requesterNodes = model.getChildElements(requesterElement);
+		List<Long> idList = new ArrayList<Long>();
+		if(requesterNodes != null){
+			Iterator<N> requesterNodesIterator = requesterNodes.iterator();			
+			while(requesterNodesIterator.hasNext()){
+				N node = requesterNodesIterator.next();
+				if (node != null) {
+					long nodeValue = Long.parseLong(model.getStringValue(node));
+					idList.add(nodeValue);
+				}
+			}
+		}
+		long[] ids = new long[idList.size()];
+		for(int i=0; i<idList.size(); i++)
+			ids[i] = idList.get(i);
+			
+		return ids;
+	}
+	
+	private boolean deleteZendeskObject(DeleteData deleteData) {
+		String companyUrl = activityConfig.getCompanyUrl();
+		String userId = activityConfig.getUserId();
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
+		
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		
+		String type = deleteData.getDeleteType();
+		long[] idList = deleteData.getListOfIds();
+		switch (type) {
+			case "ticket":
+				zendeskInstance.deleteTickets(idList[0], idList);
+				zendeskInstance.close();
+				return true;
+			case "user":
+				for (long id : idList)
+					zendeskInstance.deleteUser(id);
+				zendeskInstance.close();
+				return true;
+			case "group":
+				for (long id : idList)
+					zendeskInstance.deleteGroup(id);
+				zendeskInstance.close();
+				return true;
+			case "organization":
+				for (long id : idList)
+					zendeskInstance.deleteOrganization(id);
+				zendeskInstance.close();
+				return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * <!-- begin-custom-doc -->
 	 *
@@ -147,10 +216,10 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, boolean success) throws Exception {
 		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		activityOutput.setSuccess(new Boolean("true"));
+		activityOutput.setSuccess(success);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 		// begin-custom-code
         // add your own business code here
