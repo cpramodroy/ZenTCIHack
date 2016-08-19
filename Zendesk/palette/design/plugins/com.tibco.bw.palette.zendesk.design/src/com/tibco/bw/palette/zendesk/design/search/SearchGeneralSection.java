@@ -1,16 +1,19 @@
 package com.tibco.bw.palette.zendesk.design.search;
 
 import com.tibco.bw.design.util.PropertyTypeQnameConstants;
+
 import org.eclipse.swt.SWT;
+
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 
 import com.tibco.bw.design.field.AttributeBindingField;
+import com.tibco.bw.design.field.PasswordField;
 
 import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.swt.widgets.Spinner;
+
 import com.tibco.bw.design.field.viewer.CustomComboViewer;
 
 import org.eclipse.swt.widgets.Composite;
@@ -65,7 +68,7 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
 	* <!-- end-custom-doc -->
 	* @generated
 	*/
-    private Text password;
+    private PasswordField password;
    /**
 	* <!-- begin-custom-doc -->
 	* 
@@ -139,9 +142,9 @@ public class SearchGeneralSection extends AbstractBWTransactionalSection
    	    userIdABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, userId, PropertyTypeQnameConstants.STRING_PRIMITIVE, true);
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_PASSWORD, true);
-   	    password = BWFieldFactory.getInstance().createTextBox(parent);
+   	    password = BWFieldFactory.getInstance().createPasswordField(parent);
 
-   	    passwordABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, password, PropertyTypeQnameConstants.STRING_PRIMITIVE, true);
+   	    passwordABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, password, PropertyTypeQnameConstants.PASSWORD_PRIMITIVE, true);
 
    	    BWFieldFactory.getInstance().createLabel(parent, Messages.SEARCH_SEARCHTYPE, true);
    	    searchType = BWFieldFactory.getInstance().createComboViewer(parent);
