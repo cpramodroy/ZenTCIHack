@@ -30,6 +30,7 @@ public class CustomFieldsUtil {
 
 	/**
 	 * Used to get all custom fields from zendesk portal
+	 * 
 	 * @param zendesk
 	 *            Zendesk instance
 	 * @param type
@@ -70,6 +71,7 @@ public class CustomFieldsUtil {
 
 	/**
 	 * Used to validate custom fields against custom fields in zendesk portal.
+	 * 
 	 * @param customFieldValues
 	 * @param zendesk
 	 * @param type
