@@ -397,8 +397,17 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGetTicketMetrics_IsTicket() {
+	public EAttribute getGetTicketMetrics_SingleTicket() {
 		return (EAttribute)getTicketMetricsEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetTicketMetrics_MaxRows() {
+		return (EAttribute)getTicketMetricsEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -516,7 +525,8 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__COMPANY_URL);
 		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__USER_ID);
 		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__PASSWORD);
-		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__IS_TICKET);
+		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__SINGLE_TICKET);
+		createEAttribute(getTicketMetricsEClass, GET_TICKET_METRICS__MAX_ROWS);
 
 		searchEClass = createEClass(SEARCH);
 		createEAttribute(searchEClass, SEARCH__COMPANY_URL);
@@ -592,7 +602,8 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		initEAttribute(getGetTicketMetrics_CompanyUrl(), ecorePackage.getEString(), "companyUrl", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGetTicketMetrics_UserId(), ecorePackage.getEString(), "userId", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGetTicketMetrics_Password(), ecorePackage.getEString(), "password", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getGetTicketMetrics_IsTicket(), ecorePackage.getEBoolean(), "isTicket", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetTicketMetrics_SingleTicket(), ecorePackage.getEBoolean(), "singleTicket", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetTicketMetrics_MaxRows(), ecorePackage.getEInt(), "maxRows", null, 0, 1, GetTicketMetrics.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(searchEClass, Search.class, "Search", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSearch_CompanyUrl(), ecorePackage.getEString(), "companyUrl", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -946,15 +957,26 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "value", ""
 		   });	
 		addAnnotation
-		  (getGetTicketMetrics_IsTicket(), 
+		  (getGetTicketMetrics_SingleTicket(), 
 		   source, 
 		   new String[] {
 			 "sectionName", "General",
 			 "isRequired", "false",
-			 "label", "Is Ticket",
+			 "label", "Is Single Ticket",
 			 "isModelProperty", "false",
 			 "control", "CheckBox",
 			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetTicketMetrics_MaxRows(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "false",
+			 "label", "Max Rows",
+			 "isModelProperty", "false",
+			 "control", "Spinner",
+			 "value", "10"
 		   });	
 		addAnnotation
 		  (getSearch_CompanyUrl(), 

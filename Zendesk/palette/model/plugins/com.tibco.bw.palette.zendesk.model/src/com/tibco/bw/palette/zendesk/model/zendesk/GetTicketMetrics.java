@@ -15,7 +15,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getCompanyUrl <em>Company Url</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getUserId <em>User Id</em>}</li>
  *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getPassword <em>Password</em>}</li>
- *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isIsTicket <em>Is Ticket</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isSingleTicket <em>Single Ticket</em>}</li>
+ *   <li>{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getMaxRows <em>Max Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -103,29 +104,55 @@ public interface GetTicketMetrics extends EObject {
 	void setPassword(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Is Ticket</b></em>' attribute.
+	 * Returns the value of the '<em><b>Single Ticket</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Is Ticket</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Single Ticket</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Is Ticket</em>' attribute.
-	 * @see #setIsTicket(boolean)
-	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getGetTicketMetrics_IsTicket()
-	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='false' label='Label' isModelProperty='false' control='CheckBox' value=''"
+	 * @return the value of the '<em>Single Ticket</em>' attribute.
+	 * @see #setSingleTicket(boolean)
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getGetTicketMetrics_SingleTicket()
+	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='false' label='Is Single Ticket' isModelProperty='false' control='CheckBox' value=''"
 	 * @generated
 	 */
-	boolean isIsTicket();
+	boolean isSingleTicket();
 
 	/**
-	 * Sets the value of the '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isIsTicket <em>Is Ticket</em>}' attribute.
+	 * Sets the value of the '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isSingleTicket <em>Single Ticket</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Is Ticket</em>' attribute.
-	 * @see #isIsTicket()
+	 * @param value the new value of the '<em>Single Ticket</em>' attribute.
+	 * @see #isSingleTicket()
 	 * @generated
 	 */
-	void setIsTicket(boolean value);
+	void setSingleTicket(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Max Rows</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Max Rows</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Max Rows</em>' attribute.
+	 * @see #setMaxRows(int)
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getGetTicketMetrics_MaxRows()
+	 * @model annotation="dkcontrolconfig sectionName='General' isRequired='false' label='Max Rows' isModelProperty='false' control='Spinner' value='10'"
+	 * @generated
+	 */
+	int getMaxRows();
+
+	/**
+	 * Sets the value of the '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getMaxRows <em>Max Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Max Rows</em>' attribute.
+	 * @see #getMaxRows()
+	 * @generated
+	 */
+	void setMaxRows(int value);
 
 } // GetTicketMetrics

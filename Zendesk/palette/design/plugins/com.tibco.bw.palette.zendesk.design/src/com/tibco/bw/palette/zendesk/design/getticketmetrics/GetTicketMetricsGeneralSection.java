@@ -1,10 +1,12 @@
 package com.tibco.bw.palette.zendesk.design.getticketmetrics;
 
 import com.tibco.bw.design.util.PropertyTypeQnameConstants;
+import org.eclipse.swt.SWT;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage;
 import com.tibco.bw.design.field.AttributeBindingField;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Spinner;
 import com.tibco.bw.design.field.PasswordField;
 
 import org.eclipse.swt.widgets.Composite;
@@ -65,10 +67,15 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
 	* <!-- end-custom-doc -->
 	* @generated
 	*/
-    private Button isTicket;
-
-
-    @Override
+    private Button singleTicket;
+/**
+	* <!-- begin-custom-doc -->
+	* 
+	* <!-- end-custom-doc -->
+	* @generated
+	*/
+    private Spinner maxRows;
+@Override
     protected Class<?> getModelClass() {
        return GetTicketMetrics.class;
     }
@@ -86,7 +93,8 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
         getBindingManager().bind(companyUrlABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__COMPANY_URL); 
         getBindingManager().bind(userIdABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__USER_ID); 
         getBindingManager().bind(passwordABF, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__PASSWORD); 
-        getBindingManager().bind(isTicket, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__IS_TICKET); 
+        getBindingManager().bind(singleTicket, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__SINGLE_TICKET); 
+        getBindingManager().bind(maxRows, getInput(), ZendeskPackage.Literals.GET_TICKET_METRICS__MAX_ROWS); 
    	    // begin-custom-code
         // end-custom-code
     }
@@ -119,8 +127,11 @@ public class GetTicketMetricsGeneralSection extends AbstractBWTransactionalSecti
 
    	    passwordABF = BWFieldFactory.getInstance().createAttributeBindingField(parent, password, PropertyTypeQnameConstants.PASSWORD_PRIMITIVE, true);
 
-   	    BWFieldFactory.getInstance().createLabel(parent, Messages.GETTICKETMETRICS_ISTICKET, false);
-   	    isTicket = BWFieldFactory.getInstance().createCheckBox(parent);
+   	    BWFieldFactory.getInstance().createLabel(parent, Messages.GETTICKETMETRICS_SINGLETICKET, false);
+   	    singleTicket = BWFieldFactory.getInstance().createCheckBox(parent);
+
+   	    BWFieldFactory.getInstance().createLabel(parent, Messages.GETTICKETMETRICS_MAXROWS, false);
+   	    maxRows = BWFieldFactory.getInstance().createSpinner(parent, 2, SWT.BORDER);
 
         // begin-custom-code
         // end-custom-code

@@ -357,13 +357,22 @@ public interface ZendeskPackage extends EPackage {
 	int GET_TICKET_METRICS__PASSWORD = 2;
 
 	/**
-	 * The feature id for the '<em><b>Is Ticket</b></em>' attribute.
+	 * The feature id for the '<em><b>Single Ticket</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GET_TICKET_METRICS__IS_TICKET = 3;
+	int GET_TICKET_METRICS__SINGLE_TICKET = 3;
+
+	/**
+	 * The feature id for the '<em><b>Max Rows</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKET_METRICS__MAX_ROWS = 4;
 
 	/**
 	 * The number of structural features of the '<em>Get Ticket Metrics</em>' class.
@@ -372,7 +381,7 @@ public interface ZendeskPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GET_TICKET_METRICS_FEATURE_COUNT = 4;
+	int GET_TICKET_METRICS_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl <em>Search</em>}' class.
@@ -754,15 +763,26 @@ public interface ZendeskPackage extends EPackage {
 	EAttribute getGetTicketMetrics_Password();
 
 	/**
-	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isIsTicket <em>Is Ticket</em>}'.
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isSingleTicket <em>Single Ticket</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Is Ticket</em>'.
-	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isIsTicket()
+	 * @return the meta object for the attribute '<em>Single Ticket</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#isSingleTicket()
 	 * @see #getGetTicketMetrics()
 	 * @generated
 	 */
-	EAttribute getGetTicketMetrics_IsTicket();
+	EAttribute getGetTicketMetrics_SingleTicket();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getMaxRows <em>Max Rows</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Max Rows</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics#getMaxRows()
+	 * @see #getGetTicketMetrics()
+	 * @generated
+	 */
+	EAttribute getGetTicketMetrics_MaxRows();
 
 	/**
 	 * Returns the meta object for class '{@link com.tibco.bw.palette.zendesk.model.zendesk.Search <em>Search</em>}'.
@@ -1094,12 +1114,20 @@ public interface ZendeskPackage extends EPackage {
 		EAttribute GET_TICKET_METRICS__PASSWORD = eINSTANCE.getGetTicketMetrics_Password();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Ticket</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Single Ticket</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute GET_TICKET_METRICS__IS_TICKET = eINSTANCE.getGetTicketMetrics_IsTicket();
+		EAttribute GET_TICKET_METRICS__SINGLE_TICKET = eINSTANCE.getGetTicketMetrics_SingleTicket();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Rows</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_TICKET_METRICS__MAX_ROWS = eINSTANCE.getGetTicketMetrics_MaxRows();
 
 		/**
 		 * The meta object literal for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.SearchImpl <em>Search</em>}' class.
