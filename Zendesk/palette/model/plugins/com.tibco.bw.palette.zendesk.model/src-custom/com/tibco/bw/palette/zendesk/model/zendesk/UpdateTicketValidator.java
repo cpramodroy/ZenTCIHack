@@ -6,6 +6,7 @@ import com.tibco.bw.validation.process.ActivityValidationContext;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage;
 import com.tibco.bw.palette.zendesk.model.utils.Messages;
 import com.tibco.bw.palette.zendesk.model.utils.MessageCode;
+
 import org.eclipse.osgi.util.NLS;
 
 public class UpdateTicketValidator implements ActivityConfigurationValidator {	
@@ -53,8 +54,16 @@ public class UpdateTicketValidator implements ActivityConfigurationValidator {
 		        message = NLS.bind(Messages.PALETTE_PARAMETER_VALUE_INVALID, new String[] {"User Id"});
 		        context.createError(message, null, MessageCode.PARAMETER_NOT_SPECIFIED, ZendeskPackage.Literals.UPDATE_TICKET__USER_ID);
 		    }
-		}	
-		// begin-custom-code
-	    // end-custom-code
+		}
+		
+		String isAdditionalAttachment = context.getAttributeBindingPropertyName("isAdditionalAttachments");
+		if (isAdditionalAttachment == null || ("".equals(isAdditionalAttachment))) {
+			boolean hasAttachments = model.isAdditionalAttachment();
+			if (hasAttachments && (model.getAttachmentName() == null || model.getAttachmentName().equals(""))) {
+				String message = ""; //$NON-NLS-1$
+				message = NLS.bind(Messages.PALETTE_PARAMETER_VALUE_INVALID, new String[] { "Attachment Name" });
+				context.createError(message, null, MessageCode.PARAMETER_NOT_SPECIFIED, ZendeskPackage.Literals.CREATE_TICKET__ATTACHMENT_NAME);
+			}
+		}
   	}
 }

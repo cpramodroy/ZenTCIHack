@@ -63,16 +63,6 @@ public class CreateTicketValidator implements ActivityConfigurationValidator {
 				message = NLS.bind(Messages.PALETTE_PARAMETER_VALUE_INVALID, new String[] { "Attachment Name" });
 				context.createError(message, null, MessageCode.PARAMETER_NOT_SPECIFIED, ZendeskPackage.Literals.CREATE_TICKET__ATTACHMENT_NAME);
 			}
-		}
-		
-//		String attachment = context.getAttributeBindingPropertyName("attachmentName");
-//		if (attachment == null || ("".equals(attachment))) {
-//			String attachmentName = model.getAttachmentName();
-//			if (attachmentName != null && !attachmentName.equals("")) {
-//				model.setHasAttachments(true);
-//			}
-//		}
-		// begin-custom-code
-	    // end-custom-code
+		}		
   	}
 }
