@@ -99,14 +99,20 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		    activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_INPUT, new Object[] {activityContext.getActivityName(), serializedInputNode});
 		}
 		N result = null;
+		boolean success;
+		
+		// Get list of id(s) and type from activity input and delete corresponding object(s).
 		try {
-			// begin-custom-code
 			long[] listOfIds = getListOfIds(input, processContext.getXMLProcessingContext());
 			DeleteData deleteData = new DeleteData();
 			deleteData.setDeleteType(activityConfig.getDeleteType());
 			deleteData.setListOfIds(listOfIds);
-			boolean success = deleteZendeskObject(deleteData);
-			// end-custom-code
+			success = deleteZendeskObject(deleteData);
+		} catch (Exception e) {
+			throw new ActivityFault(activityContext, e);
+		}
+		
+		try {
 			// create output data according the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), success);
 		} catch (Exception e) {
@@ -145,12 +151,19 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		return ids;
 	}
 
-	private boolean deleteZendeskObject(DeleteData deleteData) {
+	private boolean deleteZendeskObject(DeleteData deleteData) throws ActivityFault {
 		String companyUrl = activityConfig.getCompanyUrl();
 		String userId = activityConfig.getUserId();
 		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
 
-		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		Zendesk zendeskInstance = null;
+		try {
+			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		} catch (RuntimeException e) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
+		}
 
 		String type = deleteData.getDeleteType();
 		long[] idList = deleteData.getListOfIds();

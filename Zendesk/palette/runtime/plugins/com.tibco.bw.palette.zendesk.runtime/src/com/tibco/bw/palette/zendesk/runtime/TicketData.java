@@ -8,10 +8,11 @@ import org.zendesk.client.v2.model.Priority;
 import org.zendesk.client.v2.model.Type;
 
 /**
- * @author tvuppala, pramod
- *
+ * @author tvuppala
+ * @author pcheruku
  */
-/*
+
+/**
  * This class is used to store the ticket data parameters specified in the
  * create ticket activity
  */

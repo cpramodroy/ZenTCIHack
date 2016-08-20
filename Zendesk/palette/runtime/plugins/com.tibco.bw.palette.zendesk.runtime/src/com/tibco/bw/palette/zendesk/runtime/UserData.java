@@ -1,5 +1,8 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
+/**
+ * This class is used to store the user data parameters specified in the create user activity
+ */
 public class UserData {
 	String	name;
 	String	email;

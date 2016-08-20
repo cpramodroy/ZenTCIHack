@@ -125,9 +125,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		TicketData ticketData = null;
 		Long ticketId;
 		try {
-			//Reading ticket data from input activity and creating a zendesk
-			// ticket
-
+			//Reading ticket data from input activity and creating a zendesk ticket
 			ticketData = TicketDataHelper.getTicketInput(input, processContext);
 			ticketId = createZendeskTicket(ticketData);
 		} catch (Exception exp) {

@@ -1,17 +1,22 @@
 package com.tibco.bw.palette.zendesk.runtime.util;
 
+/**
+ * This class is used to extract and store the User data from createUser activity input 
+ *
+ */
+
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 
 import com.tibco.bw.palette.zendesk.runtime.UserData;
 
 public class UserDataHelper {
-	private static final String	PARAM_NAME			= "Name";
-	private static final String	PARAM_EMAIL			= "Email";
-	private static final String	PARAM_ROLE			= "Role";
-	private static final String	PARAM_PHONE_NUMBER	= "PhoneNumber";
-	private static final String	PARAM_ALIAS			= "Alias";
-	private static final String	PARAM_EXTERNAL_ID	= "ExternalId";
+	private static final String PARAM_NAME = "Name";
+	private static final String PARAM_EMAIL = "Email";
+	private static final String PARAM_ROLE = "Role";
+	private static final String PARAM_PHONE_NUMBER = "PhoneNumber";
+	private static final String PARAM_ALIAS = "Alias";
+	private static final String PARAM_EXTERNAL_ID = "ExternalId";
 
 	public static <N> UserData getUserInput(N input, ProcessingContext<N> pcx) {
 		UserData userData = new UserData();
