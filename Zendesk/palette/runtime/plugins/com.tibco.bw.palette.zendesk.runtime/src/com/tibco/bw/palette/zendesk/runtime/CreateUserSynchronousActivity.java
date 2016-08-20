@@ -30,6 +30,7 @@ import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment;
 import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Role;
+import org.zendesk.client.v2.model.Ticket;
 import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
@@ -160,6 +161,10 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		Zendesk zendeskInstance = null;
 		try {
 			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+			User user = zendeskInstance.getAuthenticatedUser();
+			if(user == null){
+				throw new RuntimeException();
+			}
 		} catch (RuntimeException e) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
@@ -219,13 +224,23 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 			}
 
 			// Upload profile photo to user account
-			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
+			Upload upload = null;
+			try{
+				upload = zendeskInstance.createUpload(file.getName(), contents);		
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			List<Attachment> photos = upload.getAttachments();
 			user.setPhoto(photos.get(0));
 		}
 
 		// Creating user with all the required information
-		User createdUser = zendeskInstance.createUser(user);
+		User createdUser = null;
+		try{
+			createdUser = zendeskInstance.createUser(user);
+		}catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		zendeskInstance.close();
 		return createdUser.getId();
 	}

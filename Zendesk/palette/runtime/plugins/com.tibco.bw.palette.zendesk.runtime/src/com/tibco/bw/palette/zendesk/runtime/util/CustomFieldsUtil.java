@@ -12,6 +12,10 @@ import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Field;
 import org.zendesk.client.v2.model.Field.Option;
 
+import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
+import com.tibco.bw.runtime.ActivityFault;
+import com.tibco.neo.localized.LocalizedMessage;
+
 /**
  * @author tvuppala, pramod
  *
@@ -40,7 +44,12 @@ public class CustomFieldsUtil {
 		List<Field> fields = null;
 		switch (type) {
 			case "ticket":
-				fields = zendesk.getTicketFields();
+				try{
+					fields = zendesk.getTicketFields();
+				}catch (Exception e) {
+					String msg = RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS.toString();
+					throw new RuntimeException(msg);
+				}
 				for (Field field : fields) {
 					Long fieldID = field.getId();
 					String fieldType = field.getType();

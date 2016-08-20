@@ -12,6 +12,7 @@ import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
 import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
+import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.model.zendesk.CreateTicket;
 import com.tibco.bw.palette.zendesk.runtime.pojo.createticket.ActivityOutput;
@@ -164,6 +165,10 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		// Create zendesk instance to communicate with zendesk portal
 		try {
 			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
+			User user = zendeskInstance.getAuthenticatedUser();
+			if(user == null){
+				throw new RuntimeException();
+			}
 		} catch (RuntimeException e) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
@@ -196,7 +201,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		 * input custom field against zendesk custom fields Use the valid custom
 		 * fields in current ticket
 		 */
-		if (activityConfig.isHasCustomFields() && ticketData.getTicketCustomFields().size() > 0) {
+		if (ticketData.getTicketCustomFields().size() > 0) {
 			List<CustomFieldValue> customFields = CustomFieldsUtil.verifyAndGetCustomFields(ticketData.getTicketCustomFields(), zendeskInstance,
 					"ticket");
 			if (customFields.size() > 0) {
@@ -226,13 +231,22 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			 * First we need to upload the content and use that token as a
 			 * ticket comment to upload attachment.
 			 */
-			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
+			Upload upload = null;
+			try{
+				upload = zendeskInstance.createUpload(file.getName(), contents);		
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
 		}
-
-		Ticket createdTicket = zendeskInstance.createTicket(ticket);
+		Ticket createdTicket = null;
+		try{
+			 createdTicket = zendeskInstance.createTicket(ticket);
+		}catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		// closing zendesk connection
 		zendeskInstance.close();
 		return createdTicket.getId();

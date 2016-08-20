@@ -15,10 +15,12 @@ import com.tibco.bw.runtime.ActivityLifecycleFault;
 import com.tibco.bw.runtime.util.XMLUtils;
 
 import org.genxdm.ProcessingContext;
+
 import com.tibco.neo.localized.LocalizedMessage;
 
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Metric;
+import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
@@ -159,6 +161,10 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 		Zendesk zendeskInstance = null;
 		try {
 			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+			User user = zendeskInstance.getAuthenticatedUser();
+			if(user == null){
+				throw new RuntimeException();
+			}
 		} catch (RuntimeException e) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });

@@ -171,6 +171,10 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		// Create zendesk instance to communicate with zendesk portal
 		try {
 			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
+			User user = zendeskInstance.getAuthenticatedUser();
+			if (user == null) {
+				throw new RuntimeException();
+			}
 		} catch (RuntimeException e) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });

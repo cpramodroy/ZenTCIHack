@@ -12,6 +12,7 @@ import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
 import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
+import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.model.zendesk.UpdateTicket;
 import com.tibco.bw.palette.zendesk.runtime.pojo.updateticket.ActivityOutputType;
@@ -27,7 +28,7 @@ import com.tibco.bw.runtime.util.XMLUtils;
 import com.tibco.neo.localized.LocalizedMessage;
 
 /**
- * @author tvuppala, 
+ * @author tvuppala,
  * @author pcheruku
  *
  */
@@ -194,7 +195,11 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		// Create zendesk instance to communicate with zendesk portal
 		try {
 			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-		} catch (Exception e) {
+			User user = zendeskInstance.getAuthenticatedUser();
+			if (user == null) {
+				throw new RuntimeException();
+			}
+		} catch (RuntimeException e) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
 			throw new ActivityFault(activityContext, msg);
@@ -266,7 +271,12 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			 * First we need to upload the content and use that token as a
 			 * ticket comment to upload attachment.
 			 */
-			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
+			Upload upload = null;
+			try {
+				upload = zendeskInstance.createUpload(file.getName(), contents);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
