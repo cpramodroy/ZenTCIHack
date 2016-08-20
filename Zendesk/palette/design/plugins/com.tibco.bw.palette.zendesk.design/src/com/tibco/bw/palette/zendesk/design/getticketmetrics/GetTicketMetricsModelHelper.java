@@ -22,8 +22,7 @@ public class GetTicketMetricsModelHelper extends BWAbstractModelHelper
     @Override
     public EObject createInstance() {
         GetTicketMetrics activity = ZendeskFactory.eINSTANCE.createGetTicketMetrics();
-        // begin-custom-code
-        // end-custom-code
+        activity.setMaxRows(10);
         return activity;
     }
 }

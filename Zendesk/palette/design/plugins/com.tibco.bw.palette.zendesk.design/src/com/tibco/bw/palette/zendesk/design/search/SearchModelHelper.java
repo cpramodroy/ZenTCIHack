@@ -22,8 +22,7 @@ public class SearchModelHelper extends BWAbstractModelHelper
     @Override
     public EObject createInstance() {
         Search activity = ZendeskFactory.eINSTANCE.createSearch();
-        // begin-custom-code
-        // end-custom-code
+        activity.setMaxRows(10);
         return activity;
     }
 }
