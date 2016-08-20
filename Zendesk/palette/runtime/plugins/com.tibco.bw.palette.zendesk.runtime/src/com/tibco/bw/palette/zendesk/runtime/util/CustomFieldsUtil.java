@@ -56,7 +56,7 @@ public class CustomFieldsUtil {
 					customFieldIDStore.put(fieldTitle.toLowerCase(), fieldID);
 				}
 				break;
-			// TODO: Further enhancements
+			// TODO: Future enhancements
 			case "user":
 				break;
 			case "group":
@@ -66,7 +66,6 @@ public class CustomFieldsUtil {
 			default:
 				break;
 		}
-
 	}
 
 	/**
