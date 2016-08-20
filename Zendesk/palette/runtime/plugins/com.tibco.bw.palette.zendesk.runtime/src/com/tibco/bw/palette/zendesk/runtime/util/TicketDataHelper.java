@@ -22,7 +22,7 @@ import com.tibco.bw.runtime.ProcessContext;
  */
 
 /**
- * This class is used to extract and store the ticket data parameters from
+ * This class is used to extract and store the ticket data parameters for
  * create or update ticket activities.
  *
  */

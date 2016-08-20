@@ -2,12 +2,11 @@ package com.tibco.bw.palette.zendesk.runtime;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
-import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
@@ -62,10 +61,6 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	}
 
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * 
 	 * @generated
 	 * 
 	 *            This method is called when an activity is destroyed. It is
@@ -129,13 +124,20 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					serializedInputNode });
 		}
 		N result = null;
+		TicketData ticketData = null;
+		boolean success = false;
+		long ticketId = 0;
 		try {
-			// Reading ticket data from input activity and updating a zendesk
+			// Reading ticket data from input activity and updating zendesk
 			// ticket
-			TicketData ticketData = TicketDataHelper.getTicketInput(input, processContext);
-			boolean success = updateZendeskTicket(ticketData);
-			long ticketId = ticketData.getTicketId();
-			// create output data according the output structure
+			ticketData = TicketDataHelper.getTicketInput(input, processContext);
+			success = updateZendeskTicket(ticketData);
+			ticketId = ticketData.getTicketId();
+		} catch (Exception exp) {
+			throw new ActivityFault(activityContext, exp);
+		}
+		try {
+			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), ticketId, success);
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT,
@@ -178,93 +180,6 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	}
 
 	/**
-	 * 
-	 * @generated
-	 *
-	 *            This method to get the root element of output.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @return An XML Element.
-	 */
-	protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-		final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-		Model<N> model = processingContext.getModel();
-		builder.startDocument(null, "xml");
-		try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutputType", "ns0");
-			try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-		N output = builder.getNode();
-		N resultList = model.getFirstChild(output);
-		return resultList;
-	}
-
-	/**
-	 * @generated Gets the String type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return "";
-		}
-		return model.getStringValue(parameter);
-	}
-
-	/**
-	 * 
-	 * @generated Gets the String type attribute from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param attributeName
-	 *            The attribute name which you want to get the value.
-	 * @return attribute value.
-	 */
-	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N attribute = model.getAttribute(inputData, "", attributeName);
-		if (attribute == null) {
-			return "";
-		}
-		return model.getStringValue(attribute);
-	}
-
-	/**
-	 * @generated Gets the Boolean type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return false;
-		}
-		String valueStr = model.getStringValue(parameter);
-		return Boolean.parseBoolean(valueStr);
-	}
-
-	/**
 	 * This method is to update the existing ticket based on activity input.
 	 * 
 	 * @param ticketData
@@ -279,14 +194,18 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		// Create zendesk instance to communicate with zendesk portal
 		try {
 			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-		} catch (RuntimeException e) {
-			throw new RuntimeException("Unable to make connection with given url and credentials " + e);
+		} catch (Exception e) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
 		}
 		Long ticketId = ticketData.getTicketId();
 
 		Ticket ticket = zendeskInstance.getTicket(ticketId);
 		if (ticket == null) {
-			throw new RuntimeException("Ticket is not available in zendesk database");
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_TICKET_ID_NOT_AVAILABLE,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
 		}
 		String requesterName = ticketData.getRequesterName();
 		String requesterEmail = ticketData.getRequesterEmail();
@@ -333,15 +252,21 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			try {
 				fis = new FileInputStream(file);
 				fis.read(contents);
-			} catch (Exception e1) {
-				throw new Exception(e1);
+			} catch (FileNotFoundException e) {
+				throw new ActivityFault(activityContext, e);
+			} catch (IOException e) {
+				throw new ActivityFault(activityContext, e);
 			}
 			try {
 				fis.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new ActivityFault(activityContext, e);
 			}
-			Upload upload = zendeskInstance.createUpload(file.getName(), "application/binary", contents);
+			/*
+			 * First we need to upload the content and use that token as a
+			 * ticket comment to upload attachment.
+			 */
+			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
@@ -349,7 +274,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		try {
 			zendeskInstance.updateTicket(ticket);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to update ticket. " + e);
+			throw new ActivityFault(activityContext, e);
 		}
 		zendeskInstance.close();
 		return true;

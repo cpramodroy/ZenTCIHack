@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
-import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Group;
 import org.zendesk.client.v2.model.Organization;
@@ -122,10 +121,16 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					serializedInputNode });
 		}
 		N result = null;
+		SearchData searchData = null;
+		List<Long> searchResult = null;
 		try {
 			// Reading search parameters from input activity
-			SearchData searchData = getSearchInput(input, processContext);
-			List<Long> searchResult = executeSearch(searchData);
+			searchData = getSearchInput(input, processContext);
+			searchResult = executeSearch(searchData);
+		} catch (Exception exp) {
+			throw new ActivityFault(activityContext, exp);
+		}
+		try {
 			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), searchResult);
 		} catch (Exception e) {
@@ -147,22 +152,27 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * 
 	 * @param searchData
 	 * @return
+	 * @throws ActivityFault
 	 */
-	private List<Long> executeSearch(SearchData searchData) {
+	private List<Long> executeSearch(SearchData searchData) throws ActivityFault {
 		ArrayList<Long> result = null;
 		Zendesk zendeskInstance = null;
-		String companyUrl = activityConfig.getCompanyUrl();
-		String userId = activityConfig.getUserId();
+		String companyURL = activityConfig.getCompanyUrl();
+		String username = activityConfig.getUserId();
 		String password = activityConfig.getPassword(); // TODO: Encode password
 														// using HTTP connector
+
 		// Create zendesk instance to communicate with zendesk portal
 		try {
-			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
 		} catch (RuntimeException e) {
-			throw new RuntimeException("Unable to make connection with given url and credentials " + e);
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
 		}
 		int maxRows = searchData.getMaxRows();
-		// If input is empty then limiting the results to default value i.e., 10
+		// If input of maxRows is empty then limiting the results to default
+		// value i.e., 10
 		if (maxRows == 0) {
 			maxRows = 10;
 		}
@@ -323,90 +333,5 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType()
 				.getTargetNamespace(), "ActivityOutput");
 		return output;
-	}
-
-	/**
-	 * @generated
-	 *
-	 *            This method to get the root element of output.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @return An XML Element.
-	 */
-	protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-		final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-		Model<N> model = processingContext.getModel();
-		builder.startDocument(null, "xml");
-		try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput", "ns0");
-			try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-		N output = builder.getNode();
-		N resultList = model.getFirstChild(output);
-		return resultList;
-	}
-
-	/**
-	 * @generated Gets the String type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return "";
-		}
-		return model.getStringValue(parameter);
-	}
-
-	/**
-	 * @generated Gets the String type attribute from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param attributeName
-	 *            The attribute name which you want to get the value.
-	 * @return attribute value.
-	 */
-	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N attribute = model.getAttribute(inputData, "", attributeName);
-		if (attribute == null) {
-			return "";
-		}
-		return model.getStringValue(attribute);
-	}
-
-	/**
-	 * @generated Gets the Boolean type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return false;
-		}
-		String valueStr = model.getStringValue(parameter);
-		return Boolean.parseBoolean(valueStr);
 	}
 }

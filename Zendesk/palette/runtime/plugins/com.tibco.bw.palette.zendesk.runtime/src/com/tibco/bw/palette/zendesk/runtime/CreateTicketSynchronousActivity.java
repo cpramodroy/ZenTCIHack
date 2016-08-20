@@ -4,13 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
-import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Comment;
@@ -39,9 +35,6 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 
 	@Property
 	public CreateTicket activityConfig;
-
-	static ConcurrentHashMap<String, Long> customFieldIDStore = new ConcurrentHashMap<String, Long>();
-	static HashMap<String, HashMap<String, String>> customOptionsMap = new HashMap<String, HashMap<String, String>>();
 
 	/**
 	 * @generated
@@ -129,12 +122,18 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					serializedInputNode });
 		}
 		N result = null;
-
+		TicketData ticketData = null;
+		Long ticketId;
 		try {
-			// Reading ticket data from input activity and creating a zendesk
+			//Reading ticket data from input activity and creating a zendesk
 			// ticket
-			TicketData ticketData = TicketDataHelper.getTicketInput(input, processContext);
-			Long ticketId = createZendeskTicket(ticketData);
+
+			ticketData = TicketDataHelper.getTicketInput(input, processContext);
+			ticketId = createZendeskTicket(ticketData);
+		} catch (Exception exp) {
+			throw new ActivityFault(activityContext, exp);
+		}
+		try {
 			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), ticketId);
 		} catch (Exception e) {
@@ -151,23 +150,26 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	}
 
 	/**
-	 * This method is to  create the zendesk ticket.
+	 * This method is to create the zendesk ticket.
 	 * 
 	 * @param ticketData
 	 *            Data from activity input to create ticket
 	 * @return created ticket id
+	 * @throws ActivityFault
 	 */
-	private Long createZendeskTicket(TicketData ticketData) {
+	private Long createZendeskTicket(TicketData ticketData) throws ActivityFault {
 		String companyURL = activityConfig.getCompanyUrl();
 		String username = activityConfig.getUserId();
 		String password = activityConfig.getPassword();
 		Zendesk zendeskInstance = null;
+
 		// Create zendesk instance to communicate with zendesk portal
-		try{
-			zendeskInstance  = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();		
-		}
-		catch (RuntimeException e){
-			throw new RuntimeException("Unable to make connection with given url and credentials "+e);
+		try {
+			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
+		} catch (RuntimeException e) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
 		}
 		String requesterName = ticketData.getRequesterName();
 		String requesterEmail = ticketData.getRequesterEmail();
@@ -212,18 +214,20 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			try {
 				fis = new FileInputStream(file);
 				fis.read(contents);
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+			} catch (FileNotFoundException e) {
+				throw new ActivityFault(activityContext, e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new ActivityFault(activityContext, e);
 			}
 			try {
 				fis.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new ActivityFault(activityContext, e);
 			}
-			// First we need to upload the content and use that token as a
-			// ticket comment to upload attachment.
+			/*
+			 * First we need to upload the content and use that token as a
+			 * ticket comment to upload attachment.
+			 */
 			Upload upload = zendeskInstance.createUpload(file.getName(), contents);
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();
@@ -257,90 +261,5 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		N output = PaletteUtil.parseObjtoN(ActivityOutput.class, activityOutput, processingContext, activityContext.getActivityOutputType()
 				.getTargetNamespace(), "ActivityOutput");
 		return output;
-	}
-
-	/**
-	 * @generated
-	 *
-	 *            This method to get the root element of output.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @return An XML Element.
-	 */
-	protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-		final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-		Model<N> model = processingContext.getModel();
-		builder.startDocument(null, "xml");
-		try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput", "ns0");
-			try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-		N output = builder.getNode();
-		N resultList = model.getFirstChild(output);
-		return resultList;
-	}
-
-	/**
-	 * @generated Gets the String type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return "";
-		}
-		return model.getStringValue(parameter);
-	}
-
-	/**
-	 * @generated Gets the String type attribute from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param attributeName
-	 *            The attribute name which you want to get the value.
-	 * @return attribute value.
-	 */
-	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N attribute = model.getAttribute(inputData, "", attributeName);
-		if (attribute == null) {
-			return "";
-		}
-		return model.getStringValue(attribute);
-	}
-
-	/**
-	 * @generated Gets the Boolean type parameter from the input by name.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param parameterName
-	 *            The parameter name which you want to get the value.
-	 * @return parameter value.
-	 */
-	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-		Model<N> model = processingContext.getMutableContext().getModel();
-		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-		if (parameter == null) {
-			return false;
-		}
-		String valueStr = model.getStringValue(parameter);
-		return Boolean.parseBoolean(valueStr);
 	}
 }

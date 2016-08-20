@@ -12,7 +12,8 @@ import org.zendesk.client.v2.model.Type;
  *
  */
 /*
- * 
+ * This class is used to store the ticket data parameters specified in the
+ * create ticket activity
  */
 public class TicketData {
 	Long ticketId;
