@@ -25,7 +25,6 @@ import com.tibco.neo.localized.LocalizedMessage;
 import org.genxdm.io.FragmentBuilder;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment;
-import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Role;
 import org.zendesk.client.v2.model.User;
 
