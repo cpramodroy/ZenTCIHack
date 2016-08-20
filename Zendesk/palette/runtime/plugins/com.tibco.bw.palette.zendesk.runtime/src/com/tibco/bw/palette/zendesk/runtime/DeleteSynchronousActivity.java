@@ -1,36 +1,33 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
-import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
-import com.tibco.bw.palette.zendesk.model.zendesk.Delete;
-import com.tibco.bw.runtime.ActivityFault;
-import com.tibco.bw.runtime.SyncActivity;
-import com.tibco.bw.runtime.ProcessContext;
-import com.tibco.bw.runtime.ActivityLifecycleFault;
-import com.tibco.bw.runtime.util.XMLUtils;
-import org.genxdm.ProcessingContext;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.genxdm.Model;
-import com.tibco.neo.localized.LocalizedMessage;
-import org.genxdm.io.FragmentBuilder;
-import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import org.genxdm.ProcessingContext;
+import org.zendesk.client.v2.Zendesk;
+
+import com.tibco.bw.palette.zendesk.model.zendesk.Delete;
 import com.tibco.bw.palette.zendesk.runtime.pojo.delete.ActivityOutputType;
+import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.runtime.ActivityFault;
+import com.tibco.bw.runtime.ActivityLifecycleFault;
+import com.tibco.bw.runtime.ProcessContext;
+import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.annotation.Property;
+import com.tibco.bw.runtime.util.XMLUtils;
+import com.tibco.neo.localized.LocalizedMessage;
 
 
 public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
-
-
 {
-
 	@Property
 	public Delete activityConfig;
 	
-	
-	
+	public static final String PARAM_IDS = "Ids";
 	
     /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 * 
 	 * This method is called to initialize the activity. It is called by the 
@@ -48,16 +45,10 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 		super.init();
 	}
 	
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 * 
 	 * This method is called when an activity is destroyed. It is called by the BusinessWorks Engine and 
@@ -72,16 +63,10 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 		super.destroy();
 	}
 	
     /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *
      * The implementation of this method defines the execution behavior of the synchronous activity.  
@@ -113,17 +98,21 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	        String serializedInputNode = XMLUtils.serializeNode(input, processContext.getXMLProcessingContext());
 		    activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_INPUT, new Object[] {activityContext.getActivityName(), serializedInputNode});
 		}
-        N result = null;
-        try {
-            // begin-custom-code
-			// add your own business code here
+		N result = null;
+		try {
+			// begin-custom-code
+			long[] listOfIds = getListOfIds(input, processContext.getXMLProcessingContext());
+			DeleteData deleteData = new DeleteData();
+			deleteData.setDeleteType(activityConfig.getDeleteType());
+			deleteData.setListOfIds(listOfIds);
+			boolean success = deleteZendeskObject(deleteData);
 			// end-custom-code
-	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
-        } catch (Exception e) {
-            throw new ActivityFault(activityContext, new LocalizedMessage(
-						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
-        }
+			// create output data according the output structure
+			result = evalOutput(input, processContext.getXMLProcessingContext(), success);
+		} catch (Exception e) {
+			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT,
+					new Object[] { activityContext.getActivityName() }));
+		}
 
         if(getActivityLogger().isDebugEnabled()){
 	        String serializedOutputNode = XMLUtils.serializeNode(result, processContext.getXMLProcessingContext());
@@ -131,11 +120,61 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
         return result;
 	}
+	
+	private static <N> long[] getListOfIds(final N input, final ProcessingContext<N> pcx) {
+		Model<N> model = pcx.getModel();
+		N requesterElement = model.getFirstChildElementByName(input, null, PARAM_IDS);
+		Iterable<N> requesterNodes = null;
+		if (requesterElement != null)
+			requesterNodes = model.getChildElements(requesterElement);
+		List<Long> idList = new ArrayList<Long>();
+		if (requesterNodes != null) {
+			Iterator<N> requesterNodesIterator = requesterNodes.iterator();
+			while (requesterNodesIterator.hasNext()) {
+				N node = requesterNodesIterator.next();
+				if (node != null) {
+					long nodeValue = Long.parseLong(model.getStringValue(node));
+					idList.add(nodeValue);
+				}
+			}
+		}
+		long[] ids = new long[idList.size()];
+		for (int i = 0; i < idList.size(); i++)
+			ids[i] = idList.get(i);
+
+		return ids;
+	}
+
+	private boolean deleteZendeskObject(DeleteData deleteData) {
+		String companyUrl = activityConfig.getCompanyUrl();
+		String userId = activityConfig.getUserId();
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
+
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+
+		String type = deleteData.getDeleteType();
+		long[] idList = deleteData.getListOfIds();
+		switch (type) {
+			case "ticket":
+				zendeskInstance.deleteTickets(idList[0], idList);
+				return true;
+			case "user":
+				for (long id : idList)
+					zendeskInstance.deleteUser(id);
+				return true;
+			case "group":
+				for (long id : idList)
+					zendeskInstance.deleteGroup(id);
+				return true;
+			case "organization":
+				for (long id : idList)
+					zendeskInstance.deleteOrganization(id);
+				return true;
+		}
+		return false;
+	}
+	
 	/**
-	 * <!-- begin-custom-doc -->
-	 *
-	 *
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *  
 	 * This method to build the output after finishing the business.
@@ -147,116 +186,11 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, boolean success) throws Exception {
 		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		activityOutput.setSuccess(new Boolean("true"));
+		activityOutput.setSuccess(success);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 	    return output;
 	}
-    /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-	 *
-	 * This method to get the root element of output.
-	 * @param processingContext
-	 *				XML processing context.
-	 * @return An XML Element.
-	 */		
-	 protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-        final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-        Model<N> model = processingContext.getModel();
-        builder.startDocument(null, "xml");
-        try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput", "ns0");
-        try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-        N output = builder.getNode();
-        N resultList = model.getFirstChild(output);
-        // begin-custom-code
-        // add your own business code here
-        // end-custom-code
-        return resultList;
-    }
-    
-	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-         if (parameter == null) {
-             return "";
-         }
-         return model.getStringValue(parameter);
-     }
-     
-  	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type attribute from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param attributeName
-     *			The attribute name which you want to get the value.
-     * @return attribute value.	
-     */
- 	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N attribute = model.getAttribute(inputData, "", attributeName);
-         if (attribute == null) {
-             return "";
-         }
-         return model.getStringValue(attribute);
-     }
-     
- 	/**
- 	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the Boolean type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
- 		Model<N> model = processingContext.getMutableContext().getModel();
- 		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
- 		if (parameter == null) {
- 			return false;
- 		}
- 		String valueStr = model.getStringValue(parameter);
- 		return Boolean.parseBoolean(valueStr);
- 	}
 }
