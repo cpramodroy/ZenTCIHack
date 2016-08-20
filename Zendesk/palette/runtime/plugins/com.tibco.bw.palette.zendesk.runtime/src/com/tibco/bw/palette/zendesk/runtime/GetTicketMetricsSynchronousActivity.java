@@ -158,14 +158,9 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 		String userId = activityConfig.getUserId();
 		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
 		
-		Zendesk zendeskInstance = null;
-		try {
-			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-			User user = zendeskInstance.getAuthenticatedUser();
-			if(user == null){
-				throw new RuntimeException();
-			}
-		} catch (RuntimeException e) {
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		User user = zendeskInstance.getAuthenticatedUser();
+		if (user == null) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
 			throw new ActivityFault(activityContext, msg);

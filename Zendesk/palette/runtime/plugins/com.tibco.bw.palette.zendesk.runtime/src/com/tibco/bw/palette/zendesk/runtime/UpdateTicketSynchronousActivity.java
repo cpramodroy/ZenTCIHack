@@ -191,15 +191,10 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		String companyURL = activityConfig.getCompanyUrl();
 		String username = activityConfig.getUserId();
 		String password = activityConfig.getPassword();
-		Zendesk zendeskInstance = null;
 		// Create zendesk instance to communicate with zendesk portal
-		try {
-			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-			User user = zendeskInstance.getAuthenticatedUser();
-			if (user == null) {
-				throw new RuntimeException();
-			}
-		} catch (RuntimeException e) {
+		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
+		User user = zendeskInstance.getAuthenticatedUser();
+		if (user == null) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
 			throw new ActivityFault(activityContext, msg);

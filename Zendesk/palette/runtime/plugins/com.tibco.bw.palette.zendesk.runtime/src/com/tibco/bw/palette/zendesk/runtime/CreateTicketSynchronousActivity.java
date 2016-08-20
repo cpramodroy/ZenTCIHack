@@ -126,7 +126,8 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		TicketData ticketData = null;
 		Long ticketId;
 		try {
-			//Reading ticket data from input activity and creating a zendesk ticket
+			// Reading ticket data from input activity and creating a zendesk
+			// ticket
 			ticketData = TicketDataHelper.getTicketInput(input, processContext);
 			ticketId = createZendeskTicket(ticketData);
 		} catch (Exception exp) {
@@ -160,20 +161,15 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		String companyURL = activityConfig.getCompanyUrl();
 		String username = activityConfig.getUserId();
 		String password = activityConfig.getPassword();
-		Zendesk zendeskInstance = null;
-
 		// Create zendesk instance to communicate with zendesk portal
-		try {
-			zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-			User user = zendeskInstance.getAuthenticatedUser();
-			if(user == null){
-				throw new RuntimeException();
-			}
-		} catch (RuntimeException e) {
+		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
+		User user = zendeskInstance.getAuthenticatedUser();
+		if (user == null) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
 					new Object[] { activityContext.getActivityName() });
 			throw new ActivityFault(activityContext, msg);
 		}
+
 		String requesterName = ticketData.getRequesterName();
 		String requesterEmail = ticketData.getRequesterEmail();
 		String description = ticketData.getDescription();
@@ -232,8 +228,8 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			 * ticket comment to upload attachment.
 			 */
 			Upload upload = null;
-			try{
-				upload = zendeskInstance.createUpload(file.getName(), contents);		
+			try {
+				upload = zendeskInstance.createUpload(file.getName(), contents);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -242,9 +238,9 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			ticket.setComment(new Comment("Attachment uploaded.", uploadTokens));
 		}
 		Ticket createdTicket = null;
-		try{
-			 createdTicket = zendeskInstance.createTicket(ticket);
-		}catch (Exception e) {
+		try {
+			createdTicket = zendeskInstance.createTicket(ticket);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		// closing zendesk connection
