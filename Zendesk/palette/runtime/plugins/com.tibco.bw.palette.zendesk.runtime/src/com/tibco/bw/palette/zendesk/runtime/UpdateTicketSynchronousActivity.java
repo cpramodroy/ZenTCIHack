@@ -27,9 +27,9 @@ import com.tibco.bw.runtime.util.XMLUtils;
 import com.tibco.neo.localized.LocalizedMessage;
 
 /**
- * @author tvuppala, pramod
+ * @author tvuppala, 
+ * @author pcheruku
  *
- * @param <N>
  */
 public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants
 
@@ -175,7 +175,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		activityOutputType.setTicketId(ticketId);
 		activityOutputType.setSuccess(new Boolean(success));
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutputType, processingContext, activityContext.getActivityOutputType()
-				.getTargetNamespace(), "ActivityOutputType");
+				.getTargetNamespace(), "ActivityOutput");
 		return output;
 	}
 

@@ -10,6 +10,7 @@ import org.zendesk.client.v2.model.Type;
 /**
  * @author tvuppala
  * @author pcheruku
+ *
  */
 
 /**
