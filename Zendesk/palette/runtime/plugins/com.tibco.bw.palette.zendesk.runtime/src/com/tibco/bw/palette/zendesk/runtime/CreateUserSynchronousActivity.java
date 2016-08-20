@@ -30,7 +30,6 @@ import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment;
 import org.zendesk.client.v2.model.Attachment.Upload;
 import org.zendesk.client.v2.model.Role;
-import org.zendesk.client.v2.model.Ticket;
 import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;

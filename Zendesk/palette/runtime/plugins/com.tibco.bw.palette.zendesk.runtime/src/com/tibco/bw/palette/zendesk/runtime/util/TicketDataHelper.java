@@ -17,7 +17,8 @@ import com.tibco.bw.palette.zendesk.runtime.TicketData;
 import com.tibco.bw.runtime.ProcessContext;
 
 /**
- * @author tvuppala,pramod
+ * @author tvuppala,
+ *  @author pcheruku
  * 
  */
 
