@@ -13,6 +13,10 @@ import java.util.List;
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.Group;
+import org.zendesk.client.v2.model.Organization;
+import org.zendesk.client.v2.model.Ticket;
+import org.zendesk.client.v2.model.User;
 
 import com.tibco.bw.palette.zendesk.model.zendesk.Delete;
 import com.tibco.bw.palette.zendesk.runtime.pojo.delete.ActivityOutputType;
@@ -173,24 +177,88 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 
 		String type = deleteData.getDeleteType();
 		long[] idList = deleteData.getListOfIds();
+		boolean validate = validateIds(type, idList, zendeskInstance, true);
+		if(!validate) {
+			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_DELETE_IDS_DO_NOT_EXIST, new Object[] {activityContext.getActivityName(), idList }));
+		}
 		switch (type) {
 			case "ticket":
 				zendeskInstance.deleteTickets(idList[0], idList);
-				return true;
+				break;
 			case "user":
 				for (long id : idList)
 					zendeskInstance.deleteUser(id);
-				return true;
+				break;
 			case "group":
 				for (long id : idList)
 					zendeskInstance.deleteGroup(id);
-				return true;
+				break;
 			case "organization":
 				for (long id : idList)
 					zendeskInstance.deleteOrganization(id);
-				return true;
+				break;
 		}
-		return false;
+		validate = validateIds(type, idList, zendeskInstance, false);
+		if(!validate) {
+			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_DELETE_IDS_UNSUCCESSFUL, new Object[] { activityContext.getActivityName(), idList }));
+		}
+		return validate;
+	}
+
+	private boolean validateIds(String type, long[] idList, Zendesk zendeskInstance, boolean exists) {
+		boolean validate = false;
+		for(long id : idList) {
+			switch(type) {
+			case "ticket" :
+				Ticket ticket = zendeskInstance.getTicket(id);
+				if(ticket != null && exists)  // id exists before delete, so return true
+					validate = true;
+				else if(ticket != null && !exists) // id exists after delete, implies delete failed
+					validate = false;
+				else if(ticket == null && exists) // id does not exist before delete, implies invalid input
+					validate = false;
+				else if(ticket == null && !exists) // id does not exist after delete, implies delete succeeded
+					validate = true;
+				break;
+
+			case "user" :
+				User user = zendeskInstance.getUser(id);
+				if(user != null && exists)  // id exists before delete, so return true
+					validate = true;
+				else if(user != null && !exists) // id exists after delete, implies delete failed
+					validate = false;
+				else if(user == null && exists) // id does not exist before delete, implies invalid input
+					validate = false;
+				else if(user == null && !exists) // id does not exist after delete, implies delete succeeded
+					validate = true;
+				break;
+
+			case "group" :
+				Group group = zendeskInstance.getGroup(id);
+				if(group != null && exists)  // id exists before delete, so return true
+					validate = true;
+				else if(group != null && !exists) // id exists after delete, implies delete failed
+					validate = false;
+				else if(group == null && exists) // id does not exist before delete, implies invalid input
+					validate = false;
+				else if(group == null && !exists) // id does not exist after delete, implies delete succeeded
+					validate = true;
+				break;
+
+			case "organization" :
+				Organization org = zendeskInstance.getOrganization(id);
+				if(org != null && exists)  // id exists before delete, so return true
+					validate = true;
+				else if(org != null && !exists) // id exists after delete, implies delete failed
+					validate = false;
+				else if(org == null && exists) // id does not exist before delete, implies invalid input
+					validate = false;
+				else if(org == null && !exists) // id does not exist after delete, implies delete succeeded
+					validate = true;
+				break;
+			} // close switch
+		} // close forEach
+		return validate;
 	}
 	
 	/**
