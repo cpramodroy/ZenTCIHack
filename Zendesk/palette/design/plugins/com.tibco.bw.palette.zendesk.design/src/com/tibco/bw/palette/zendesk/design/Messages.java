@@ -26,6 +26,13 @@ public class Messages extends NLS {
 	public static String UpdateTicketSchema_inputHeader_typeValidationError_label;
 	public static String UpdateTicketSchema_inputHeader_sourceError_label;
 	
+	// GetTickets messages
+	public static String OutputHeaderLabelProvider_getTickets_label;
+	public static String GetTicketsSchema_outputHeader_tns_prefix;
+	public static String GetTicketsSchema_outputHeader_tns;
+	public static String GetTicketsSchema_outputHeader_typeValidationError_label;
+	public static String GetTicketsSchema_outputHeader_sourceError_label;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(Messages.BUNDLE_NAME, Messages.class);

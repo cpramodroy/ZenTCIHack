@@ -98,6 +98,30 @@
          </palette>
       </activityType>
 
+      <activityType
+            activityTypeID="bw.zendesk.GetTickets"
+            name="%zendesk.activity.GetTickets.name"
+            type="Standard"
+            priority="100"
+            tooltip="%zendesk.activity.GetTickets.tooltip"
+            visible="true">
+         <palette
+               paletteID="bw.zendesk">
+         </palette>
+      </activityType>
+
+      <activityType
+            activityTypeID="bw.zendesk.GetUsers"
+            name="%zendesk.activity.GetUsers.name"
+            type="Standard"
+            priority="100"
+            tooltip="%zendesk.activity.GetUsers.tooltip"
+            visible="true">
+         <palette
+               paletteID="bw.zendesk">
+         </palette>
+      </activityType>
+
       
    </extension>
    
@@ -126,6 +150,14 @@
       <signature
             activityTypeID="bw.zendesk.Search"
             signatureClass="com.tibco.bw.palette.zendesk.design.search.SearchSignature">
+      </signature>
+      <signature
+            activityTypeID="bw.zendesk.GetTickets"
+            signatureClass="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsSignature">
+      </signature>
+      <signature
+            activityTypeID="bw.zendesk.GetUsers"
+            signatureClass="com.tibco.bw.palette.zendesk.design.getusers.GetUsersSignature">
       </signature>
    </extension>
    
@@ -172,6 +204,20 @@
             ePackageNSURI="http://ns.tibco.com/bw/palette/zendesk"
             instanceName="%zendesk.activity.default.Search.name"
             modelHelperClass="com.tibco.bw.palette.zendesk.design.search.SearchModelHelper">
+      </config>
+      <config
+            activityTypeID="bw.zendesk.GetTickets"
+            eClassName="GetTickets"
+            ePackageNSURI="http://ns.tibco.com/bw/palette/zendesk"
+            instanceName="%zendesk.activity.default.GetTickets.name"
+            modelHelperClass="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsModelHelper">
+      </config>
+      <config
+            activityTypeID="bw.zendesk.GetUsers"
+            eClassName="GetUsers"
+            ePackageNSURI="http://ns.tibco.com/bw/palette/zendesk"
+            instanceName="%zendesk.activity.default.GetUsers.name"
+            modelHelperClass="com.tibco.bw.palette.zendesk.design.getusers.GetUsersModelHelper">
       </config>
    </extension>
 
@@ -245,13 +291,33 @@
                id="bw.zendesk.Search.general"
                tab="tibco.bw.activity.property.tab.general">
          </propertySection>
+         <propertySection
+               afterSection="com.tibco.bw.design.activity.general"
+               class="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsGeneralSection"
+               filter="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsGeneralSection"
+               id="bw.zendesk.GetTickets.general"
+               tab="tibco.bw.activity.property.tab.general">
+         </propertySection>
+         <propertySection
+               class="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsOutputEditorSection"
+               filter="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsOutputEditorSection"
+               id="bw.zendesk.GetTickets.outputEditor"
+               tab="tibco.bw.activity.property.tab.outputEditor">
+         </propertySection>
+         <propertySection
+               afterSection="com.tibco.bw.design.activity.general"
+               class="com.tibco.bw.palette.zendesk.design.getusers.GetUsersGeneralSection"
+               filter="com.tibco.bw.palette.zendesk.design.getusers.GetUsersGeneralSection"
+               id="bw.zendesk.GetUsers.general"
+               tab="tibco.bw.activity.property.tab.general">
+         </propertySection>
       </propertySections>
    </extension>
    
    <extension
          point="com.tibco.bw.design.BWContextHelp">
       <plugin
-            defaultURL="file://C:/Users/pcheruku/workspace/bw/6.3.3/v19/2/Zendesk/doc/index.html"
+            defaultURL="file://F:/git/ZenTCIHack/Zendesk/doc/index.html"
             id="bw.zendesk.product"
             name="BusinessWorks Zendesk Plugin">
       </plugin>

@@ -365,4 +365,89 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GetTickets">
+    <eAnnotations source="dkactivityconfig">
+      <details key="activitytype" value="Synchronous"/>
+      <details key="schemaType" value="XSD/WSDL"/>
+      <details key="schemaFile" value="GetTickets.xsd"/>
+      <details key="inputelementname" value="ActivityInput"/>
+      <details key="outputelementname" value="ActivityOutput"/>
+      <details key="faultelementname" value=""/>
+      <details key="helpdocuuid" value="e416be09-79cc-42f1-9d9f-d61177d4f4a5"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="companyUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="Company Url"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="TextBox"/>
+        <details key="value"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="userId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="User Id"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="TextBox"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="Password"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="PasswordField"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+      <eAnnotations source="http://tns.tibco.com/bw/annotations/semantictype/password"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputHeadersQName" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/XMLType.ecore#//QName"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GetUsers">
+    <eAnnotations source="dkactivityconfig">
+      <details key="activitytype" value="Synchronous"/>
+      <details key="schemaType" value="XSD/WSDL"/>
+      <details key="schemaFile" value="GetUsers.xsd"/>
+      <details key="inputelementname" value="ActivityInput"/>
+      <details key="outputelementname" value="ActivityOutut"/>
+      <details key="faultelementname" value=""/>
+      <details key="helpdocuuid" value="47e4105e-7c97-4908-b3e7-907373d4117b"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="companyUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="Company Url"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="TextBox"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="userId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="User Id"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="TextBox"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="dkcontrolconfig">
+        <details key="sectionName" value="General"/>
+        <details key="isRequired" value="true"/>
+        <details key="label" value="Password"/>
+        <details key="isModelProperty" value="true"/>
+        <details key="control" value="PasswordField"/>
+        <details key="value" value=""/>
+      </eAnnotations>
+      <eAnnotations source="http://tns.tibco.com/bw/annotations/semantictype/password"/>
+    </eStructuralFeatures>
+  </eClassifiers>
 </ecore:EPackage>

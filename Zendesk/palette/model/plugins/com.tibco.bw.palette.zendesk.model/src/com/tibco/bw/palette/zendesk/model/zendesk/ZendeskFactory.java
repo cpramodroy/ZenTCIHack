@@ -76,6 +76,24 @@ public interface ZendeskFactory extends EFactory {
 	Search createSearch();
 
 	/**
+	 * Returns a new object of class '<em>Get Tickets</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Get Tickets</em>'.
+	 * @generated
+	 */
+	GetTickets createGetTickets();
+
+	/**
+	 * Returns a new object of class '<em>Get Users</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Get Users</em>'.
+	 * @generated
+	 */
+	GetUsers createGetUsers();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

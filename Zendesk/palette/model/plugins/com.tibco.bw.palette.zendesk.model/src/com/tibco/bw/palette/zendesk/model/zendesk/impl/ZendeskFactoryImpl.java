@@ -62,6 +62,8 @@ public class ZendeskFactoryImpl extends EFactoryImpl implements ZendeskFactory {
 			case ZendeskPackage.DELETE: return createDelete();
 			case ZendeskPackage.GET_TICKET_METRICS: return createGetTicketMetrics();
 			case ZendeskPackage.SEARCH: return createSearch();
+			case ZendeskPackage.GET_TICKETS: return createGetTickets();
+			case ZendeskPackage.GET_USERS: return createGetUsers();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -125,6 +127,26 @@ public class ZendeskFactoryImpl extends EFactoryImpl implements ZendeskFactory {
 	public Search createSearch() {
 		SearchImpl search = new SearchImpl();
 		return search;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GetTickets createGetTickets() {
+		GetTicketsImpl getTickets = new GetTicketsImpl();
+		return getTickets;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GetUsers createGetUsers() {
+		GetUsersImpl getUsers = new GetUsersImpl();
+		return getUsers;
 	}
 
 	/**

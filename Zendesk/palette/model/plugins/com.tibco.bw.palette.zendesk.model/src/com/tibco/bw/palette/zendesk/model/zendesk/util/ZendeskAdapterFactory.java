@@ -92,6 +92,14 @@ public class ZendeskAdapterFactory extends AdapterFactoryImpl {
 				return createSearchAdapter();
 			}
 			@Override
+			public Adapter caseGetTickets(GetTickets object) {
+				return createGetTicketsAdapter();
+			}
+			@Override
+			public Adapter caseGetUsers(GetUsers object) {
+				return createGetUsersAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -192,6 +200,34 @@ public class ZendeskAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSearchAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets <em>Get Tickets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets
+	 * @generated
+	 */
+	public Adapter createGetTicketsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetUsers <em>Get Users</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetUsers
+	 * @generated
+	 */
+	public Adapter createGetUsersAdapter() {
 		return null;
 	}
 

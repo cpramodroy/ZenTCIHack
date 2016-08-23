@@ -6,6 +6,8 @@ import com.tibco.bw.palette.zendesk.model.zendesk.CreateTicket;
 import com.tibco.bw.palette.zendesk.model.zendesk.CreateUser;
 import com.tibco.bw.palette.zendesk.model.zendesk.Delete;
 import com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics;
+import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
+import com.tibco.bw.palette.zendesk.model.zendesk.GetUsers;
 import com.tibco.bw.palette.zendesk.model.zendesk.Search;
 import com.tibco.bw.palette.zendesk.model.zendesk.UpdateTicket;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskFactory;
@@ -66,6 +68,20 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 	 * @generated
 	 */
 	private EClass searchEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass getTicketsEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass getUsersEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -469,6 +485,87 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getGetTickets() {
+		return getTicketsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetTickets_CompanyUrl() {
+		return (EAttribute)getTicketsEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetTickets_UserId() {
+		return (EAttribute)getTicketsEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetTickets_Password() {
+		return (EAttribute)getTicketsEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetTickets_OutputHeadersQName() {
+		return (EAttribute)getTicketsEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGetUsers() {
+		return getUsersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetUsers_CompanyUrl() {
+		return (EAttribute)getUsersEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetUsers_UserId() {
+		return (EAttribute)getUsersEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGetUsers_Password() {
+		return (EAttribute)getUsersEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ZendeskFactory getZendeskFactory() {
 		return (ZendeskFactory)getEFactoryInstance();
 	}
@@ -534,6 +631,17 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		createEAttribute(searchEClass, SEARCH__PASSWORD);
 		createEAttribute(searchEClass, SEARCH__SEARCH_TYPE);
 		createEAttribute(searchEClass, SEARCH__MAX_ROWS);
+
+		getTicketsEClass = createEClass(GET_TICKETS);
+		createEAttribute(getTicketsEClass, GET_TICKETS__COMPANY_URL);
+		createEAttribute(getTicketsEClass, GET_TICKETS__USER_ID);
+		createEAttribute(getTicketsEClass, GET_TICKETS__PASSWORD);
+		createEAttribute(getTicketsEClass, GET_TICKETS__OUTPUT_HEADERS_QNAME);
+
+		getUsersEClass = createEClass(GET_USERS);
+		createEAttribute(getUsersEClass, GET_USERS__COMPANY_URL);
+		createEAttribute(getUsersEClass, GET_USERS__USER_ID);
+		createEAttribute(getUsersEClass, GET_USERS__PASSWORD);
 	}
 
 	/**
@@ -611,6 +719,17 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		initEAttribute(getSearch_Password(), ecorePackage.getEString(), "password", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSearch_SearchType(), ecorePackage.getEString(), "searchType", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSearch_MaxRows(), ecorePackage.getEInt(), "maxRows", null, 0, 1, Search.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(getTicketsEClass, GetTickets.class, "GetTickets", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGetTickets_CompanyUrl(), ecorePackage.getEString(), "companyUrl", null, 0, 1, GetTickets.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetTickets_UserId(), ecorePackage.getEString(), "userId", null, 0, 1, GetTickets.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetTickets_Password(), ecorePackage.getEString(), "password", null, 0, 1, GetTickets.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetTickets_OutputHeadersQName(), theXMLTypePackage.getQName(), "outputHeadersQName", null, 0, 1, GetTickets.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(getUsersEClass, GetUsers.class, "GetUsers", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGetUsers_CompanyUrl(), ecorePackage.getEString(), "companyUrl", null, 0, 1, GetUsers.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetUsers_UserId(), ecorePackage.getEString(), "userId", null, 0, 1, GetUsers.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGetUsers_Password(), ecorePackage.getEString(), "password", null, 0, 1, GetUsers.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -703,6 +822,30 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "outputelementname", "ActivityOutput",
 			 "faultelementname", "",
 			 "helpdocuuid", "4c780bb7-16f6-40db-8440-fdc5ca7f9505"
+		   });	
+		addAnnotation
+		  (getTicketsEClass, 
+		   source, 
+		   new String[] {
+			 "activitytype", "Synchronous",
+			 "schemaType", "XSD/WSDL",
+			 "schemaFile", "GetTickets.xsd",
+			 "inputelementname", "ActivityInput",
+			 "outputelementname", "ActivityOutput",
+			 "faultelementname", "",
+			 "helpdocuuid", "e416be09-79cc-42f1-9d9f-d61177d4f4a5"
+		   });	
+		addAnnotation
+		  (getUsersEClass, 
+		   source, 
+		   new String[] {
+			 "activitytype", "Synchronous",
+			 "schemaType", "XSD/WSDL",
+			 "schemaFile", "GetUsers.xsd",
+			 "inputelementname", "ActivityInput",
+			 "outputelementname", "ActivityOutut",
+			 "faultelementname", "",
+			 "helpdocuuid", "47e4105e-7c97-4908-b3e7-907373d4117b"
 		   });
 	}
 
@@ -1008,7 +1151,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "isRequired", "true",
 			 "label", "Password",
 			 "isModelProperty", "true",
-			 "control", "TextBox",
+			 "control", "PasswordField",
 			 "value", ""
 		   });	
 		addAnnotation
@@ -1031,6 +1174,72 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "label", "Max Rows",
 			 "isModelProperty", "true",
 			 "control", "Spinner",
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetTickets_CompanyUrl(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "Company Url",
+			 "isModelProperty", "true",
+			 "control", "TextBox",
+			 "value", null
+		   });	
+		addAnnotation
+		  (getGetTickets_UserId(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "User Id",
+			 "isModelProperty", "true",
+			 "control", "TextBox",
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetTickets_Password(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "Password",
+			 "isModelProperty", "true",
+			 "control", "PasswordField",
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetUsers_CompanyUrl(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "Company Url",
+			 "isModelProperty", "true",
+			 "control", "TextBox",
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetUsers_UserId(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "User Id",
+			 "isModelProperty", "true",
+			 "control", "TextBox",
+			 "value", ""
+		   });	
+		addAnnotation
+		  (getGetUsers_Password(), 
+		   source, 
+		   new String[] {
+			 "sectionName", "General",
+			 "isRequired", "true",
+			 "label", "Password",
+			 "isModelProperty", "true",
+			 "control", "PasswordField",
 			 "value", ""
 		   });
 	}
@@ -1065,6 +1274,21 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 		   });	
 		addAnnotation
 		  (getGetTicketMetrics_Password(), 
+		   source, 
+		   new String[] {
+		   });	
+		addAnnotation
+		  (getSearch_Password(), 
+		   source, 
+		   new String[] {
+		   });	
+		addAnnotation
+		  (getGetTickets_Password(), 
+		   source, 
+		   new String[] {
+		   });	
+		addAnnotation
+		  (getGetUsers_Password(), 
 		   source, 
 		   new String[] {
 		   });

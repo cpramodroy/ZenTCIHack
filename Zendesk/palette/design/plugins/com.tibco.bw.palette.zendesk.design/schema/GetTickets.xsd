@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/GetTickets" xmlns:tns="http://www.example.org/GetTickets" elementFormDefault="qualified">
+<complexType name="RequesterType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" name="Name" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Email" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="CollaboratorsType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="unbounded" name="CC" type="tns:CCType"/>
+		</sequence>
+	</complexType>
+	<complexType name="CCType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" name="Name" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Email" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="TagsType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="unbounded" name="TagName" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="CustomFieldType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" maxOccurs="1" name="Field1" type="string"/>
+		</sequence>
+	</complexType>
+	<complexType name="TicketType">
+		<sequence>
+			<element form="unqualified" minOccurs="0" name="Requester" type="tns:RequesterType"/>
+			<element form="unqualified" minOccurs="0" name="Subject" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Description" type="string"/>
+			<element form="unqualified" minOccurs="0" maxOccurs="1" name="Collaborators" type="tns:CollaboratorsType"/>
+			<element form="unqualified" minOccurs="0" name="Type" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Priority" type="string"/>
+			<element form="unqualified" minOccurs="0" name="Tags" type="tns:TagsType"/>
+			<element form="unqualified" maxOccurs="1" minOccurs="0" name="CustomFields" type="tns:CustomFieldType"/>
+		</sequence>
+	</complexType>
+	    <complexType name="ActivityOutputType">
+    	<sequence>
+    		<element maxOccurs="unbounded" minOccurs="1" name="Ticket" type="tns:TicketType"/>
+    	</sequence>
+    </complexType>
+	<element name="ActivityOutput" type="tns:ActivityOutputType"/>
+	<complexType name="ActivityInputType">
+    	<sequence>
+    		<element maxOccurs="unbounded" minOccurs="1" name="TicketIds" type="tns:TicketIdsType"/>
+    	</sequence>
+    </complexType>
+    	<complexType name="TicketIdsType">
+    	<sequence>
+    		<element maxOccurs="unbounded" minOccurs="1" name="TicketId" type="long"/>
+    	</sequence>
+    </complexType>
+    <element name="ActivityInput" type="tns:ActivityInputType"/>
+</schema>

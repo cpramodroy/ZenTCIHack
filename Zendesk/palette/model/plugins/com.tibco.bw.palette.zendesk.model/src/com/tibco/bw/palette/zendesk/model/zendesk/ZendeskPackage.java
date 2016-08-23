@@ -449,6 +449,108 @@ public interface ZendeskPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketsImpl <em>Get Tickets</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketsImpl
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.ZendeskPackageImpl#getGetTickets()
+	 * @generated
+	 */
+	int GET_TICKETS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Company Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKETS__COMPANY_URL = 0;
+
+	/**
+	 * The feature id for the '<em><b>User Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKETS__USER_ID = 1;
+
+	/**
+	 * The feature id for the '<em><b>Password</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKETS__PASSWORD = 2;
+
+	/**
+	 * The feature id for the '<em><b>Output Headers QName</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKETS__OUTPUT_HEADERS_QNAME = 3;
+
+	/**
+	 * The number of structural features of the '<em>Get Tickets</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_TICKETS_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetUsersImpl <em>Get Users</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.GetUsersImpl
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.ZendeskPackageImpl#getGetUsers()
+	 * @generated
+	 */
+	int GET_USERS = 7;
+
+	/**
+	 * The feature id for the '<em><b>Company Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_USERS__COMPANY_URL = 0;
+
+	/**
+	 * The feature id for the '<em><b>User Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_USERS__USER_ID = 1;
+
+	/**
+	 * The feature id for the '<em><b>Password</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_USERS__PASSWORD = 2;
+
+	/**
+	 * The number of structural features of the '<em>Get Users</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GET_USERS_FEATURE_COUNT = 3;
+
+
+	/**
 	 * Returns the meta object for class '{@link com.tibco.bw.palette.zendesk.model.zendesk.CreateTicket <em>Create Ticket</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -850,6 +952,103 @@ public interface ZendeskPackage extends EPackage {
 	EAttribute getSearch_MaxRows();
 
 	/**
+	 * Returns the meta object for class '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets <em>Get Tickets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Get Tickets</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets
+	 * @generated
+	 */
+	EClass getGetTickets();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getCompanyUrl <em>Company Url</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Company Url</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getCompanyUrl()
+	 * @see #getGetTickets()
+	 * @generated
+	 */
+	EAttribute getGetTickets_CompanyUrl();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getUserId <em>User Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>User Id</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getUserId()
+	 * @see #getGetTickets()
+	 * @generated
+	 */
+	EAttribute getGetTickets_UserId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getPassword <em>Password</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Password</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getPassword()
+	 * @see #getGetTickets()
+	 * @generated
+	 */
+	EAttribute getGetTickets_Password();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getOutputHeadersQName <em>Output Headers QName</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Headers QName</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetTickets#getOutputHeadersQName()
+	 * @see #getGetTickets()
+	 * @generated
+	 */
+	EAttribute getGetTickets_OutputHeadersQName();
+
+	/**
+	 * Returns the meta object for class '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetUsers <em>Get Users</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Get Users</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetUsers
+	 * @generated
+	 */
+	EClass getGetUsers();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getCompanyUrl <em>Company Url</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Company Url</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getCompanyUrl()
+	 * @see #getGetUsers()
+	 * @generated
+	 */
+	EAttribute getGetUsers_CompanyUrl();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getUserId <em>User Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>User Id</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getUserId()
+	 * @see #getGetUsers()
+	 * @generated
+	 */
+	EAttribute getGetUsers_UserId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getPassword <em>Password</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Password</em>'.
+	 * @see com.tibco.bw.palette.zendesk.model.zendesk.GetUsers#getPassword()
+	 * @see #getGetUsers()
+	 * @generated
+	 */
+	EAttribute getGetUsers_Password();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1178,6 +1377,82 @@ public interface ZendeskPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SEARCH__MAX_ROWS = eINSTANCE.getSearch_MaxRows();
+
+		/**
+		 * The meta object literal for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketsImpl <em>Get Tickets</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.GetTicketsImpl
+		 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.ZendeskPackageImpl#getGetTickets()
+		 * @generated
+		 */
+		EClass GET_TICKETS = eINSTANCE.getGetTickets();
+
+		/**
+		 * The meta object literal for the '<em><b>Company Url</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_TICKETS__COMPANY_URL = eINSTANCE.getGetTickets_CompanyUrl();
+
+		/**
+		 * The meta object literal for the '<em><b>User Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_TICKETS__USER_ID = eINSTANCE.getGetTickets_UserId();
+
+		/**
+		 * The meta object literal for the '<em><b>Password</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_TICKETS__PASSWORD = eINSTANCE.getGetTickets_Password();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Headers QName</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_TICKETS__OUTPUT_HEADERS_QNAME = eINSTANCE.getGetTickets_OutputHeadersQName();
+
+		/**
+		 * The meta object literal for the '{@link com.tibco.bw.palette.zendesk.model.zendesk.impl.GetUsersImpl <em>Get Users</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.GetUsersImpl
+		 * @see com.tibco.bw.palette.zendesk.model.zendesk.impl.ZendeskPackageImpl#getGetUsers()
+		 * @generated
+		 */
+		EClass GET_USERS = eINSTANCE.getGetUsers();
+
+		/**
+		 * The meta object literal for the '<em><b>Company Url</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_USERS__COMPANY_URL = eINSTANCE.getGetUsers_CompanyUrl();
+
+		/**
+		 * The meta object literal for the '<em><b>User Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_USERS__USER_ID = eINSTANCE.getGetUsers_UserId();
+
+		/**
+		 * The meta object literal for the '<em><b>Password</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GET_USERS__PASSWORD = eINSTANCE.getGetUsers_Password();
 
 	}
 

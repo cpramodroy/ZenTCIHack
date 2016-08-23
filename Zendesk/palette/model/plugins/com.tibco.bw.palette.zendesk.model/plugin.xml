@@ -53,5 +53,17 @@
             largeIcon="icons/obj32/zendesk_search_32x32.png"
             smallIcon="icons/obj16/zendesk_search_16x16.png">
       </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.GetTickets"
+            diagramIcon="icons/obj48/zendesk_gettickets_48x48.png"
+            largeIcon="icons/obj32/zendesk_gettickets_32x32.png"
+            smallIcon="icons/obj16/zendesk_gettickets_16x16.png">
+      </activityIcon>
+    <activityIcon
+            activityTypeID="bw.zendesk.GetUsers"
+            diagramIcon="icons/obj48/zendesk_getusers_48x48.png"
+            largeIcon="icons/obj32/zendesk_getusers_32x32.png"
+            smallIcon="icons/obj16/zendesk_getusers_16x16.png">
+      </activityIcon>
     </extension>
 </plugin>
