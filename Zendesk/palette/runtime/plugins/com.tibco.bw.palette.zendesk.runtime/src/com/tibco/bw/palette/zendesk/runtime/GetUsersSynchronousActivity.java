@@ -13,10 +13,14 @@ import com.tibco.neo.localized.LocalizedMessage;
 import org.genxdm.io.FragmentBuilder;
 import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
 import com.tibco.bw.palette.zendesk.runtime.pojo.getusers.ActivityOutputType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.getusers.UsersType;
 import com.tibco.bw.runtime.annotation.Property;
 
 
-public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
+public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
+
+
+{
 
 	@Property
 	public GetUsers activityConfig;
@@ -147,12 +151,14 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
 		
 		ActivityOutputType activityOutut = new ActivityOutputType();
-		activityOutut.setName("StringValue");
-		activityOutut.setEmail("StringValue");
-		activityOutut.setRole("StringValue");
-		activityOutut.setPhoneNumber("StringValue");
-		activityOutut.setAlias("StringValue");
-		activityOutut.setExternalId("StringValue");
+		UsersType user = new UsersType();
+		user.setName("StringValue");
+		user.setEmail("StringValue");
+		user.setRole("StringValue");
+		user.setPhoneNumber("StringValue");
+		user.setAlias("StringValue");
+		user.setExternalId("StringValue");
+		activityOutut.setUser(user);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutut, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutut");
 		// begin-custom-code
         // add your own business code here

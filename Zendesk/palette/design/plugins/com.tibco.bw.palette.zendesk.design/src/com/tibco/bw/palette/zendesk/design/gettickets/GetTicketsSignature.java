@@ -99,7 +99,7 @@ public class GetTicketsSignature extends BWActivitySignature {
 		// get dynamic schema
 		XSDTypeDefinition outputCustomFieldType = ModelHelper.INSTANCE.getXSDTypeByQName(getTickets, getTickets.getOutputHeadersQName());
 
-		// create namespace and use it to update new input schema's namespace.
+		// create namespace and use it to update new output schema's namespace.
 		String namespace = createNamespace(new Object[] { outputType.getSchema(), config, "output" }); //$NON-NLS-1$
 		updateNamespace(outputType, namespace);
 
@@ -111,9 +111,9 @@ public class GetTicketsSignature extends BWActivitySignature {
         return outputType;
     }
     
-	private void isOutputHeaderContentChanged(Configuration config, XSDElementDeclaration newInputTypeElement, XSDTypeDefinition inputCustomFieldType) {
-		XSDSchema outputCustomFieldSchema = newInputTypeElement.getSchema();
-		XSDSchema customFieldSchema = inputCustomFieldType.getSchema();
+	private void isOutputHeaderContentChanged(Configuration config, XSDElementDeclaration newOutputTypeElement, XSDTypeDefinition outputCustomFieldType) {
+		XSDSchema outputCustomFieldSchema = newOutputTypeElement.getSchema();
+		XSDSchema customFieldSchema = outputCustomFieldType.getSchema();
 
 		if (outputCustomFieldSchema != null && customFieldSchema != null) {
 			if (isContentChanged(outputCustomFieldSchema.resolveElementDeclaration("CustomFields"), customFieldSchema.resolveElementDeclaration("CustomFields"))) {

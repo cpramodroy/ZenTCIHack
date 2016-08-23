@@ -25,7 +25,7 @@ public class DeleteSchema extends BWExtensionActivitySchema
 	 *
 	 * The name of the input element.
 	 */
-	private static final String INPUT_TYPE_ELEMENT_NAME = "ActvityInput";
+	private static final String INPUT_TYPE_ELEMENT_NAME = "ActivityInput";
     /**
 	 * <!-- begin-custom-doc -->
 	 * 

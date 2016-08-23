@@ -9,8 +9,11 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.tibco.bw.palette.zendesk.design.messages"; //$NON-NLS-1$
 	
 	public static String SendInputEditorSection_tree_label;
+	public static String SendOutputEditorSection_tree_label;
 	public static String InputHeaderSelectTypeAction_tooltip;
+	public static String OutputHeaderSelectTypeAction_tooltip;
 	public static String InputHeaderRemoveTypeAction_tooltip;
+	public static String OutputHeaderRemoveTypeAction_tooltip;
 	
 	// CreateTicket messages
 	public static String InputHeaderLabelProvider_createTicket_label;

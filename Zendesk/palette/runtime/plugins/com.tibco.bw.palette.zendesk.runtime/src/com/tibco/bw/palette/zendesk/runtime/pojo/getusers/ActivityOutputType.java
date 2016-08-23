@@ -17,12 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string" form="unqualified"/>
- *         &lt;element name="Email" type="{http://www.w3.org/2001/XMLSchema}string" form="unqualified"/>
- *         &lt;element name="Role" type="{http://www.w3.org/2001/XMLSchema}string" form="unqualified"/>
- *         &lt;element name="PhoneNumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="unqualified"/>
- *         &lt;element name="Alias" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="unqualified"/>
- *         &lt;element name="ExternalId" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="unqualified"/>
+ *         &lt;element name="User" type="{http://www.example.org/GetUsers}UsersType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,170 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ActivityOutputType", namespace = "http://www.example.org/GetUsers", propOrder = {
-    "name",
-    "email",
-    "role",
-    "phoneNumber",
-    "alias",
-    "externalId"
+    "user"
 })
 public class ActivityOutputType {
 
-    @XmlElement(name = "Name", required = true)
-    protected String name;
-    @XmlElement(name = "Email", required = true)
-    protected String email;
-    @XmlElement(name = "Role", required = true)
-    protected String role;
-    @XmlElement(name = "PhoneNumber")
-    protected String phoneNumber;
-    @XmlElement(name = "Alias")
-    protected String alias;
-    @XmlElement(name = "ExternalId")
-    protected String externalId;
+    @XmlElement(name = "User", namespace = "http://www.example.org/GetUsers", required = true)
+    protected UsersType user;
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the user property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link UsersType }
      *     
      */
-    public String getName() {
-        return name;
+    public UsersType getUser() {
+        return user;
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the user property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link UsersType }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
-    }
-
-    /**
-     * Gets the value of the email property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Sets the value of the email property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setEmail(String value) {
-        this.email = value;
-    }
-
-    /**
-     * Gets the value of the role property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRole() {
-        return role;
-    }
-
-    /**
-     * Sets the value of the role property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRole(String value) {
-        this.role = value;
-    }
-
-    /**
-     * Gets the value of the phoneNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    /**
-     * Sets the value of the phoneNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPhoneNumber(String value) {
-        this.phoneNumber = value;
-    }
-
-    /**
-     * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAlias() {
-        return alias;
-    }
-
-    /**
-     * Sets the value of the alias property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAlias(String value) {
-        this.alias = value;
-    }
-
-    /**
-     * Gets the value of the externalId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getExternalId() {
-        return externalId;
-    }
-
-    /**
-     * Sets the value of the externalId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setExternalId(String value) {
-        this.externalId = value;
+    public void setUser(UsersType value) {
+        this.user = value;
     }
 
 }

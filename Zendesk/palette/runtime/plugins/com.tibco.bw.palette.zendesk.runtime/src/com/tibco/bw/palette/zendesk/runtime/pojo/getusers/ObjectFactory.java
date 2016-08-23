@@ -51,6 +51,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link UsersType }
+     * 
+     */
+    public UsersType createUsersType() {
+        return new UsersType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityOutputType }{@code >}}
      * 
      */

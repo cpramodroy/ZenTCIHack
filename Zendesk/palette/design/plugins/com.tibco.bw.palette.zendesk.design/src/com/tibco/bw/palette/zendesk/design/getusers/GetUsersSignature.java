@@ -13,7 +13,8 @@ import com.tibco.bw.model.activityconfig.Configuration;
  * @generated
  * 
  */
-public class GetUsersSignature extends BWActivitySignature {
+public class GetUsersSignature extends BWActivitySignature 
+{
 	
 	
 	/**

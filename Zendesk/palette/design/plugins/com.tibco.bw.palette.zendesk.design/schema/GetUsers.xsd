@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/GetUsers" xmlns:tns="http://www.example.org/GetUsers" elementFormDefault="qualified">
-<complexType name="ActivityOutputType">
+<complexType name="UsersType">
 		<sequence>
 			<element form="unqualified" minOccurs="1" name="Name" type="string"/>
 			<element form="unqualified" minOccurs="1" name="Email" type="string"/>
@@ -10,7 +10,13 @@
 			<element form="unqualified" minOccurs="0" name="ExternalId" type="string"/>
 		</sequence>
 	</complexType>
-	<element name="ActivityOutut" type="tns:ActivityOutputType"/>
+	<complexType name="ActivityOutputType">
+    	<sequence>
+    		<element maxOccurs="unbounded" minOccurs="1" name="User" type="tns:UsersType"/>
+    	</sequence>
+    </complexType>
+    
+	<element name="ActivityOutput" type="tns:ActivityOutputType"/>
 	<complexType name="ActivityInputType">
     	<sequence>
     		<element maxOccurs="1" minOccurs="1" name="UserId" type="long"/>

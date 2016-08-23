@@ -5,7 +5,9 @@ import com.tibco.bw.design.api.BWAbstractModelHelper;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskFactory;
 import com.tibco.bw.palette.zendesk.model.zendesk.GetUsers;
 
-public class GetUsersModelHelper extends BWAbstractModelHelper {
+public class GetUsersModelHelper extends BWAbstractModelHelper 
+
+{
 
 	/**
 	 * <!-- begin-custom-doc -->

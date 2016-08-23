@@ -14,7 +14,8 @@ import com.tibco.bw.palette.zendesk.model.utils.Messages;
 /**
  * General tab properties for the activity.
  */
-public class GetUsersGeneralSection extends AbstractBWTransactionalSection {
+public class GetUsersGeneralSection extends AbstractBWTransactionalSection 
+{
    /**
 	* <!-- begin-custom-doc -->
 	* 

@@ -4,7 +4,9 @@ import com.tibco.bw.design.api.BWExtensionActivitySchema;
 import java.io.InputStream;
 import org.eclipse.xsd.XSDSchema;
 
-public class GetUsersSchema extends BWExtensionActivitySchema {
+public class GetUsersSchema extends BWExtensionActivitySchema 
+
+{
 	private static GetUsersSchema INSTANCE = new GetUsersSchema();
     /**
 	 * <!-- begin-custom-doc -->
@@ -32,7 +34,7 @@ public class GetUsersSchema extends BWExtensionActivitySchema {
 	 *
 	 * The name of the output element.
 	 */
-	private static final String OUTPUT_TYPE_ELEMENT_NAME = "ActivityOutut";
+	private static final String OUTPUT_TYPE_ELEMENT_NAME = "ActivityOutput";
     /**
 	 * <!-- begin-custom-doc -->
 	 * 

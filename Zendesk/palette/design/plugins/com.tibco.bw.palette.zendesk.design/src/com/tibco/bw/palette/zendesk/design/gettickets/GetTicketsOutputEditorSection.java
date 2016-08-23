@@ -14,13 +14,13 @@ import com.tibco.bw.design.field.utils.QNameDataType;
 import com.tibco.bw.design.internal.base.BWDesign;
 import com.tibco.bw.design.propertysection.AbstractInlineSchemaSection;
 import com.tibco.bw.palette.zendesk.design.Messages;
-import com.tibco.bw.palette.zendesk.model.zendesk.CreateTicket;
+import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
 import com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage;
 import com.tibco.zion.common.component.xsdtree.SimpleXsdTree;
 
 
 /**
- * Input Editor tab for Send mail activity.
+ * Input Editor tab for Get Tickets activity.
  */
 public class GetTicketsOutputEditorSection extends AbstractInlineSchemaSection {
 
@@ -31,12 +31,12 @@ public class GetTicketsOutputEditorSection extends AbstractInlineSchemaSection {
 
 	@Override
 	protected Class<?> getModelClass() {
-		return CreateTicket.class;
+		return GetTickets.class;
 	}
 
 	@Override
 	protected EStructuralFeature getBindingFeature() {
-		return ZendeskPackage.Literals.CREATE_TICKET__INPUT_HEADERS_QNAME;
+		return ZendeskPackage.Literals.GET_TICKETS__OUTPUT_HEADERS_QNAME;
 	}
 
 	@Override
