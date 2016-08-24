@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class TagsType {
 
-    @XmlElement(name = "TagName", nillable = true)
+    @XmlElement(name = "TagName")
     protected List<String> tagName;
 
     /**

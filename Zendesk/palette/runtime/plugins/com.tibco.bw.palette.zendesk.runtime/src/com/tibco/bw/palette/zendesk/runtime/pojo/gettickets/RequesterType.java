@@ -1,10 +1,9 @@
 
 package com.tibco.bw.palette.zendesk.runtime.pojo.gettickets;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -35,20 +34,20 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class RequesterType {
 
-    @XmlElementRef(name = "Name", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> name;
-    @XmlElementRef(name = "Email", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> email;
+    @XmlElement(name = "Name")
+    protected String name;
+    @XmlElement(name = "Email")
+    protected String email;
 
     /**
      * Gets the value of the name property.
      * 
      * @return
      *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link String }
      *     
      */
-    public JAXBElement<String> getName() {
+    public String getName() {
         return name;
     }
 
@@ -57,10 +56,10 @@ public class RequesterType {
      * 
      * @param value
      *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link String }
      *     
      */
-    public void setName(JAXBElement<String> value) {
+    public void setName(String value) {
         this.name = value;
     }
 
@@ -69,10 +68,10 @@ public class RequesterType {
      * 
      * @return
      *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link String }
      *     
      */
-    public JAXBElement<String> getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -81,10 +80,10 @@ public class RequesterType {
      * 
      * @param value
      *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link String }
      *     
      */
-    public void setEmail(JAXBElement<String> value) {
+    public void setEmail(String value) {
         this.email = value;
     }
 
