@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.tibco.bw.palette.zendesk.model/src" modelPluginID="com.tibco.bw.palette.zendesk.model"
-    modelName="Zendesk" importerID="org.eclipse.emf.importer.ecore" bundleManifest="false"
-    complianceLevel="6.0" copyrightFields="false" runtimeVersion="2.4" language=""
-    usedGenPackages="../../org.eclipse.emf.ecore/model/XMLType.genmodel#//type">
-  <foreignModel>zendesk.activity.ecore</foreignModel>
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="6.0"
+    copyrightFields="false" runtimeVersion="2.4">
   <genPackages prefix="Zendesk" basePackage="com.tibco.bw.palette.zendesk.model" disposableProviderFactory="true"
       ecorePackage="zendesk.activity.ecore#/">
     <genClasses ecoreClass="zendesk.activity.ecore#//CreateTicket">

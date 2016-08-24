@@ -110,17 +110,19 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		}
 		N result = null;
 		boolean success;
+		DeleteData deleteData = new DeleteData();
 		
-		// Get list of id(s) and type from activity input and delete corresponding object(s).
+		// Get list of id(s) and type from activity input 
 		try {
 			long[] listOfIds = getListOfIds(input, processContext.getXMLProcessingContext());
-			DeleteData deleteData = new DeleteData();
 			deleteData.setDeleteType(activityConfig.getDeleteType());
 			deleteData.setListOfIds(listOfIds);
-			success = deleteZendeskObject(deleteData);
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
+		
+		// delete corresponding object(s)
+		success = deleteZendeskObject(deleteData);
 		
 		try {
 			// create output data according the output structure
@@ -139,18 +141,18 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	
 	private static <N> long[] getListOfIds(final N input, final ProcessingContext<N> pcx) {
 		Model<N> model = pcx.getModel();
-		N requesterElement = model.getFirstChildElementByName(input, null, PARAM_IDS);
-		Iterable<N> requesterNodes = null;
-		if (requesterElement != null)
-			requesterNodes = model.getChildElements(requesterElement);
+		N IdsElement = model.getFirstChildElementByName(input, null, PARAM_IDS);
+		Iterable<N> IdsNodes = null;
+		if (IdsElement != null)
+			IdsNodes = model.getChildElements(IdsElement);
 		List<Long> idList = new ArrayList<Long>();
-		if (requesterNodes != null) {
-			Iterator<N> requesterNodesIterator = requesterNodes.iterator();
-			while (requesterNodesIterator.hasNext()) {
-				N node = requesterNodesIterator.next();
-				if (node != null) {
-					long nodeValue = Long.parseLong(model.getStringValue(node));
-					idList.add(nodeValue);
+		if (IdsNodes != null) {
+			Iterator<N> IdsNodesIterator = IdsNodes.iterator();
+			while (IdsNodesIterator.hasNext()) {
+				N id = IdsNodesIterator.next();
+				if (id != null) {
+					long idValue = Long.parseLong(model.getStringValue(id));
+					idList.add(idValue);
 				}
 			}
 		}
@@ -202,6 +204,7 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		if(!validate) {
 			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_DELETE_IDS_UNSUCCESSFUL, new Object[] { activityContext.getActivityName(), idList }));
 		}
+		zendeskInstance.close();
 		return validate;
 	}
 

@@ -6,37 +6,31 @@ package com.tibco.bw.palette.zendesk.runtime;
  *
  */
 
-import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
-import com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics;
-import com.tibco.bw.runtime.ActivityFault;
-import com.tibco.bw.runtime.SyncActivity;
-import com.tibco.bw.runtime.ProcessContext;
-import com.tibco.bw.runtime.ActivityLifecycleFault;
-import com.tibco.bw.runtime.util.XMLUtils;
-
-import org.genxdm.ProcessingContext;
-
-import com.tibco.neo.localized.LocalizedMessage;
-
-import org.zendesk.client.v2.Zendesk;
-import org.zendesk.client.v2.model.Metric;
-import org.zendesk.client.v2.model.User;
-
-import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
-import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
-
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.TicketMetricsType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ComboMinutesType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ActivityOutputType;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.genxdm.ProcessingContext;
+import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.Metric;
+import org.zendesk.client.v2.model.User;
+
+import com.tibco.bw.palette.zendesk.model.zendesk.GetTicketMetrics;
+import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ActivityOutputType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.ComboMinutesType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.getticketmetrics.TicketMetricsType;
+import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.palette.zendesk.runtime.util.TicketDataHelper;
+import com.tibco.bw.runtime.ActivityFault;
+import com.tibco.bw.runtime.ActivityLifecycleFault;
+import com.tibco.bw.runtime.ProcessContext;
+import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.annotation.Property;
+import com.tibco.bw.runtime.util.XMLUtils;
+import com.tibco.neo.localized.LocalizedMessage;
 
 
 public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
@@ -129,12 +123,14 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 				if (tId != null)
 					ticketId = Long.parseLong(tId);
 			}
-			ticketMetrics = getZendeskTicketMetrics(ticketId);
+
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
-    	
-        try {
+        
+		ticketMetrics = getZendeskTicketMetrics(ticketId);
+        
+		try {
 	        // create output data according the output structure
         	if(ticketId > 0)
         		result = evalOutput(input, processContext.getXMLProcessingContext(), zMetric);
@@ -167,11 +163,14 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 		}
 		Iterable<Metric> ticketMetrics = null;
 		
-		if(ticketId > 0)
-			zMetric = zendeskInstance.getTicketMetricByTicket(ticketId);
-		else 
-			ticketMetrics = zendeskInstance.getTicketMetrics();
-
+		try {
+			if (ticketId > 0)
+				zMetric = zendeskInstance.getTicketMetricByTicket(ticketId);
+			else
+				ticketMetrics = zendeskInstance.getTicketMetrics();
+		} catch (Exception e) {
+			throw new ActivityFault(activityContext, e);
+		}
 		return ticketMetrics;
 	}
 

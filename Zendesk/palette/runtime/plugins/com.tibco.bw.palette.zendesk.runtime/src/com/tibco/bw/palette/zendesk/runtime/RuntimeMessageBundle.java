@@ -14,7 +14,7 @@ public class RuntimeMessageBundle extends MessageBundle
 
     // Following member is accessed by MessageBundle.initializeMessages, do not remove!
     static public final String BUNDLE_NAME = "com.tibco.bw.palette.zendesk.runtime.Resources"; //$NON-NLS-1$
-    static {
+	static {
         MessageBundle.initializeMessages(RuntimeMessageBundle.class);
     }
     public static BundleMessage DEBUG_PLUGIN_ACTIVITY_METHOD_CALLED;
@@ -26,5 +26,6 @@ public class RuntimeMessageBundle extends MessageBundle
     public static BundleMessage ERROR_OCCURED_TICKET_ID_NOT_AVAILABLE;
     public static BundleMessage ERROR_OCCURED_DELETE_IDS_DO_NOT_EXIST;
     public static BundleMessage ERROR_OCCURED_DELETE_IDS_UNSUCCESSFUL;
-
+    public static BundleMessage ERROR_OCCURED_USER_ID_NOT_AVAILABLE;
+    
 }

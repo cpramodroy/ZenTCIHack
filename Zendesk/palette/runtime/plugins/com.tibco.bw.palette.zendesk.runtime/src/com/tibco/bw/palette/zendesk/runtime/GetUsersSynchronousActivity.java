@@ -1,37 +1,38 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
-import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
-import com.tibco.bw.palette.zendesk.model.zendesk.GetUsers;
-import com.tibco.bw.runtime.ActivityFault;
-import com.tibco.bw.runtime.SyncActivity;
-import com.tibco.bw.runtime.ProcessContext;
-import com.tibco.bw.runtime.ActivityLifecycleFault;
-import com.tibco.bw.runtime.util.XMLUtils;
-import org.genxdm.ProcessingContext;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.genxdm.Model;
-import com.tibco.neo.localized.LocalizedMessage;
-import org.genxdm.io.FragmentBuilder;
-import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import org.genxdm.ProcessingContext;
+import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.User;
+
+import com.tibco.bw.palette.zendesk.model.zendesk.GetUsers;
 import com.tibco.bw.palette.zendesk.runtime.pojo.getusers.ActivityOutputType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.getusers.UsersType;
+import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.runtime.ActivityFault;
+import com.tibco.bw.runtime.ActivityLifecycleFault;
+import com.tibco.bw.runtime.ProcessContext;
+import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.annotation.Property;
+import com.tibco.bw.runtime.util.XMLUtils;
+import com.tibco.neo.localized.LocalizedMessage;
 
 
 public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
 
 
 {
-
 	@Property
 	public GetUsers activityConfig;
 	
-	
-	
+	public static final String PARAM_USER_IDS = "UserIds";
 	
     /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
+
 	 * @generated
 	 * 
 	 * This method is called to initialize the activity. It is called by the 
@@ -49,16 +50,10 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 		super.init();
 	}
 	
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 * 
 	 * This method is called when an activity is destroyed. It is called by the BusinessWorks Engine and 
@@ -73,16 +68,10 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 		super.destroy();
 	}
 	
     /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *
      * The implementation of this method defines the execution behavior of the synchronous activity.  
@@ -115,12 +104,11 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 		    activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_INPUT, new Object[] {activityContext.getActivityName(), serializedInputNode});
 		}
         N result = null;
+        ArrayList<User> listUsers = null;
+        // Get list of UserId(s) from activity input and return corresponding User(s).
+        listUsers = getZendeskUsers(getListofIds(input, processContext.getXMLProcessingContext()));
         try {
-            // begin-custom-code
-			// add your own business code here
-			// end-custom-code
-	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+            result = evalOutput(input, processContext.getXMLProcessingContext(), listUsers);
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -132,11 +120,56 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 		}
         return result;
 	}
+
+	private List<Long> getListofIds(N input, ProcessingContext<N> pcx) {
+		Model<N> model = pcx.getModel();
+		N UserIdsElement = model.getFirstChildElementByName(input, null, PARAM_USER_IDS);
+		Iterable<N> UsersIdNodes = null;
+		if (UserIdsElement != null)
+			UsersIdNodes = model.getChildElements(UserIdsElement);
+		List<Long> userIdList = new ArrayList<Long>();
+		if (UsersIdNodes != null) {
+			Iterator<N> UsersIdNodesIterator = UsersIdNodes.iterator();
+			while (UsersIdNodesIterator.hasNext()) {
+				N userId = UsersIdNodesIterator.next();
+				if (userId != null) {
+					long userIdValue = Long.parseLong(model.getStringValue(userId));
+					userIdList.add(userIdValue);
+				}
+			}
+		}
+		return userIdList;
+	}
+	
+	private ArrayList<User> getZendeskUsers(List<Long> listUserIds) throws ActivityFault {
+		String companyUrl = activityConfig.getCompanyUrl();
+		String userId = activityConfig.getUserId();
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
+		
+		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityFault(activityContext, msg);
+		}
+		
+		ArrayList<User> listUsers = new ArrayList<User>();
+		
+		// validate input userIds and add users to list
+		for(long id : listUserIds) {
+			User user = zendeskInstance.getUser(id);
+			if(user != null ) 
+				listUsers.add(user);
+			else {
+				throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_USER_ID_NOT_AVAILABLE, new Object[] { activityContext.getActivityName(), listUserIds}));
+			}
+		}
+		zendeskInstance.close();
+		return listUsers;
+	}
+
 	/**
-	 * <!-- begin-custom-doc -->
-	 *
-	 *
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *  
 	 * This method to build the output after finishing the business.
@@ -148,123 +181,23 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, ArrayList<User> listUsers) throws Exception {
 		
-		ActivityOutputType activityOutut = new ActivityOutputType();
-		UsersType user = new UsersType();
-		user.setName("StringValue");
-		user.setEmail("StringValue");
-		user.setRole("StringValue");
-		user.setPhoneNumber("StringValue");
-		user.setAlias("StringValue");
-		user.setExternalId("StringValue");
-		activityOutut.setUser(user);
-		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutut, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutut");
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
+		ActivityOutputType activityOutput = new ActivityOutputType();
+		for (User zUser : listUsers) { // iterate over each zendesk user and add to output
+			UsersType user = new UsersType();
+			user.setName(zUser.getName());
+			user.setEmail(zUser.getEmail());
+			user.setRole(zUser.getRole().toString());
+			if(zUser.getPhone() != null)
+				user.setPhoneNumber(zUser.getPhone());
+			if(zUser.getAlias() != null)
+				user.setAlias(zUser.getAlias());
+			if(zUser.getExternalId() != null)
+				user.setExternalId(zUser.getExternalId());
+			activityOutput.getUser().add(user);
+		}
+		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 	    return output;
 	}
-    /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-	 *
-	 * This method to get the root element of output.
-	 * @param processingContext
-	 *				XML processing context.
-	 * @return An XML Element.
-	 */		
-	 protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-        final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-        Model<N> model = processingContext.getModel();
-        builder.startDocument(null, "xml");
-        try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutut", "ns0");
-        try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-        N output = builder.getNode();
-        N resultList = model.getFirstChild(output);
-        // begin-custom-code
-        // add your own business code here
-        // end-custom-code
-        return resultList;
-    }
-    
-	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-         if (parameter == null) {
-             return "";
-         }
-         return model.getStringValue(parameter);
-     }
-     
-  	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type attribute from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param attributeName
-     *			The attribute name which you want to get the value.
-     * @return attribute value.	
-     */
- 	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N attribute = model.getAttribute(inputData, "", attributeName);
-         if (attribute == null) {
-             return "";
-         }
-         return model.getStringValue(attribute);
-     }
-     
- 	/**
- 	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the Boolean type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
- 		Model<N> model = processingContext.getMutableContext().getModel();
- 		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
- 		if (parameter == null) {
- 			return false;
- 		}
- 		String valueStr = model.getStringValue(parameter);
- 		return Boolean.parseBoolean(valueStr);
- 	}
 }

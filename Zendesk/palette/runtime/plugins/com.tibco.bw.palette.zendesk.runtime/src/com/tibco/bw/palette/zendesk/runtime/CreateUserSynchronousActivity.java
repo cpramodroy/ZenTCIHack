@@ -122,12 +122,15 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		long userId;
 
 		try {
-			// Reading activity input to create zendesk user
+			// Reading activity input 
 			userData = UserDataHelper.getUserInput(input, processContext.getXMLProcessingContext());
-			userId = createZendeskUser(userData);
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
+		
+		// create zendesk user
+		userId = createZendeskUser(userData);
+		
 		try {
 			// create output data according the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), userId);
@@ -173,11 +176,11 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		String role = userData.getRole();
 		if (role == null)
 			user.setRole(Role.END_USER);
-		else if (role.equals("admin"))
+		else if (role.equalsIgnoreCase("admin"))
 			user.setRole(Role.ADMIN);
-		else if (role.equals("end-user"))
+		else if (role.equalsIgnoreCase("end-user"))
 			user.setRole(Role.END_USER);
-		else if (role.equals("agent"))
+		else if (role.equalsIgnoreCase("agent"))
 			user.setRole(Role.AGENT);
 
 		if (userData.getPhoneNumber() != null) {
@@ -233,7 +236,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		try{
 			createdUser = zendeskInstance.createUser(user);
 		}catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new ActivityFault(activityContext, e);
 		}
 		zendeskInstance.close();
 		return createdUser.getId();

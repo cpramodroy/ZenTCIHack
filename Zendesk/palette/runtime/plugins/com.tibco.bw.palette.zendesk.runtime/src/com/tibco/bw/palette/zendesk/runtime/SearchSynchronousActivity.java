@@ -133,10 +133,13 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		try {
 			// Reading search parameters from input activity
 			searchData = getSearchInput(input, processContext);
-			searchResult = executeSearch(searchData);
 		} catch (Exception exp) {
 			throw new ActivityFault(activityContext, exp);
 		}
+		
+		// call out to zendesk sdk
+		searchResult = executeSearch(searchData);
+
 		try {
 			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), searchResult);
@@ -165,8 +168,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		ArrayList<Long> result = null;
 		String companyURL = activityConfig.getCompanyUrl();
 		String username = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password
-														// using HTTP connector
+		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
 
 		// Create zendesk instance to communicate with zendesk portal
 		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();

@@ -129,14 +129,16 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		boolean success = false;
 		long ticketId = 0;
 		try {
-			// Reading ticket data from input activity and updating zendesk
-			// ticket
+			// Reading ticket data from input activity
 			ticketData = TicketDataHelper.getTicketInput(input, processContext);
-			success = updateZendeskTicket(ticketData);
 			ticketId = ticketData.getTicketId();
 		} catch (Exception exp) {
 			throw new ActivityFault(activityContext, exp);
 		}
+		
+		// updating zendesk ticket
+		success = updateZendeskTicket(ticketData);
+
 		try {
 			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), ticketId, success);
@@ -185,9 +187,9 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 * 
 	 * @param ticketData
 	 * @return
-	 * @throws RuntimeException
+	 * @throws ActivityFault
 	 */
-	private boolean updateZendeskTicket(TicketData ticketData) throws Exception {
+	private boolean updateZendeskTicket(TicketData ticketData) throws ActivityFault {
 		String companyURL = activityConfig.getCompanyUrl();
 		String username = activityConfig.getUserId();
 		String password = activityConfig.getPassword();
@@ -270,7 +272,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 			try {
 				upload = zendeskInstance.createUpload(file.getName(), contents);
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new ActivityFault(activityContext, e);
 			}
 			String[] uploadTokens = new String[1];
 			uploadTokens[0] = upload.getToken();

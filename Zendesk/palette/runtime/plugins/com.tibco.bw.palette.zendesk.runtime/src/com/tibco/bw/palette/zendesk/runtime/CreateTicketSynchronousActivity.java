@@ -124,15 +124,16 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		}
 		N result = null;
 		TicketData ticketData = null;
-		Long ticketId;
 		try {
-			// Reading ticket data from input activity and creating a zendesk
-			// ticket
+			// Reading ticket data from input activity
 			ticketData = TicketDataHelper.getTicketInput(input, processContext);
-			ticketId = createZendeskTicket(ticketData);
 		} catch (Exception exp) {
 			throw new ActivityFault(activityContext, exp);
 		}
+		
+		// creating a zendesk ticket
+		Long ticketId = createZendeskTicket(ticketData);
+		
 		try {
 			// create output data according to the output structure
 			result = evalOutput(input, processContext.getXMLProcessingContext(), ticketId);
@@ -241,7 +242,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		try {
 			createdTicket = zendeskInstance.createTicket(ticket);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new ActivityFault(activityContext, e);
 		}
 		// closing zendesk connection
 		zendeskInstance.close();
