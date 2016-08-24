@@ -8,6 +8,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 
 import com.tibco.bw.design.api.BWActivitySignature;
 import com.tibco.bw.design.util.ModelHelper;
+import com.tibco.bw.design.util.XSDUtility;
 import com.tibco.bw.model.activityconfig.Configuration;
 import com.tibco.bw.palette.zendesk.design.ZendeskExceptionsSchema;
 import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
@@ -105,7 +106,8 @@ public class GetTicketsSignature extends BWActivitySignature {
 
 		if (outputType != null && outputCustomFieldType != null) {
 			isOutputHeaderContentChanged(config, outputType, outputCustomFieldType);
-			combineSimpleTypes(outputType, outputCustomFieldType, "CustomFields");
+			XSDElementDeclaration ticketElement = XSDUtility.getChildElement(outputType, "Ticket");
+			combineSimpleTypes(ticketElement, outputCustomFieldType, "CustomFields");
 		}
         // end-custom-code
         return outputType;
