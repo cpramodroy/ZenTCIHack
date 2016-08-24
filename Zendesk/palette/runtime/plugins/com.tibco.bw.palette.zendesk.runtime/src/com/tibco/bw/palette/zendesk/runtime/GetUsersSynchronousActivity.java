@@ -22,18 +22,14 @@ import com.tibco.bw.runtime.util.XMLUtils;
 import com.tibco.neo.localized.LocalizedMessage;
 
 
-public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants 
-
-
-{
+public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
 	@Property
 	public GetUsers activityConfig;
-	
+	private Zendesk zendeskInstance;
 	public static final String PARAM_USER_IDS = "UserIds";
 	
     /**
-
-	 * @generated
+     * @generated
 	 * 
 	 * This method is called to initialize the activity. It is called by the 
 	 * BusinessWorks Engine once for a particular activity lifetime.
@@ -49,6 +45,16 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 								,activityContext.getProcessName()
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
+		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
 		}
 		super.init();
 	}
@@ -68,6 +74,7 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 	
@@ -123,15 +130,15 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 
 	private List<Long> getListofIds(N input, ProcessingContext<N> pcx) {
 		Model<N> model = pcx.getModel();
-		N UserIdsElement = model.getFirstChildElementByName(input, null, PARAM_USER_IDS);
-		Iterable<N> UsersIdNodes = null;
-		if (UserIdsElement != null)
-			UsersIdNodes = model.getChildElements(UserIdsElement);
+		N userIdsElement = model.getFirstChildElementByName(input, null, PARAM_USER_IDS);
+		Iterable<N> usersIdNodes = null;
+		if (userIdsElement != null)
+			usersIdNodes = model.getChildElements(userIdsElement);
 		List<Long> userIdList = new ArrayList<Long>();
-		if (UsersIdNodes != null) {
-			Iterator<N> UsersIdNodesIterator = UsersIdNodes.iterator();
-			while (UsersIdNodesIterator.hasNext()) {
-				N userId = UsersIdNodesIterator.next();
+		if (usersIdNodes != null) {
+			Iterator<N> usersIdNodesIterator = usersIdNodes.iterator();
+			while (usersIdNodesIterator.hasNext()) {
+				N userId = usersIdNodesIterator.next();
 				if (userId != null) {
 					long userIdValue = Long.parseLong(model.getStringValue(userId));
 					userIdList.add(userIdValue);
@@ -142,30 +149,18 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 	}
 	
 	private ArrayList<User> getZendeskUsers(List<Long> listUserIds) throws ActivityFault {
-		String companyUrl = activityConfig.getCompanyUrl();
-		String userId = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
-		
-		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-		User _user = zendeskInstance.getAuthenticatedUser();
-		if (_user == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
-		
 		ArrayList<User> listUsers = new ArrayList<User>();
-		
+
 		// validate input userIds and add users to list
-		for(long id : listUserIds) {
+		for (long id : listUserIds) {
 			User user = zendeskInstance.getUser(id);
-			if(user != null ) 
+			if (user != null)
 				listUsers.add(user);
 			else {
-				throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_USER_ID_NOT_AVAILABLE, new Object[] { activityContext.getActivityName(), listUserIds}));
+				throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_USER_ID_NOT_AVAILABLE, new Object[] {
+						activityContext.getActivityName(), listUserIds }));
 			}
 		}
-		zendeskInstance.close();
 		return listUsers;
 	}
 
@@ -182,9 +177,9 @@ public class GetUsersSynchronousActivity<N> extends SyncActivity<N> implements Z
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, ArrayList<User> listUsers) throws Exception {
-		
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		for (User zUser : listUsers) { // iterate over each zendesk user and add to output
+		// iterate over each zendesk user and add to output
+		for (User zUser : listUsers) { 
 			UsersType user = new UsersType();
 			user.setName(zUser.getName());
 			user.setEmail(zUser.getEmail());

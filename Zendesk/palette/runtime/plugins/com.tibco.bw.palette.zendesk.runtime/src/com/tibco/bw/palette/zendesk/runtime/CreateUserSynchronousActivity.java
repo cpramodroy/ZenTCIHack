@@ -40,6 +40,7 @@ import com.tibco.bw.runtime.annotation.Property;
 public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
 	@Property
 	public CreateUser activityConfig;
+	private Zendesk zendeskInstance;
 
 	/**
 	 * @generated
@@ -57,6 +58,16 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 					RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_METHOD_CALLED,
 					new Object[] { "init()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
+		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
 		}
 		super.init();
 	}
@@ -76,6 +87,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 					new Object[] { "destroy()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 
@@ -122,7 +134,7 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		long userId;
 
 		try {
-			// Reading activity input 
+			// Reading activity input
 			userData = UserDataHelper.getUserInput(input, processContext.getXMLProcessingContext());
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
@@ -156,18 +168,6 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 	 * @throws ActivityFault
 	 */
 	private Long createZendeskUser(UserData userData) throws ActivityFault {
-		String companyUrl = activityConfig.getCompanyUrl();
-		String userId = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
-
-		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-		User zenUser = zendeskInstance.getAuthenticatedUser();
-		if (zenUser == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
-
 		// Build user for zendesk
 		User user = new User();
 		user.setName(userData.getName());
@@ -238,7 +238,6 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 		}catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
-		zendeskInstance.close();
 		return createdUser.getId();
 	}
 
@@ -256,7 +255,6 @@ public class CreateUserSynchronousActivity<N> extends SyncActivity<N> implements
 	 *         <code>null</code> if the activity does not require an output.
 	 */
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long userId) throws Exception {
-
 		ActivityOutputType activityOutput = new ActivityOutputType();
 		activityOutput.setUserId(userId);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType()

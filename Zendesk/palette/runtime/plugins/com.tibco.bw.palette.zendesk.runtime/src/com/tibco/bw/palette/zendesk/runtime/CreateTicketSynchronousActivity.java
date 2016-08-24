@@ -36,6 +36,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 
 	@Property
 	public CreateTicket activityConfig;
+	private Zendesk zendeskInstance;
 
 	/**
 	 * @generated
@@ -56,6 +57,16 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					new Object[] { "init()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
+}
 		super.init();
 	}
 
@@ -75,6 +86,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					new Object[] { "destroy()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 
@@ -159,18 +171,6 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 * @throws ActivityFault
 	 */
 	private Long createZendeskTicket(TicketData ticketData) throws ActivityFault {
-		String companyURL = activityConfig.getCompanyUrl();
-		String username = activityConfig.getUserId();
-		String password = activityConfig.getPassword();
-		// Create zendesk instance to communicate with zendesk portal
-		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-		User user = zendeskInstance.getAuthenticatedUser();
-		if (user == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
-
 		String requesterName = ticketData.getRequesterName();
 		String requesterEmail = ticketData.getRequesterEmail();
 		String description = ticketData.getDescription();
@@ -199,8 +199,7 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		 * fields in current ticket
 		 */
 		if (ticketData.getTicketCustomFields().size() > 0) {
-			List<CustomFieldValue> customFields = CustomFieldsUtil.verifyAndGetCustomFields(ticketData.getTicketCustomFields(), zendeskInstance,
-					"ticket");
+			List<CustomFieldValue> customFields = CustomFieldsUtil.verifyAndGetCustomFields(ticketData.getTicketCustomFields(), zendeskInstance, "ticket");
 			if (customFields.size() > 0) {
 				ticket.setCustomFields(customFields);
 			}
@@ -244,8 +243,6 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
-		// closing zendesk connection
-		zendeskInstance.close();
 		return createdTicket.getId();
 	}
 
@@ -264,7 +261,6 @@ public class CreateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 *         an output.
 	 */
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Long ticketId) throws Exception {
-
 		ActivityOutput activityOutput = new ActivityOutput();
 		activityOutput.setTicketId(ticketId);
 		N output = PaletteUtil.parseObjtoN(ActivityOutput.class, activityOutput, processingContext, activityContext.getActivityOutputType()

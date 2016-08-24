@@ -34,6 +34,7 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 {
 	@Property
 	public Delete activityConfig;
+	private Zendesk zendeskInstance;
 	
 	public static final String PARAM_IDS = "Ids";
 	
@@ -55,6 +56,16 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
+		}
 		super.init();
 	}
 	
@@ -73,6 +84,7 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 	
@@ -164,22 +176,9 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	}
 
 	private boolean deleteZendeskObject(DeleteData deleteData) throws ActivityFault {
-		String companyUrl = activityConfig.getCompanyUrl();
-		String userId = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
-
-		Zendesk zendeskInstance = null;
-		try {
-			zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-		} catch (RuntimeException e) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
-
 		String type = deleteData.getDeleteType();
 		long[] idList = deleteData.getListOfIds();
-		boolean validate = validateIds(type, idList, zendeskInstance, true);
+		boolean validate = validateIds(type, idList, true);
 		if(!validate) {
 			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_DELETE_IDS_DO_NOT_EXIST, new Object[] {activityContext.getActivityName(), idList }));
 		}
@@ -200,15 +199,14 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					zendeskInstance.deleteOrganization(id);
 				break;
 		}
-		validate = validateIds(type, idList, zendeskInstance, false);
+		validate = validateIds(type, idList, false);
 		if(!validate) {
 			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_DELETE_IDS_UNSUCCESSFUL, new Object[] { activityContext.getActivityName(), idList }));
 		}
-		zendeskInstance.close();
 		return validate;
 	}
 
-	private boolean validateIds(String type, long[] idList, Zendesk zendeskInstance, boolean exists) {
+	private boolean validateIds(String type, long[] idList, boolean exists) {
 		boolean validate = false;
 		for(long id : idList) {
 			switch(type) {
@@ -277,7 +275,6 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
 	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, boolean success) throws Exception {
-		
 		ActivityOutputType activityOutput = new ActivityOutputType();
 		activityOutput.setSuccess(success);
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");

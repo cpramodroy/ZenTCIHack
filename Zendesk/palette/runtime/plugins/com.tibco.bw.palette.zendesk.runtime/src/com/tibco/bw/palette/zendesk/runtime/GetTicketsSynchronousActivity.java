@@ -1,39 +1,42 @@
 package com.tibco.bw.palette.zendesk.runtime;
 
-import com.tibco.bw.palette.zendesk.runtime.RuntimeMessageBundle;
-import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
-import com.tibco.bw.runtime.ActivityFault;
-import com.tibco.bw.runtime.SyncActivity;
-import com.tibco.bw.runtime.ProcessContext;
-import com.tibco.bw.runtime.ActivityLifecycleFault;
-import com.tibco.bw.runtime.util.XMLUtils;
-import org.genxdm.ProcessingContext;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.genxdm.Model;
-import com.tibco.neo.localized.LocalizedMessage;
-import org.genxdm.io.FragmentBuilder;
-import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
-import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CustomFieldType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CollaboratorsType;
+import org.genxdm.ProcessingContext;
+import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.CustomFieldValue;
+import org.zendesk.client.v2.model.Ticket;
+import org.zendesk.client.v2.model.User;
+
+import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.ActivityOutputType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TagsType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.RequesterType;
-import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TicketType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CCType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CollaboratorsType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CustomFieldType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.RequesterType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TagsType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TicketType;
+import com.tibco.bw.palette.zendesk.runtime.util.PaletteUtil;
+import com.tibco.bw.runtime.ActivityFault;
+import com.tibco.bw.runtime.ActivityLifecycleFault;
+import com.tibco.bw.runtime.ProcessContext;
+import com.tibco.bw.runtime.SyncActivity;
 import com.tibco.bw.runtime.annotation.Property;
+import com.tibco.bw.runtime.util.XMLUtils;
+import com.tibco.neo.localized.LocalizedMessage;
 
 
 public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
-
 	@Property
 	public GetTickets activityConfig;
+	private Zendesk zendeskInstance;
 	
+	private static final String PARAM_TICKET_IDS = "TicketIds";
 	
-	
-	
-    /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
+	/**
 	 * @generated
 	 * 
 	 * This method is called to initialize the activity. It is called by the 
@@ -51,16 +54,20 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+											 .setUsername(activityConfig.getUserId())
+											 .setPassword(activityConfig.getPassword())
+											 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
+		}
 		super.init();
 	}
 	
 	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 * 
 	 * This method is called when an activity is destroyed. It is called by the BusinessWorks Engine and 
@@ -75,9 +82,7 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
+		zendeskInstance.close();
 		super.destroy();
 	}
 	
@@ -117,12 +122,12 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 		    activityLogger.debug(RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_INPUT, new Object[] {activityContext.getActivityName(), serializedInputNode});
 		}
         N result = null;
+        List<Ticket> listTickets = null;
+        // Get list of TicketId(s) from activity input and return corresponding Ticket(s).
+        listTickets = getZendeskTickets(getListofIds(input, processContext.getXMLProcessingContext()));
         try {
-            // begin-custom-code
-			// add your own business code here
-			// end-custom-code
 	        // create output data according the output structure
-            result = evalOutput(input, processContext.getXMLProcessingContext(), null);
+            result = evalOutput(input, processContext.getXMLProcessingContext(), listTickets);
         } catch (Exception e) {
             throw new ActivityFault(activityContext, new LocalizedMessage(
 						RuntimeMessageBundle.ERROR_OCCURED_RETRIEVE_RESULT, new Object[] {activityContext.getActivityName()}));
@@ -134,11 +139,45 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 		}
         return result;
 	}
+
+	private long[] getListofIds(N input, ProcessingContext<N> pcx) {
+		Model<N> model = pcx.getModel();
+		N ticketIdsElement = model.getFirstChildElementByName(input, null, PARAM_TICKET_IDS);
+		Iterable<N> ticketsIdNodes = null;
+		if (ticketIdsElement != null)
+			ticketsIdNodes = model.getChildElements(ticketIdsElement);
+		List<Long> ticketIdList = new ArrayList<Long>();
+		if (ticketsIdNodes != null) {
+			Iterator<N> ticketsIdNodesNodesIterator = ticketsIdNodes.iterator();
+			while (ticketsIdNodesNodesIterator.hasNext()) {
+				N ticketId = ticketsIdNodesNodesIterator.next();
+				if (ticketId != null) {
+					long ticketIdValue = Long.parseLong(model.getStringValue(ticketId));
+					ticketIdList.add(ticketIdValue);
+				}
+			}
+		}
+		long[] ticketIds = new long[ticketIdList.size()];
+		for (int i = 0; i < ticketIdList.size(); i++)
+			ticketIds[i] = ticketIdList.get(i);
+
+		return ticketIds;
+	}
+	
+	private List<Ticket> getZendeskTickets(long[] listTicketIds) throws ActivityFault {
+		List<Ticket> listTickets = new ArrayList<Ticket>();
+		try {
+			// get ticket values from zendesk
+			listTickets = zendeskInstance.getTickets(listTicketIds[0], listTicketIds);
+		} catch (Exception e) {
+			throw new ActivityFault(activityContext, new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_TICKET_ID_NOT_AVAILABLE, new Object[] {
+					activityContext.getActivityName(), listTicketIds }));
+		}
+
+		return listTickets;
+	}
+	
 	/**
-	 * <!-- begin-custom-doc -->
-	 *
-	 *
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *  
 	 * This method to build the output after finishing the business.
@@ -150,137 +189,64 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 	 *			Business object.
 	 * @return An XML Element which adheres to the output schema of the activity or may return <code>null</code> if the activity does not require an output.
 	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, Object data) throws Exception {
-		
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, List<Ticket> listTickets) throws Exception {
 		ActivityOutputType activityOutput = new ActivityOutputType();
-		TicketType ticket = new TicketType();
-		RequesterType requester = new RequesterType();
-		requester.setName("StringValue");
-		requester.setEmail("StringValue");
-		ticket.setRequester(requester);
-		ticket.setSubject("StringValue");
-		ticket.setDescription("StringValue");
-		CollaboratorsType collaborators = new CollaboratorsType();
-		CCType cc = new CCType();
-		cc.setName("StringValue");
-		cc.setEmail("StringValue");
-		collaborators.getCC().add(cc);
-		ticket.setCollaborators(collaborators);
-		ticket.setType("StringValue");
-		ticket.setPriority("StringValue");
-		TagsType tags = new TagsType();
-		tags.getTagName().add("StringValue");
-		ticket.setTags(tags);
-		CustomFieldType customFields = new CustomFieldType();
-		customFields.setField1("StringValue");
-		ticket.setCustomFields(customFields);
-		activityOutput.getTicket().add(ticket);
+		for (Ticket zticket : listTickets) {
+			TicketType ticket = new TicketType();
+			
+			// set Requester
+			RequesterType requester = new RequesterType();
+			if (zticket.getRequester() != null) {
+				requester.setName(zticket.getRequester().getName());
+				requester.setEmail(zticket.getRequester().getEmail());
+			}
+			ticket.setRequester(requester);
+			// end Requester
+			
+			ticket.setSubject(zticket.getSubject());
+			ticket.setDescription(zticket.getDescription());
+
+			// set collaborators
+			CollaboratorsType collaborators = new CollaboratorsType();
+			CCType cc = new CCType();
+			List<Long> ccIds = zticket.getCollaboratorIds();
+			if (!ccIds.isEmpty()) {
+				for (long id : ccIds) {
+					User user = zendeskInstance.getUser(id);
+					cc.setName(user.getName());
+					cc.setEmail(user.getEmail());
+					collaborators.getCC().add(cc);
+				}
+			}
+			ticket.setCollaborators(collaborators);
+			// end collaborators
+			
+			if(zticket.getType() != null)
+				ticket.setType(zticket.getType().toString());
+			
+			if(zticket.getPriority() != null)
+				ticket.setPriority(zticket.getPriority().toString());
+			
+			// set tags
+			List<String> listTags = zticket.getTags();
+			TagsType tags = new TagsType();
+			if(!listTags.isEmpty())
+				tags.getTagName().addAll(listTags);
+			ticket.setTags(tags);
+			// end tags
+			
+			// set custom fields
+			zendeskInstance.getTicketFields();
+			List<CustomFieldValue> listCustomFieldValue = zticket.getCustomFields();
+			//TODO : Populate custom fields
+			CustomFieldType customFields = new CustomFieldType();
+			customFields.setField1("StringValue");
+			ticket.setCustomFields(customFields);
+			// end custom fields
+
+			activityOutput.getTicket().add(ticket);
+		}
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
-		// begin-custom-code
-        // add your own business code here
-        // end-custom-code
 	    return output;
 	}
-    /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-	 *
-	 * This method to get the root element of output.
-	 * @param processingContext
-	 *				XML processing context.
-	 * @return An XML Element.
-	 */		
-	 protected N getOutputRootElement(ProcessingContext<N> processingContext) {
-        final FragmentBuilder<N> builder = processingContext.newFragmentBuilder();
-
-        Model<N> model = processingContext.getModel();
-        builder.startDocument(null, "xml");
-        try {
-			builder.startElement(activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput", "ns0");
-        try {
-			} finally {
-				builder.endElement();
-			}
-		} finally {
-			builder.endDocument();
-		}
-        N output = builder.getNode();
-        N resultList = model.getFirstChild(output);
-        // begin-custom-code
-        // add your own business code here
-        // end-custom-code
-        return resultList;
-    }
-    
-	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public String getInputParameterStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
-         if (parameter == null) {
-             return "";
-         }
-         return model.getStringValue(parameter);
-     }
-     
-  	/**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the String type attribute from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param attributeName
-     *			The attribute name which you want to get the value.
-     * @return attribute value.	
-     */
- 	public String getInputAttributeStringValueByName(final N inputData, final ProcessingContext<N> processingContext, final String attributeName) {
-         Model<N> model = processingContext.getMutableContext().getModel();
-         N attribute = model.getAttribute(inputData, "", attributeName);
-         if (attribute == null) {
-             return "";
-         }
-         return model.getStringValue(attribute);
-     }
-     
- 	/**
- 	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
-	 * @generated
-     * Gets the Boolean type parameter from the input by name.
-     * @param inputData
-     *			This is the activity input data.
-     * @param processingContext
-     *			XML processing context.
-     * @param parameterName
-     *			The parameter name which you want to get the value.
-     * @return parameter value.	
-     */
- 	public boolean getInputParameterBooleanValueByName(final N inputData, final ProcessingContext<N> processingContext, final String parameterName) {
- 		Model<N> model = processingContext.getMutableContext().getModel();
- 		N parameter = model.getFirstChildElementByName(inputData, null, parameterName);
- 		if (parameter == null) {
- 			return false;
- 		}
- 		String valueStr = model.getStringValue(parameter);
- 		return Boolean.parseBoolean(valueStr);
- 	}
 }

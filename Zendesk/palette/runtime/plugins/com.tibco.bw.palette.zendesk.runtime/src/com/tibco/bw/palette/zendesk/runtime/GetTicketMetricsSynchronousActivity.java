@@ -37,6 +37,7 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 {
 	@Property
 	public GetTicketMetrics activityConfig;
+	private Zendesk zendeskInstance;
 	private static Metric zMetric;
 	private static final String	PARAM_TICKET_ID = "TicketId";
 	
@@ -59,6 +60,16 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
+		}
 		super.init();
 	}
 	
@@ -77,6 +88,7 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 	
@@ -150,19 +162,7 @@ public class GetTicketMetricsSynchronousActivity<N> extends SyncActivity<N> impl
 	}
 	
 	private Iterable<Metric> getZendeskTicketMetrics(long ticketId) throws ActivityFault {
-		String companyUrl = activityConfig.getCompanyUrl();
-		String userId = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
-		
-		Zendesk zendeskInstance = new Zendesk.Builder(companyUrl).setUsername(userId).setPassword(password).build();
-		User user = zendeskInstance.getAuthenticatedUser();
-		if (user == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
 		Iterable<Metric> ticketMetrics = null;
-		
 		try {
 			if (ticketId > 0)
 				zMetric = zendeskInstance.getTicketMetricByTicket(ticketId);

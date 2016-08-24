@@ -32,13 +32,11 @@ import com.tibco.neo.localized.LocalizedMessage;
  * @author pcheruku
  *
  */
-public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants
-
-{
-
+public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
 	@Property
 	public UpdateTicket activityConfig;
-
+	private Zendesk zendeskInstance;
+	
 	/**
 	 * @generated
 	 * 
@@ -57,6 +55,16 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					RuntimeMessageBundle.DEBUG_PLUGIN_ACTIVITY_METHOD_CALLED,
 					new Object[] { "init()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
+		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
 		}
 		super.init();
 	}
@@ -77,6 +85,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 					new Object[] { "destroy()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 
@@ -154,34 +163,7 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		}
 		return result;
 	}
-
-	/**
-	 * 
-	 * @generated
-	 * 
-	 *            This method to build the output after finishing the business.
-	 * @param inputData
-	 *            This is the activity input data.
-	 * @param processingContext
-	 *            XML processing context.
-	 * @param ticketId
-	 *            updated ticket id.
-	 * @param success
-	 *            true or false based on update ticket.
-	 * @return An XML Element which adheres to the output schema of the activity
-	 *         or may return <code>null</code> if the activity does not require
-	 *         an output.
-	 */
-	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long ticketId, boolean success) throws Exception {
-
-		ActivityOutputType activityOutputType = new ActivityOutputType();
-		activityOutputType.setTicketId(ticketId);
-		activityOutputType.setSuccess(new Boolean(success));
-		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutputType, processingContext, activityContext.getActivityOutputType()
-				.getTargetNamespace(), "ActivityOutput");
-		return output;
-	}
-
+	
 	/**
 	 * This method is to update the existing ticket based on activity input.
 	 * 
@@ -190,23 +172,11 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 	 * @throws ActivityFault
 	 */
 	private boolean updateZendeskTicket(TicketData ticketData) throws ActivityFault {
-		String companyURL = activityConfig.getCompanyUrl();
-		String username = activityConfig.getUserId();
-		String password = activityConfig.getPassword();
-		// Create zendesk instance to communicate with zendesk portal
-		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-		User user = zendeskInstance.getAuthenticatedUser();
-		if (user == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
 		Long ticketId = ticketData.getTicketId();
-
 		Ticket ticket = zendeskInstance.getTicket(ticketId);
 		if (ticket == null) {
 			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_TICKET_ID_NOT_AVAILABLE,
-					new Object[] { activityContext.getActivityName() });
+					new Object[] { activityContext.getActivityName(), ticketId });
 			throw new ActivityFault(activityContext, msg);
 		}
 		String requesterName = ticketData.getRequesterName();
@@ -283,7 +253,33 @@ public class UpdateTicketSynchronousActivity<N> extends SyncActivity<N> implemen
 		} catch (Exception e) {
 			throw new ActivityFault(activityContext, e);
 		}
-		zendeskInstance.close();
 		return true;
+	}
+
+	/**
+	 * 
+	 * @generated
+	 * 
+	 *            This method to build the output after finishing the business.
+	 * @param inputData
+	 *            This is the activity input data.
+	 * @param processingContext
+	 *            XML processing context.
+	 * @param ticketId
+	 *            updated ticket id.
+	 * @param success
+	 *            true or false based on update ticket.
+	 * @return An XML Element which adheres to the output schema of the activity
+	 *         or may return <code>null</code> if the activity does not require
+	 *         an output.
+	 */
+	protected <A> N evalOutput(N inputData, ProcessingContext<N> processingContext, long ticketId, boolean success) throws Exception {
+
+		ActivityOutputType activityOutputType = new ActivityOutputType();
+		activityOutputType.setTicketId(ticketId);
+		activityOutputType.setSuccess(new Boolean(success));
+		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutputType, processingContext, activityContext.getActivityOutputType()
+				.getTargetNamespace(), "ActivityOutput");
+		return output;
 	}
 }

@@ -35,12 +35,10 @@ import com.tibco.neo.localized.LocalizedMessage;
  *
  * @param <N>
  */
-public class SearchSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants
-
-{
-
+public class SearchSynchronousActivity<N> extends SyncActivity<N> implements ZendeskContants {
 	@Property
 	public Search activityConfig;
+	private Zendesk zendeskInstance;
 
 	/**
 	 * @generated
@@ -61,6 +59,16 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					new Object[] { "init()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance = new Zendesk.Builder(activityConfig.getCompanyUrl())
+									 .setUsername(activityConfig.getUserId())
+									 .setPassword(activityConfig.getPassword())
+									 .build();
+		User _user = zendeskInstance.getAuthenticatedUser();
+		if (_user == null) {
+			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
+					new Object[] { activityContext.getActivityName() });
+			throw new ActivityLifecycleFault(msg);
+		}
 		super.init();
 	}
 
@@ -80,6 +88,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 					new Object[] { "destroy()", activityContext.getActivityName(), activityContext.getProcessName(),
 							activityContext.getDeploymentUnitName(), activityContext.getDeploymentUnitVersion() });
 		}
+		zendeskInstance.close();
 		super.destroy();
 	}
 
@@ -166,21 +175,8 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 */
 	private List<Long> executeSearch(SearchData searchData) throws ActivityFault {
 		ArrayList<Long> result = null;
-		String companyURL = activityConfig.getCompanyUrl();
-		String username = activityConfig.getUserId();
-		String password = activityConfig.getPassword(); // TODO: Encode password using HTTP connector
-
-		// Create zendesk instance to communicate with zendesk portal
-		Zendesk zendeskInstance = new Zendesk.Builder(companyURL).setUsername(username).setPassword(password).build();
-		User user = zendeskInstance.getAuthenticatedUser();
-		if (user == null) {
-			LocalizedMessage msg = new LocalizedMessage(RuntimeMessageBundle.ERROR_OCCURED_INVALID_CREDENTIALS,
-					new Object[] { activityContext.getActivityName() });
-			throw new ActivityFault(activityContext, msg);
-		}
 		int maxRows = searchData.getMaxRows();
-		// If input of maxRows is empty then limiting the results to default
-		// value i.e., 10
+		// If input of maxRows is empty then limiting the results to default value i.e. 10
 		if (maxRows == 0) {
 			maxRows = 10;
 		}
@@ -189,16 +185,16 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 		searchType = searchType.toLowerCase();
 		switch (searchType) {
 			case "ticket":
-				result = getSearchResultsByTicket(query, maxRows, zendeskInstance);
+				result = getSearchResultsByTicket(query, maxRows);
 				break;
 			case "user":
-				result = getSearchResultsByUser(query, maxRows, zendeskInstance);
+				result = getSearchResultsByUser(query, maxRows);
 				break;
 			case "group":
-				result = getSearchResultsByGroup(query, maxRows, zendeskInstance);
+				result = getSearchResultsByGroup(query, maxRows);
 				break;
 			case "organization":
-				result = getSearchResultsByOrganization(query, maxRows, zendeskInstance);
+				result = getSearchResultsByOrganization(query, maxRows);
 				break;
 
 		}
@@ -214,7 +210,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @param zendeskInstance
 	 * @return list of organization ids for the given query
 	 */
-	private ArrayList<Long> getSearchResultsByOrganization(String query, int maxRows, Zendesk zendeskInstance) {
+	private ArrayList<Long> getSearchResultsByOrganization(String query, int maxRows) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Organization> orgs = zendeskInstance.getSearchResults(Organization.class, query);
 		for (Organization org : orgs) {
@@ -233,7 +229,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @param zendeskInstance
 	 * @return list of group ids for the given query
 	 */
-	private ArrayList<Long> getSearchResultsByGroup(String query, int maxRows, Zendesk zendeskInstance) {
+	private ArrayList<Long> getSearchResultsByGroup(String query, int maxRows) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Group> groups = zendeskInstance.getSearchResults(Group.class, query);
 		for (Group group : groups) {
@@ -252,7 +248,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @param zendeskInstance
 	 * @return list of user ids for the given query
 	 */
-	private ArrayList<Long> getSearchResultsByUser(String query, int maxRows, Zendesk zendeskInstance) {
+	private ArrayList<Long> getSearchResultsByUser(String query, int maxRows) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<User> users = zendeskInstance.getSearchResults(User.class, query);
 		for (User user : users) {
@@ -271,7 +267,7 @@ public class SearchSynchronousActivity<N> extends SyncActivity<N> implements Zen
 	 * @param zendeskInstance
 	 * @return list of ticket ids for the given query
 	 */
-	private ArrayList<Long> getSearchResultsByTicket(String query, int maxRows, Zendesk zendeskInstance) {
+	private ArrayList<Long> getSearchResultsByTicket(String query, int maxRows) {
 		ArrayList<Long> result = new ArrayList<Long>();
 		Iterable<Ticket> tickets = zendeskInstance.getSearchResults(Ticket.class, query);
 		for (Ticket ticket : tickets) {
