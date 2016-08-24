@@ -1,9 +1,11 @@
 
 package com.tibco.bw.palette.zendesk.runtime.pojo.gettickets;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -52,16 +54,16 @@ public class TicketType {
     protected String subject;
     @XmlElement(name = "Description")
     protected String description;
-    @XmlElement(name = "Collaborators")
-    protected CollaboratorsType collaborators;
-    @XmlElement(name = "Type")
-    protected String type;
-    @XmlElement(name = "Priority")
-    protected String priority;
-    @XmlElement(name = "Tags")
-    protected TagsType tags;
-    @XmlElement(name = "CustomFields")
-    protected CustomFieldType customFields;
+    @XmlElementRef(name = "Collaborators", type = JAXBElement.class, required = false)
+    protected JAXBElement<CollaboratorsType> collaborators;
+    @XmlElementRef(name = "Type", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> type;
+    @XmlElementRef(name = "Priority", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> priority;
+    @XmlElementRef(name = "Tags", type = JAXBElement.class, required = false)
+    protected JAXBElement<TagsType> tags;
+    @XmlElementRef(name = "CustomFields", type = JAXBElement.class, required = false)
+    protected JAXBElement<CustomFieldType> customFields;
 
     /**
      * Gets the value of the requester property.
@@ -140,10 +142,10 @@ public class TicketType {
      * 
      * @return
      *     possible object is
-     *     {@link CollaboratorsType }
+     *     {@link JAXBElement }{@code <}{@link CollaboratorsType }{@code >}
      *     
      */
-    public CollaboratorsType getCollaborators() {
+    public JAXBElement<CollaboratorsType> getCollaborators() {
         return collaborators;
     }
 
@@ -152,10 +154,10 @@ public class TicketType {
      * 
      * @param value
      *     allowed object is
-     *     {@link CollaboratorsType }
+     *     {@link JAXBElement }{@code <}{@link CollaboratorsType }{@code >}
      *     
      */
-    public void setCollaborators(CollaboratorsType value) {
+    public void setCollaborators(JAXBElement<CollaboratorsType> value) {
         this.collaborators = value;
     }
 
@@ -164,10 +166,10 @@ public class TicketType {
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public String getType() {
+    public JAXBElement<String> getType() {
         return type;
     }
 
@@ -176,10 +178,10 @@ public class TicketType {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public void setType(String value) {
+    public void setType(JAXBElement<String> value) {
         this.type = value;
     }
 
@@ -188,10 +190,10 @@ public class TicketType {
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public String getPriority() {
+    public JAXBElement<String> getPriority() {
         return priority;
     }
 
@@ -200,10 +202,10 @@ public class TicketType {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public void setPriority(String value) {
+    public void setPriority(JAXBElement<String> value) {
         this.priority = value;
     }
 
@@ -212,10 +214,10 @@ public class TicketType {
      * 
      * @return
      *     possible object is
-     *     {@link TagsType }
+     *     {@link JAXBElement }{@code <}{@link TagsType }{@code >}
      *     
      */
-    public TagsType getTags() {
+    public JAXBElement<TagsType> getTags() {
         return tags;
     }
 
@@ -224,10 +226,10 @@ public class TicketType {
      * 
      * @param value
      *     allowed object is
-     *     {@link TagsType }
+     *     {@link JAXBElement }{@code <}{@link TagsType }{@code >}
      *     
      */
-    public void setTags(TagsType value) {
+    public void setTags(JAXBElement<TagsType> value) {
         this.tags = value;
     }
 
@@ -236,10 +238,10 @@ public class TicketType {
      * 
      * @return
      *     possible object is
-     *     {@link CustomFieldType }
+     *     {@link JAXBElement }{@code <}{@link CustomFieldType }{@code >}
      *     
      */
-    public CustomFieldType getCustomFields() {
+    public JAXBElement<CustomFieldType> getCustomFields() {
         return customFields;
     }
 
@@ -248,10 +250,10 @@ public class TicketType {
      * 
      * @param value
      *     allowed object is
-     *     {@link CustomFieldType }
+     *     {@link JAXBElement }{@code <}{@link CustomFieldType }{@code >}
      *     
      */
-    public void setCustomFields(CustomFieldType value) {
+    public void setCustomFields(JAXBElement<CustomFieldType> value) {
         this.customFields = value;
     }
 
