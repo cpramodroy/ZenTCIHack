@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ActivityOutut_QNAME = new QName("http://www.example.org/GetUsers", "ActivityOutut");
+    private final static QName _ActivityOutput_QNAME = new QName("http://www.example.org/GetUsers", "ActivityOutput");
     private final static QName _ActivityInput_QNAME = new QName("http://www.example.org/GetUsers", "ActivityInput");
 
     /**
@@ -59,12 +59,20 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link UserIdsType }
+     * 
+     */
+    public UserIdsType createUserIdsType() {
+        return new UserIdsType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityOutputType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.example.org/GetUsers", name = "ActivityOutut")
-    public JAXBElement<ActivityOutputType> createActivityOutut(ActivityOutputType value) {
-        return new JAXBElement<ActivityOutputType>(_ActivityOutut_QNAME, ActivityOutputType.class, null, value);
+    @XmlElementDecl(namespace = "http://www.example.org/GetUsers", name = "ActivityOutput")
+    public JAXBElement<ActivityOutputType> createActivityOutput(ActivityOutputType value) {
+        return new JAXBElement<ActivityOutputType>(_ActivityOutput_QNAME, ActivityOutputType.class, null, value);
     }
 
     /**

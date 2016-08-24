@@ -414,7 +414,7 @@
       <details key="schemaType" value="XSD/WSDL"/>
       <details key="schemaFile" value="GetUsers.xsd"/>
       <details key="inputelementname" value="ActivityInput"/>
-      <details key="outputelementname" value="ActivityOutut"/>
+      <details key="outputelementname" value="ActivityOutput"/>
       <details key="faultelementname" value=""/>
       <details key="helpdocuuid" value="47e4105e-7c97-4908-b3e7-907373d4117b"/>
     </eAnnotations>

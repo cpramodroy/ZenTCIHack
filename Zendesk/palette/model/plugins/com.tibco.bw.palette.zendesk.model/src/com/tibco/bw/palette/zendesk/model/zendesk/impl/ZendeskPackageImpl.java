@@ -843,7 +843,7 @@ public class ZendeskPackageImpl extends EPackageImpl implements ZendeskPackage {
 			 "schemaType", "XSD/WSDL",
 			 "schemaFile", "GetUsers.xsd",
 			 "inputelementname", "ActivityInput",
-			 "outputelementname", "ActivityOutut",
+			 "outputelementname", "ActivityOutput",
 			 "faultelementname", "",
 			 "helpdocuuid", "47e4105e-7c97-4908-b3e7-907373d4117b"
 		   });

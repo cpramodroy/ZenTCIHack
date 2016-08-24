@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="UserId" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="UserIds" type="{http://www.example.org/GetUsers}UserIdsType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,27 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ActivityInputType", namespace = "http://www.example.org/GetUsers", propOrder = {
-    "userId"
+    "userIds"
 })
 public class ActivityInputType {
 
-    @XmlElement(name = "UserId", namespace = "http://www.example.org/GetUsers")
-    protected long userId;
+    @XmlElement(name = "UserIds", namespace = "http://www.example.org/GetUsers", required = true)
+    protected UserIdsType userIds;
 
     /**
-     * Gets the value of the userId property.
+     * Gets the value of the userIds property.
      * 
+     * @return
+     *     possible object is
+     *     {@link UserIdsType }
+     *     
      */
-    public long getUserId() {
-        return userId;
+    public UserIdsType getUserIds() {
+        return userIds;
     }
 
     /**
-     * Sets the value of the userId property.
+     * Sets the value of the userIds property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link UserIdsType }
+     *     
      */
-    public void setUserId(long value) {
-        this.userId = value;
+    public void setUserIds(UserIdsType value) {
+        this.userIds = value;
     }
 
 }

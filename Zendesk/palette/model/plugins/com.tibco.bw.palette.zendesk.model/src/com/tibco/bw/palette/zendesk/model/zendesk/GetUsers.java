@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see com.tibco.bw.palette.zendesk.model.zendesk.ZendeskPackage#getGetUsers()
- * @model annotation="dkactivityconfig activitytype='Synchronous' schemaType='XSD/WSDL' schemaFile='GetUsers.xsd' inputelementname='ActivityInput' outputelementname='ActivityOutut' faultelementname='' helpdocuuid='47e4105e-7c97-4908-b3e7-907373d4117b'"
+ * @model annotation="dkactivityconfig activitytype='Synchronous' schemaType='XSD/WSDL' schemaFile='GetUsers.xsd' inputelementname='ActivityInput' outputelementname='ActivityOutput' faultelementname='' helpdocuuid='47e4105e-7c97-4908-b3e7-907373d4117b'"
  * @generated
  */
 public interface GetUsers extends EObject {
