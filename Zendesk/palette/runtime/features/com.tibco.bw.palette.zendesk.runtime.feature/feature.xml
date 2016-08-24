@@ -17,7 +17,9 @@
    <license url="%licenseURL">
       %license
    </license>
-
+   
+   <import feature="com.tibco.tpcl.org.slf4j.log4j12.feature" match="compatible" version="1.7.0"/>
+   
    <plugin
          id="com.tibco.bw.palette.zendesk.runtime"
          download-size="0"

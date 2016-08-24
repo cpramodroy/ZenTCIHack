@@ -22,7 +22,8 @@ Import-Package: com.tibco.bw.palette.zendesk.model.zendesk;version="[1.0.0,2.0.0
  org.genxdm.xs.constraints;version="[1.0.0,2.0.0)",
  org.genxdm.xs.exceptions;version="[1.0.0,2.0.0)",
  org.genxdm.xs.resolve;version="[1.0.0,2.0.0)",
- org.genxdm.xs.types;version="[1.0.0,2.0.0)"
+ org.genxdm.xs.types;version="[1.0.0,2.0.0)",
+ org.slf4j;version="[1.5.2,2.0.0)"
 Service-Component:  OSGI-INF/createticket.xml, OSGI-INF/createuser.xml
  , OSGI-INF/updateticket.xml, OSGI-INF/delete.xml, OSGI-INF/getticketm
  etrics.xml, OSGI-INF/search.xml, OSGI-INF/gettickets.xml, OSGI-INF/ge
