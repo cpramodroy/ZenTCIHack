@@ -299,12 +299,6 @@
                tab="tibco.bw.activity.property.tab.general">
          </propertySection>
          <propertySection
-               class="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsOutputEditorSection"
-               filter="com.tibco.bw.palette.zendesk.design.gettickets.GetTicketsOutputEditorSection"
-               id="bw.zendesk.GetTickets.outputEditor"
-               tab="tibco.bw.activity.property.tab.outputEditor">
-         </propertySection>
-         <propertySection
                afterSection="com.tibco.bw.design.activity.general"
                class="com.tibco.bw.palette.zendesk.design.getusers.GetUsersGeneralSection"
                filter="com.tibco.bw.palette.zendesk.design.getusers.GetUsersGeneralSection"

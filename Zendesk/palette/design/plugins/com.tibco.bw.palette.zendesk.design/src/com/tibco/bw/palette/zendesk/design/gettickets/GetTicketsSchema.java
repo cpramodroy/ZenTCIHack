@@ -1,30 +1,14 @@
 package com.tibco.bw.palette.zendesk.design.gettickets;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
-import org.eclipse.xsd.XSDCompositor;
+import java.io.InputStream;
+
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDForm;
-import org.eclipse.xsd.XSDModelGroup;
-import org.eclipse.xsd.XSDParticle;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDSchema;
 
 import com.tibco.bw.design.api.BWExtensionActivitySchema;
-import com.tibco.bw.design.internal.base.BWDesign;
-import com.tibco.bw.palette.zendesk.design.Messages;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.UUID;
+public class GetTicketsSchema extends BWExtensionActivitySchema 
 
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDConstants;
-
-public class GetTicketsSchema extends BWExtensionActivitySchema {
-	
-	private static String ATTRIBUTE_NAME = "source"; //$NON-NLS-1$
-	private static String ATTRIBUTE_VALUE = "bw.zendesk.getTickets"; //$NON-NLS-1$
+{
 	
 	private static GetTicketsSchema INSTANCE = new GetTicketsSchema();
     /**
@@ -108,87 +92,5 @@ public class GetTicketsSchema extends BWExtensionActivitySchema {
 	@Override
 	protected InputStream getSchemaAsInputStream() {
 		return this.getClass().getResourceAsStream(SCHEMA_FILE_PATH);
-	}
-	
-	public XSDSchema createOutputHeaderSchemaWithType() {
-		String prefix = Messages.GetTicketsSchema_outputHeader_tns_prefix;
-		String namespace = Messages.GetTicketsSchema_outputHeader_tns + "/" + UUID.randomUUID().toString();
-
-		XSDSchema schema = xsdFactory.createXSDSchema();
-		schema.setTargetNamespace(namespace);
-
-		Map<String, String> qNamePrefixToNsMap = schema.getQNamePrefixToNamespaceMap();
-		qNamePrefixToNsMap.put(schema.getSchemaForSchemaQNamePrefix(), XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
-		qNamePrefixToNsMap.put(prefix, namespace);
-
-		// root complex type
-		XSDComplexTypeDefinition rootComplexType = xsdFactory.createXSDComplexTypeDefinition();
-		rootComplexType.setTargetNamespace(namespace);
-		rootComplexType.setName("customFieldType"); //$NON-NLS-1$
-
-			// root complex type particle
-			XSDParticle complexTypeParticle = xsdFactory.createXSDParticle();
-
-				// particle's model group
-				XSDModelGroup modelGroup = xsdFactory.createXSDModelGroup();
-				modelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
-
-					// particle for "Field1" element
-					XSDParticle field1ElementParticle = xsdFactory.createXSDParticle();
-					field1ElementParticle.setMinOccurs(0);
-					field1ElementParticle.setMaxOccurs(1);
-				
-
-						// "Field1" element with string type
-						XSDElementDeclaration contentTypeElement = xsdFactory.createXSDElementDeclaration();
-						contentTypeElement.setName("Field1"); //$NON-NLS-1$
-						contentTypeElement.setForm(XSDForm.UNQUALIFIED_LITERAL);
-							XSDSimpleTypeDefinition stringType = schema.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"); //$NON-NLS-1$						
-
-						contentTypeElement.setTypeDefinition(stringType);
-
-						field1ElementParticle.setContent(contentTypeElement);
-
-				modelGroup.getContents().add(field1ElementParticle);
-	
-			complexTypeParticle.setContent(modelGroup);
-
-		rootComplexType.setContent(complexTypeParticle);
-		rootComplexType.setContentType(complexTypeParticle);
-
-		schema.getContents().add(rootComplexType);
-
-		XSDSchema compiledSchema = compileSchema(schema);
-		addExtensionAttribute(compiledSchema, rootComplexType, ATTRIBUTE_NAME, ATTRIBUTE_VALUE);
-		return compiledSchema;
-	}
-	
-	public IStatus validateOutputHeaderType(XSDTypeDefinition xsdTypeDefinition, boolean matchExtension) {
-		boolean isValid = false;
-		XSDComplexTypeDefinition complexType = null;
-		if (xsdTypeDefinition instanceof XSDComplexTypeDefinition) {
-			complexType = (XSDComplexTypeDefinition) xsdTypeDefinition;
-		}
-		if (complexType != null) {
-			XSDParticle particle = complexType.getComplexType();
-			if (particle != null && particle.getTerm() instanceof XSDModelGroup) {
-				if (matchExtension) {
-					if (hasExtensionAttribute(xsdTypeDefinition, ATTRIBUTE_NAME, ATTRIBUTE_VALUE)) {
-						isValid = true;
-					} else {
-						return BWDesign.createErrorStatus(Messages.GetTicketsSchema_outputHeader_sourceError_label);
-					}
-				} else {
-					isValid = true;
-				}
-			}
-		}
-		if (isValid) {
-			return Status.OK_STATUS;
-		} else {
-			return BWDesign.createErrorStatus(Messages.GetTicketsSchema_outputHeader_typeValidationError_label);
-		}
-	}
-
-	
+	}	
 }

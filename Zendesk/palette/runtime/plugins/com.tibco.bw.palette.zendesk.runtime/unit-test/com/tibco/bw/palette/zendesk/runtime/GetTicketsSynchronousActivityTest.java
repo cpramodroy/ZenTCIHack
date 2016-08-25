@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
-public class GetTicketsSynchronousActivityTest {
+public class GetTicketsSynchronousActivityTest 
+
+{
 	String expectedResult = null;
 
 	/**

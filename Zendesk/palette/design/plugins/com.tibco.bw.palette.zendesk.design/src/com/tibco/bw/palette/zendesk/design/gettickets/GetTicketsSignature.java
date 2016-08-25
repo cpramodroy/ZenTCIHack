@@ -3,15 +3,10 @@ package com.tibco.bw.palette.zendesk.design.gettickets;
 import java.util.List;
 
 import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDTypeDefinition;
 
 import com.tibco.bw.design.api.BWActivitySignature;
-import com.tibco.bw.design.util.ModelHelper;
-import com.tibco.bw.design.util.XSDUtility;
 import com.tibco.bw.model.activityconfig.Configuration;
 import com.tibco.bw.palette.zendesk.design.ZendeskExceptionsSchema;
-import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
 /**
  * <!-- begin-custom-doc -->
  * 
@@ -19,7 +14,8 @@ import com.tibco.bw.palette.zendesk.model.zendesk.GetTickets;
  * @generated
  * 
  */
-public class GetTicketsSignature extends BWActivitySignature {
+public class GetTicketsSignature extends BWActivitySignature 
+{
 	
 	
 	/**
@@ -93,37 +89,11 @@ public class GetTicketsSignature extends BWActivitySignature {
     public XSDElementDeclaration getOutputType(final Configuration config) {
         XSDElementDeclaration outputType = null;
         outputType =  GetTicketsSchema.getOutputType();
-		
         // begin-custom-code
-		GetTickets getTickets = (GetTickets) getDefaultEMFConfigObject(config);
-		
-		// get dynamic schema
-		XSDTypeDefinition outputCustomFieldType = ModelHelper.INSTANCE.getXSDTypeByQName(getTickets, getTickets.getOutputHeadersQName());
-
-		// create namespace and use it to update new output schema's namespace.
-		String namespace = createNamespace(new Object[] { outputType.getSchema(), config, "output" }); //$NON-NLS-1$
-		updateNamespace(outputType, namespace);
-
-		if (outputType != null && outputCustomFieldType != null) {
-			isOutputHeaderContentChanged(config, outputType, outputCustomFieldType);
-			XSDElementDeclaration ticketElement = XSDUtility.getChildElement(outputType, "Ticket");
-			combineSimpleTypes(ticketElement, outputCustomFieldType, "CustomFields");
-		}
         // end-custom-code
         return outputType;
     }
     
-	private void isOutputHeaderContentChanged(Configuration config, XSDElementDeclaration newOutputTypeElement, XSDTypeDefinition outputCustomFieldType) {
-		XSDSchema outputCustomFieldSchema = newOutputTypeElement.getSchema();
-		XSDSchema customFieldSchema = outputCustomFieldType.getSchema();
-
-		if (outputCustomFieldSchema != null && customFieldSchema != null) {
-			if (isContentChanged(outputCustomFieldSchema.resolveElementDeclaration("CustomFields"), customFieldSchema.resolveElementDeclaration("CustomFields"))) {
-				createImport(config, outputCustomFieldSchema, customFieldSchema);
-			}
-		}
-	}
-
     /**
 	 * <!-- begin-custom-doc -->
 	 * 

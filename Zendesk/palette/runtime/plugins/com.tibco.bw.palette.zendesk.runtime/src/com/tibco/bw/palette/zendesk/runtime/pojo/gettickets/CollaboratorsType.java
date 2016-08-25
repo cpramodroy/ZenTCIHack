@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class CollaboratorsType {
 
-    @XmlElement(name = "CC")
+    @XmlElement(name = "CC", nillable = true)
     protected List<CCType> cc;
 
     /**

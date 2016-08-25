@@ -107,6 +107,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link FieldType }
+     * 
+     */
+    public FieldType createFieldType() {
+        return new FieldType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ActivityInputType }{@code >}}
      * 
      */

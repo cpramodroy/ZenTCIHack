@@ -7,7 +7,6 @@ import java.util.List;
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.zendesk.client.v2.Zendesk;
-import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
 import org.zendesk.client.v2.model.User;
 
@@ -16,6 +15,7 @@ import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.ActivityOutputType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CCType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CollaboratorsType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.CustomFieldType;
+import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.FieldType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.RequesterType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TagsType;
 import com.tibco.bw.palette.zendesk.runtime.pojo.gettickets.TicketType;
@@ -196,9 +196,10 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 			
 			// set Requester
 			RequesterType requester = new RequesterType();
-			if (zticket.getRequester() != null) {
-				requester.setName(zticket.getRequester().getName());
-				requester.setEmail(zticket.getRequester().getEmail());
+			if (zticket.getRequesterId() != null) {
+				User _requester = zendeskInstance.getUser(zticket.getRequesterId());
+				requester.setName(_requester.getName());
+				requester.setEmail(_requester.getEmail());
 			}
 			ticket.setRequester(requester);
 			// end Requester
@@ -236,11 +237,11 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 			// end tags
 			
 			// set custom fields
-			zendeskInstance.getTicketFields();
-			List<CustomFieldValue> listCustomFieldValue = zticket.getCustomFields();
-			//TODO : Populate custom fields
 			CustomFieldType customFields = new CustomFieldType();
-			customFields.setField1("StringValue");
+			FieldType field = new FieldType();
+			field.setTitle("StringValue");
+			field.setValue("StringValue");
+			customFields.getField().add(field);
 			ticket.setCustomFields(customFields);
 			// end custom fields
 

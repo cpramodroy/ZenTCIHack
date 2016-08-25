@@ -1,6 +1,8 @@
 
 package com.tibco.bw.palette.zendesk.runtime.pojo.gettickets;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Field1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="unqualified"/>
+ *         &lt;element name="Field" type="{http://www.example.org/GetTickets}FieldType" maxOccurs="unbounded" minOccurs="0" form="unqualified"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,35 +30,40 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CustomFieldType", namespace = "http://www.example.org/GetTickets", propOrder = {
-    "field1"
+    "field"
 })
 public class CustomFieldType {
 
-    @XmlElement(name = "Field1")
-    protected String field1;
+    @XmlElement(name = "Field")
+    protected List<FieldType> field;
 
     /**
-     * Gets the value of the field1 property.
+     * Gets the value of the field property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getField1() {
-        return field1;
-    }
-
-    /**
-     * Sets the value of the field1 property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the field property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getField().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link FieldType }
+     * 
+     * 
      */
-    public void setField1(String value) {
-        this.field1 = value;
+    public List<FieldType> getField() {
+        if (field == null) {
+            field = new ArrayList<FieldType>();
+        }
+        return this.field;
     }
 
 }

@@ -52,15 +52,15 @@ public class TicketType {
     protected String subject;
     @XmlElement(name = "Description")
     protected String description;
-    @XmlElement(name = "Collaborators")
+    @XmlElement(name = "Collaborators", nillable = true)
     protected CollaboratorsType collaborators;
-    @XmlElement(name = "Type")
+    @XmlElement(name = "Type", nillable = true)
     protected String type;
-    @XmlElement(name = "Priority")
+    @XmlElement(name = "Priority", nillable = true)
     protected String priority;
-    @XmlElement(name = "Tags")
+    @XmlElement(name = "Tags", nillable = true)
     protected TagsType tags;
-    @XmlElement(name = "CustomFields")
+    @XmlElement(name = "CustomFields", nillable = true)
     protected CustomFieldType customFields;
 
     /**

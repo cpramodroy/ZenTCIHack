@@ -34,9 +34,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class RequesterType {
 
-    @XmlElement(name = "Name")
+    @XmlElement(name = "Name", nillable = true)
     protected String name;
-    @XmlElement(name = "Email")
+    @XmlElement(name = "Email", nillable = true)
     protected String email;
 
     /**
