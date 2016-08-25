@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class CustomFieldType {
 
-    @XmlElement(name = "Field")
+    @XmlElement(name = "Field", nillable = true)
     protected List<FieldType> field;
 
     /**

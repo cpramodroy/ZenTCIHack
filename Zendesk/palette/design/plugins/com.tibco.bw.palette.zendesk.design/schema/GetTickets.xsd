@@ -35,7 +35,7 @@
 	</complexType>
 	<complexType name="TicketType">
 		<sequence>
-			<element form="unqualified" minOccurs="0" name="Requester" type="tns:RequesterType"/>
+			<element form="unqualified" minOccurs="0" nillable = "true" name="Requester" type="tns:RequesterType"/>
 			<element form="unqualified" minOccurs="0" name="Subject" type="string"/>
 			<element form="unqualified" minOccurs="0" name="Description" type="string"/>
 			<element form="unqualified" minOccurs="0" nillable = "true" maxOccurs="1" name="Collaborators" type="tns:CollaboratorsType"/>

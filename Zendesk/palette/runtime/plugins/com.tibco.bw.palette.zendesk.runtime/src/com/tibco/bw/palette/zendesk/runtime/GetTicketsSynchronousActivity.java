@@ -245,16 +245,16 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 			createCustomFieldsTitleMap(ticketFields);
 			
 			List<CustomFieldValue> listCustomFields = zticket.getCustomFields();
-			for(CustomFieldValue customField: listCustomFields){
+			for (CustomFieldValue customField : listCustomFields) {
 				long id = customField.getId();
 				String customFieldTitle = customFieldsTitleMap.get(id);
 				String customFieldValue = customField.getValue();
-				if(customFieldValue != null){
-					FieldType field = new FieldType();
-					field.setTitle(customFieldTitle);
+
+				FieldType field = new FieldType();
+				field.setTitle(customFieldTitle);
+				if (customFieldValue != null)
 					field.setValue(customFieldValue);
-					outputCustomFields.getField().add(field);
-				}				
+				outputCustomFields.getField().add(field);
 			}
 			ticket.setCustomFields(outputCustomFields);
 			// end custom fields
