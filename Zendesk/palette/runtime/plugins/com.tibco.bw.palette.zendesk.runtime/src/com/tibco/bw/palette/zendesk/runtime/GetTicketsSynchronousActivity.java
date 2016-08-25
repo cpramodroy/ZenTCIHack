@@ -3,10 +3,13 @@ package com.tibco.bw.palette.zendesk.runtime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.genxdm.Model;
 import org.genxdm.ProcessingContext;
 import org.zendesk.client.v2.Zendesk;
+import org.zendesk.client.v2.model.CustomFieldValue;
+import org.zendesk.client.v2.model.Field;
 import org.zendesk.client.v2.model.Ticket;
 import org.zendesk.client.v2.model.User;
 
@@ -33,6 +36,7 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 	@Property
 	public GetTickets activityConfig;
 	private Zendesk zendeskInstance;
+	private ConcurrentHashMap<Long, String> customFieldsTitleMap = new ConcurrentHashMap<Long, String>();
 	
 	private static final String PARAM_TICKET_IDS = "TicketIds";
 	
@@ -82,14 +86,12 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 								,activityContext.getDeploymentUnitName()
 								,activityContext.getDeploymentUnitVersion() });
 		}
+		customFieldsTitleMap.clear();
 		zendeskInstance.close();
 		super.destroy();
 	}
 	
     /**
-	 * <!-- begin-custom-doc -->
-	 * 
-	 * <!-- end-custom-doc -->
 	 * @generated
 	 *
      * The implementation of this method defines the execution behavior of the synchronous activity.  
@@ -237,17 +239,41 @@ public class GetTicketsSynchronousActivity<N> extends SyncActivity<N> implements
 			// end tags
 			
 			// set custom fields
-			CustomFieldType customFields = new CustomFieldType();
-			FieldType field = new FieldType();
-			field.setTitle("StringValue");
-			field.setValue("StringValue");
-			customFields.getField().add(field);
-			ticket.setCustomFields(customFields);
+			CustomFieldType outputCustomFields = new CustomFieldType();
+			List<Field> ticketFields = zendeskInstance.getTicketFields();
+			
+			createCustomFieldsTitleMap(ticketFields);
+			
+			List<CustomFieldValue> listCustomFields = zticket.getCustomFields();
+			for(CustomFieldValue customField: listCustomFields){
+				long id = customField.getId();
+				String customFieldTitle = customFieldsTitleMap.get(id);
+				String customFieldValue = customField.getValue();
+				if(customFieldValue != null){
+					FieldType field = new FieldType();
+					field.setTitle(customFieldTitle);
+					field.setValue(customFieldValue);
+					outputCustomFields.getField().add(field);
+				}				
+			}
+			ticket.setCustomFields(outputCustomFields);
 			// end custom fields
 
 			activityOutput.getTicket().add(ticket);
 		}
 		N output = PaletteUtil.parseObjtoN(ActivityOutputType.class, activityOutput, processingContext, activityContext.getActivityOutputType().getTargetNamespace(), "ActivityOutput");
 	    return output;
+	}
+	
+	/**
+	 * Creates a map containing custom field id's and it's title
+	 * @param ticketFields
+	 */
+	private void createCustomFieldsTitleMap(List<Field> ticketFields) {
+		for (Field field : ticketFields) {
+			Long fieldID = field.getId();
+			String fieldTitle = field.getTitle().replaceAll("\\s+", "");
+			customFieldsTitleMap .put(fieldID, fieldTitle);
+		}
 	}
 }

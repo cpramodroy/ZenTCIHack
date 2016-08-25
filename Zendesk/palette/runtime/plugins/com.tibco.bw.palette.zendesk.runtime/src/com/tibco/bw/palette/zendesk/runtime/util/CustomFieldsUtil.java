@@ -108,6 +108,8 @@ public class CustomFieldsUtil {
 				customFields.add(customField);
 			}
 		}
+		customFieldIDStore.clear();
+		customOptionsMap.clear();
 		return customFields;
 	}
 }
