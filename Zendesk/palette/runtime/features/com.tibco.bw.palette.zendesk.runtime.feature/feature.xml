@@ -18,7 +18,8 @@
       %license
    </license>
    
-   <import feature="com.tibco.tpcl.org.slf4j.log4j12.feature" match="compatible" version="1.7.0"/>
+   <import feature="com.tibco.bw.tpcl.com.fasterxml.jackson.feature.eclipse" version="1.0.0" match="compatible"/>
+   <import feature="com.tibco.tpcl.org.slf4j.log4j12.feature" version="1.7.0" match="compatible"/>
    
    <plugin
          id="com.tibco.bw.palette.zendesk.runtime"
