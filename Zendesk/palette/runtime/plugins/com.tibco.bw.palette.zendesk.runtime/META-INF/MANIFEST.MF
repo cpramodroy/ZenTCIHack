@@ -3,6 +3,7 @@ Bundle-SymbolicName: com.tibco.bw.palette.zendesk.runtime
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %providerName
+Require-Bundle: com.tibco.bw.tpcl.com.fasterxml.jackson;bundle-version="[1.0.0,2.0.0)"
 Import-Package: com.tibco.bw.palette.zendesk.model.zendesk;version="[1.0.0,2.0.0)",
  com.tibco.bw.palette.zendesk.runtime;version="[1.0.0,2.0.0)",
  com.tibco.bw.runtime;version="[6.0.0,7.0.0)",
@@ -39,9 +40,6 @@ Bundle-Name: %pluginName
 Bundle-Localization: plugin
 Bundle-ClassPath: lib/async-http-client-1.9.31.jar,
  lib/handy-uri-templates-1.1.7.jar,
- lib/jackson-annotations-2.1.4.jar,
- lib/jackson-core-2.1.4.jar,
- lib/jackson-databind-2.1.4.jar,
  lib/netty-3.10.4.Final.jar,
  lib/zendesk-java-client-0.5.0.jar,
  .

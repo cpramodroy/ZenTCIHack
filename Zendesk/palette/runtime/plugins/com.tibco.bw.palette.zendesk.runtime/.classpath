@@ -2,11 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/async-http-client-1.9.31.jar"/>
-	<classpathentry kind="lib" path="lib/handy-uri-templates-1.1.7.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-annotations-2.1.4.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-core-2.1.4.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-databind-2.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/netty-3.10.4.Final.jar"/>
+	<classpathentry kind="lib" path="lib/handy-uri-templates-1.1.7.jar"/>
 	<classpathentry kind="lib" path="lib/zendesk-java-client-0.5.0.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="unit-test"/>
