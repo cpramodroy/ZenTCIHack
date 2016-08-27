@@ -224,13 +224,13 @@ public class DeleteSynchronousActivity<N> extends SyncActivity<N> implements Zen
 
 			case "user" :
 				User user = zendeskInstance.getUser(id);
-				if(user != null && exists)  // id exists before delete, so return true
+				if(user.getEmail() != null && exists)  // id exists before delete, so return true
 					validate = true;
-				else if(user != null && !exists) // id exists after delete, implies delete failed
+				else if(user.getEmail() != null && !exists) // id exists after delete, implies delete failed
 					validate = false;
-				else if(user == null && exists) // id does not exist before delete, implies invalid input
+				else if(user.getEmail() == null && exists) // id does not exist before delete, implies invalid input
 					validate = false;
-				else if(user == null && !exists) // id does not exist after delete, implies delete succeeded
+				else if(user.getEmail() == null && !exists) // id does not exist after delete, implies delete succeeded
 					validate = true;
 				break;
 
